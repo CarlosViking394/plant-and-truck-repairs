@@ -10,6 +10,7 @@ export const IMAGE_PATHS = {
   HERO_BG: "/images/hero-bg.jpg",
   FRONT_PAGE: "/images/hero-image.jpg",
   EARTHMOVING: "/images/Earthmoving.jpg",
+  MOBILE_DIESEL_MECHANIC: "/images/mobile_diesel_mechanic_final.jpg",
 } as const;
 
 /**

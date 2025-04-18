@@ -15,7 +15,8 @@ export default function Home() {
       title: "Mobile Diesel Mechanic",
       description: "On-site diesel engine diagnostics, repairs, and maintenance for all makes and models. Our mobile mechanics come to your location, saving you time and reducing equipment downtime.",
       icon: "/icons/diesel-mechanic.svg",
-      alt: "Mobile diesel mechanic servicing a truck engine"
+      alt: "Mobile diesel mechanic servicing a truck engine",
+      backgroundImage: IMAGE_PATHS.MOBILE_DIESEL_MECHANIC
     },
     {
       title: "Mobile Plant Repairs",
