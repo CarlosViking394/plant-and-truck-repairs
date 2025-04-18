@@ -56,7 +56,7 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-1">
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
           Full Name *
         </label>
         <input
@@ -66,14 +66,14 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-cyan-500 focus:border-cyan-500 text-white"
+          className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-md focus:ring-cyan-600 focus:border-cyan-600 text-gray-800"
           placeholder="John Smith"
         />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
             Email Address *
           </label>
           <input
@@ -83,13 +83,13 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-cyan-500 focus:border-cyan-500 text-white"
+            className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-md focus:ring-cyan-600 focus:border-cyan-600 text-gray-800"
             placeholder="john@example.com"
           />
         </div>
         
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-1">
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
             Phone Number *
           </label>
           <input
@@ -99,14 +99,14 @@ export default function ContactForm() {
             value={formData.phone}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-cyan-500 focus:border-cyan-500 text-white"
+            className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-md focus:ring-cyan-600 focus:border-cyan-600 text-gray-800"
             placeholder="(04) 1234 5678"
           />
         </div>
       </div>
       
       <div>
-        <label htmlFor="service" className="block text-sm font-medium text-gray-300 mb-1">
+        <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-1">
           Service Required *
         </label>
         <select
@@ -115,7 +115,7 @@ export default function ContactForm() {
           value={formData.service}
           onChange={handleChange}
           required
-          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-cyan-500 focus:border-cyan-500 text-white"
+          className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-md focus:ring-cyan-600 focus:border-cyan-600 text-gray-800"
         >
           <option value="" disabled>Select a service</option>
           <option value="diesel-mechanic">Mobile Diesel Mechanic</option>
@@ -128,7 +128,7 @@ export default function ContactForm() {
       </div>
       
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-1">
+        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
           Message
         </label>
         <textarea
@@ -137,7 +137,7 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-cyan-500 focus:border-cyan-500 text-white"
+          className="w-full px-4 py-2 bg-gray-200 border border-gray-300 rounded-md focus:ring-cyan-600 focus:border-cyan-600 text-gray-800"
           placeholder="Please provide details about the service you need..."
         ></textarea>
       </div>
@@ -148,8 +148,8 @@ export default function ContactForm() {
           disabled={formStatus === 'submitting'}
           className={`w-full py-3 px-4 rounded-md text-white font-medium transition-colors duration-300 ${
             formStatus === 'submitting' 
-              ? 'bg-cyan-600 cursor-not-allowed' 
-              : 'bg-cyan-500 hover:bg-cyan-600'
+              ? 'bg-cyan-700 cursor-not-allowed' 
+              : 'bg-cyan-700 hover:bg-cyan-800'
           }`}
         >
           {formStatus === 'submitting' ? 'Sending...' : 'Send Message'}
@@ -157,13 +157,13 @@ export default function ContactForm() {
       </div>
       
       {formStatus === 'success' && (
-        <div className="mt-4 p-3 bg-green-900 border border-green-700 text-green-100 rounded-md">
+        <div className="mt-4 p-3 bg-green-100 border border-green-300 text-green-800 rounded-md">
           Thank you! Your message has been sent. We'll get back to you shortly.
         </div>
       )}
       
       {formStatus === 'error' && (
-        <div className="mt-4 p-3 bg-red-900 border border-red-700 text-red-100 rounded-md">
+        <div className="mt-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-md">
           There was a problem sending your message. Please try again later.
         </div>
       )}
