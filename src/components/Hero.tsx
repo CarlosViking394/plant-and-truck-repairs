@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { IMAGE_PATHS } from '@/lib/constants';
@@ -20,22 +20,50 @@ export default function Hero({
   ctaLink,
   className,
 }: HeroProps) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const backgroundImages = [
+    IMAGE_PATHS.OUTBACK_ROAD,
+    IMAGE_PATHS.SOUTHEAST_TRUCK
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex(prevIndex => 
+        prevIndex === 0 ? 1 : 0
+      );
+    }, 6000); // Change image every 6 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className={cn(
       "relative bg-gray-800 text-gray-100 py-24 min-h-[80vh] flex items-center",
       className
     )}>
-      {/* Background image with overlay */}
+      {/* Background images with transition */}
       <div className="absolute inset-0 overflow-hidden z-0">
-        <Image
-          src={IMAGE_PATHS.FRONT_PAGE}
-          alt="SEQ Mobile Plant & Truck Repairs - Professional diesel mechanic services"
-          fill
-          priority
-          className="object-cover object-center opacity-70"
-          sizes="100vw"
-          quality={90}
-        />
+        {backgroundImages.map((image, index) => (
+          <div 
+            key={index} 
+            className="absolute inset-0 transition-opacity duration-1500 ease-in-out"
+            style={{ 
+              opacity: index === currentImageIndex ? 1 : 0,
+              zIndex: index === currentImageIndex ? 0 : -1,
+              transition: 'opacity 1.5s ease-in-out'
+            }}
+          >
+            <Image
+              src={image}
+              alt={`SEQ Mobile Plant & Truck Repairs - Background ${index + 1}`}
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="100vw"
+              quality={90}
+            />
+          </div>
+        ))}
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-800/70 to-gray-700/60 z-10"></div>
       </div>
       
