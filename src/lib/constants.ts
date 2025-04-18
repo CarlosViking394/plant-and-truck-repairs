@@ -13,6 +13,7 @@ export const IMAGE_PATHS = {
   MOBILE_DIESEL_MECHANIC: "/images/mobile_diesel_mechanic_final.jpg",
   MOBILE_PLANT_REPAIRS: "/images/MobilePlantRepairs.png",
   WHO_WE_ARE: "/images/whoweare.png",
+  OUTBACK_ROAD: "/images/inthemiddleofoz.png",
 } as const;
 
 /**
