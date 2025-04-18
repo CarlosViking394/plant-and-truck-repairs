@@ -11,7 +11,7 @@ import {
   Construction, 
   Thermometer,
   Battery,
-  ToolIcon
+  Settings
 } from 'lucide-react';
 
 type ServiceCardProps = Omit<Service, 'id'> & {
@@ -27,7 +27,7 @@ const IconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   thermometer: Thermometer,
   battery: Battery,
   // Add fallback
-  default: ToolIcon
+  default: Settings
 };
 
 export default function ServiceCard({
