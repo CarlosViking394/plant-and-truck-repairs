@@ -14,6 +14,7 @@ export const IMAGE_PATHS = {
   MOBILE_PLANT_REPAIRS: "/images/MobilePlantRepairs.png",
   WHO_WE_ARE: "/images/whoweare.png",
   OUTBACK_ROAD: "/images/inthemiddleofoz.png",
+  SOUTHEAST_TRUCK: "/images/southEastQTruck.png",
 } as const;
 
 /**

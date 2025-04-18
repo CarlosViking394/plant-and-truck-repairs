@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import CalendlyWidget from './CalendlyWidget';
 import Image from 'next/image';
@@ -12,20 +12,44 @@ interface ContactSectionProps {
 }
 
 export default function ContactSection({ id, className }: ContactSectionProps) {
+  const [currentImage, setCurrentImage] = useState(0);
+  const images = [
+    IMAGE_PATHS.OUTBACK_ROAD,
+    IMAGE_PATHS.SOUTHEAST_TRUCK
+  ];
+  
+  // Transition effect between images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev === 0 ? 1 : 0));
+    }, 8000); // Change image every 8 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <section id={id} className={cn(
       "py-16 px-4 relative overflow-hidden", 
       className
     )}>
-      {/* Background image */}
+      {/* Background images with transition */}
       <div className="absolute inset-0 overflow-hidden">
-        <Image 
-          src={IMAGE_PATHS.OUTBACK_ROAD}
-          alt="Australian outback road"
-          fill
-          className="object-cover"
-          priority
-        />
+        {images.map((src, index) => (
+          <div 
+            key={src}
+            className={`absolute inset-0 transition-opacity duration-2000 ease-in-out ${
+              currentImage === index ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <Image 
+              src={src}
+              alt={index === 0 ? "Australian outback road" : "Truck in South East Queensland"}
+              fill
+              className="object-cover"
+              priority={index === 0}
+            />
+          </div>
+        ))}
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
       
