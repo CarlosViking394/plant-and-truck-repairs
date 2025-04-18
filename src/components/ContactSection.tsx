@@ -14,45 +14,33 @@ interface ContactSectionProps {
 export default function ContactSection({ id, className }: ContactSectionProps) {
   return (
     <section id={id} className={cn(
-      "py-16 px-4 bg-gray-200 relative overflow-hidden", 
+      "py-16 px-4 relative overflow-hidden", 
       className
     )}>
-      {/* Background pattern */}
-      <div className="absolute inset-0 overflow-hidden opacity-10">
-        <div className="absolute top-0 left-0 w-full h-full">
-          <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <pattern id="pattern-circles" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse">
-              <circle id="pattern-circle" cx="10" cy="10" r="1.6257413380501518" fill="#0891b2"></circle>
-            </pattern>
-            <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-circles)"></rect>
-          </svg>
-        </div>
+      {/* Background image */}
+      <div className="absolute inset-0 overflow-hidden">
+        <Image 
+          src={IMAGE_PATHS.OUTBACK_ROAD}
+          alt="Australian outback road"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
       
       <div className="container mx-auto relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-cyan-700">Book a Service</h2>
-            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Book a Service</h2>
+            <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Schedule your mobile plant or truck repair service online for fast, reliable service throughout South East Queensland.
             </p>
           </div>
           
           <div className="max-w-2xl mx-auto relative">
-            {/* Outback Road Background Image */}
-            <div className="absolute inset-0 -m-6 rounded-2xl overflow-hidden">
-              <Image 
-                src={IMAGE_PATHS.OUTBACK_ROAD}
-                alt="Australian outback road"
-                fill
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-black/30"></div>
-            </div>
-            
             {/* Floating card effect */}
-            <div id="booking-widget" className="bg-gray-100/90 backdrop-blur-sm p-8 rounded-lg shadow-xl border-2 border-orange-500 relative overflow-hidden scroll-mt-24 transform hover:-translate-y-1 transition-all duration-300 hover:shadow-2xl z-10 m-6">
+            <div id="booking-widget" className="bg-gray-100/90 backdrop-blur-sm p-8 rounded-lg shadow-xl border-2 border-orange-500 relative overflow-hidden scroll-mt-24 transform hover:-translate-y-1 transition-all duration-300 hover:shadow-2xl z-10">
               <div className="absolute top-0 right-0 bg-orange-500 text-white px-3 py-1 text-sm font-bold shadow-md">
                 FAST BOOKING
               </div>
@@ -107,14 +95,14 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
             </div>
           </div>
           
-          <div className="mt-24 bg-gray-100 p-6 rounded-lg shadow-md border border-gray-300 relative">
+          <div className="mt-24 bg-gray-100/90 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-gray-300 relative">
             {/* Decorative element */}
             <div className="absolute -top-4 -right-4 h-16 w-16 bg-cyan-500/20 rounded-full blur-xl"></div>
             <div className="absolute -bottom-8 -left-8 h-24 w-24 bg-orange-500/10 rounded-full blur-xl"></div>
             
             <h3 className="text-xl font-semibold mb-4 text-cyan-700">South East Queensland Service Areas</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-gray-200 border border-gray-300 rounded-lg">
+              <div className="p-4 bg-gray-200/90 backdrop-blur-sm border border-gray-300 rounded-lg">
                 <h4 className="font-medium text-gray-800 mb-2 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-700 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -137,7 +125,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                   </li>
                 </ul>
               </div>
-              <div className="p-4 bg-gray-200 border border-gray-300 rounded-lg">
+              <div className="p-4 bg-gray-200/90 backdrop-blur-sm border border-gray-300 rounded-lg">
                 <h4 className="font-medium text-gray-800 mb-2 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-700 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -160,7 +148,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                   </li>
                 </ul>
               </div>
-              <div className="p-4 bg-gray-200 border border-gray-300 rounded-lg">
+              <div className="p-4 bg-gray-200/90 backdrop-blur-sm border border-gray-300 rounded-lg">
                 <h4 className="font-medium text-gray-800 mb-2 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-700 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
