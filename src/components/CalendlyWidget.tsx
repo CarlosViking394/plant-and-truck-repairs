@@ -1,9 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { CONTACT } from '@/lib/constants';
+import Script from 'next/script';
 
 interface CalendlyWidgetProps {
   className?: string;
+}
+
+// Get API key from environment variable
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyDLOii6uO3MQcIndVJiV5yhtR45o7mv4pE";
+
+declare global {
+  interface Window {
+    initAutocomplete: () => void;
+    google: any;
+  }
 }
 
 export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
@@ -14,10 +26,133 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [location, setLocation] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [details, setDetails] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStep, setFormStep] = useState(1);
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const [googleMapsError, setGoogleMapsError] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const calendlyEmbedRef = useRef<HTMLDivElement>(null);
+  const locationInputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<any>(null);
+  
+  // Component mounted effect
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+  
+  // Handle Google Maps script loading
+  const handleGoogleMapsLoaded = () => {
+    console.log("Google Maps script loaded successfully");
+    // Don't initialize here - wait for the input to be available
+    // The visibility state change will trigger another useEffect
+    setGoogleMapsLoaded(true);
+  };
+  
+  const handleGoogleMapsError = () => {
+    console.error("Failed to load Google Maps script");
+    setGoogleMapsError("Failed to load Google Maps API");
+  };
+  
+  // Initialize Google Places autocomplete
+  const initializeAutocomplete = () => {
+    // Only run on client-side and when component is mounted
+    if (typeof window === 'undefined' || !isMounted) {
+      return;
+    }
+    
+    if (!window.google || !window.google.maps || !window.google.maps.places) {
+      console.error("Google Maps API not available");
+      setGoogleMapsError("Google Maps API not available");
+      return;
+    }
+    
+    // Check if input ref is available and visible
+    if (!locationInputRef.current) {
+      console.log("Location input ref not available yet");
+      return; // Exit without error - we'll retry when the element is available
+    }
+    
+    try {
+      console.log("Initializing autocomplete on input element");
+      
+      // Check if autocomplete is already initialized on this input
+      if (autocompleteRef.current) {
+        console.log("Autocomplete already initialized");
+        return;
+      }
+      
+      // Create autocomplete object, restricting to Australia
+      autocompleteRef.current = new window.google.maps.places.Autocomplete(locationInputRef.current, {
+        componentRestrictions: { country: "au" },
+        fields: ["formatted_address", "geometry", "name"],
+        types: ["address"]
+      });
+      
+      // Add event listener for place selection
+      autocompleteRef.current.addListener("place_changed", () => {
+        const place = autocompleteRef.current.getPlace();
+        if (place && place.formatted_address) {
+          console.log("Place selected:", place.formatted_address);
+          setLocation(place.formatted_address);
+        }
+      });
+      
+      setGoogleMapsLoaded(true);
+      setGoogleMapsError(null);
+      console.log("Autocomplete successfully initialized");
+    } catch (error) {
+      console.error("Error initializing autocomplete:", error);
+      setGoogleMapsError("Error initializing autocomplete");
+    }
+  };
+  
+  // Set up the global callback for Maps API
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.initAutocomplete = () => {
+        console.log("Google Maps callback received");
+        setGoogleMapsLoaded(true);
+      };
+    }
+    
+    return () => {
+      // Clean up event listeners
+      if (autocompleteRef.current) {
+        // Google Maps doesn't provide a clean way to remove all listeners
+        // but we can set the reference to null
+        autocompleteRef.current = null;
+      }
+    };
+  }, []);
+  
+  // Initialize autocomplete when the form step changes to 2 and input is available
+  useEffect(() => {
+    if (
+      isMounted && 
+      showBookingForm && 
+      formStep === 2 && 
+      googleMapsLoaded && 
+      window.google && 
+      window.google.maps && 
+      window.google.maps.places
+    ) {
+      // Use setTimeout to ensure the DOM is fully rendered
+      const timer = setTimeout(() => {
+        if (locationInputRef.current) {
+          initializeAutocomplete();
+          // Focus on the input after initialization
+          locationInputRef.current.focus();
+        }
+      }, 200);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isMounted, showBookingForm, formStep, googleMapsLoaded]);
 
   // Generate next 7 available dates (excluding Sundays)
   const getAvailableDates = () => {
@@ -59,7 +194,22 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     setShowBookingForm(!showBookingForm);
     if (!showBookingForm) {
       setFormStep(1);
+      setBookingConfirmed(false);
     }
+  };
+
+  // Reset the form
+  const resetForm = () => {
+    setSelectedDate(null);
+    setSelectedTime(null);
+    setServiceType('Mobile Diesel Mechanic');
+    setLocation('');
+    setName('');
+    setPhone('');
+    setEmail('');
+    setDetails('');
+    setFormStep(1);
+    setBookingConfirmed(false);
   };
 
   // Function to handle form step navigation
@@ -83,44 +233,55 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       month: 'short'
     });
   };
+  
+  // Function to check if a date is selected
+  const isDateSelected = (date: Date): boolean => {
+    if (!selectedDate) return false;
+    // Compare year, month, and day instead of timestamp
+    return (
+      date.getFullYear() === selectedDate.getFullYear() &&
+      date.getMonth() === selectedDate.getMonth() &&
+      date.getDate() === selectedDate.getDate()
+    );
+  };
 
   // Handle date selection
   const handleDateSelection = (date: Date) => {
-    setSelectedDate(date);
+    console.log("Date selected:", date); // Add logging
+    setSelectedDate(new Date(date)); // Create a new Date object to ensure state update
   };
 
   // Handle time selection
   const handleTimeSelection = (time: string) => {
     setSelectedTime(time);
   };
+  
+  // Handle location input changes
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocation(e.target.value);
+  };
 
   // Handle form submission
   const handleSubmit = () => {
     setIsSubmitting(true);
     
-    // Simulate Calendly API call
+    // Simulate API call
     setTimeout(() => {
-      // Construct Calendly URL with parameters
-      // In a real implementation, this would properly integrate with Calendly's API
-      // For demonstration, we're just showing a success message
-      const calendlyParams = new URLSearchParams({
-        name: name,
-        email: 'customer@example.com', // Would come from form in real implementation
-        date: selectedDate ? selectedDate.toISOString().split('T')[0] : '',
-        time: selectedTime || '',
+      // In a real implementation, this would call an API endpoint
+      console.log({
+        date: selectedDate ? formatDate(selectedDate) : '',
+        time: selectedTime,
         service: serviceType,
         location: location,
-        phone: phone
+        name: name,
+        phone: phone,
+        email: email,
+        details: details
       });
       
-      console.log(`Calendly booking parameters: ${calendlyParams.toString()}`);
-      
-      // Show success message
-      alert('Your booking has been confirmed! We will contact you shortly to finalize the details.');
-      
-      // Reset form and close
+      // Show success
+      setBookingConfirmed(true);
       setIsSubmitting(false);
-      toggleBookingForm();
     }, 1500);
   };
 
@@ -129,363 +290,489 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const canProceedToStep3 = serviceType !== '' && location !== '';
   const canSubmit = name !== '' && phone !== '';
 
-  // Function to check if a date is selected
-  const isDateSelected = (date: Date): boolean => {
-    return selectedDate !== null && selectedDate.getTime() === date.getTime();
-  };
-
   // Function to check if a time is selected
   const isTimeSelected = (time: string): boolean => {
     return selectedTime === time;
   };
 
   return (
-    <div className={className}>
-      <div 
-        ref={calendlyEmbedRef}
-        className="rounded-md bg-gradient-to-br from-gray-700 to-gray-800 text-center p-1"
-      >
-        {!showBookingForm ? (
-          // Initial booking information view
-          <div className="bg-gray-800 rounded-md p-6">
-            <div className="mb-6 flex justify-center">
-              <div className="bg-orange-500/20 p-4 rounded-full">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="h-12 w-12 text-orange-400" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
-                  />
-                </svg>
+    <>
+      {/* Google Maps API Script */}
+      <Script
+        src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initAutocomplete`}
+        strategy="lazyOnload"
+        onLoad={handleGoogleMapsLoaded}
+        onError={handleGoogleMapsError}
+      />
+      
+      <div className={className}>
+        <div 
+          ref={calendlyEmbedRef}
+          className="rounded-md overflow-hidden"
+        >
+          {!showBookingForm ? (
+            // Initial booking information view
+            <div className="bg-gray-200 rounded-md p-6 border border-gray-300">
+              <div className="mb-6 flex justify-center">
+                <div className="bg-cyan-700/20 p-4 rounded-full">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className="h-12 w-12 text-cyan-700" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                    />
+                  </svg>
+                </div>
               </div>
-            </div>
-            <h4 className="text-2xl font-semibold mb-4 text-white">Quick Online Booking</h4>
-            <p className="text-gray-300 mb-6 text-lg">
-              Schedule a mobile mechanic service at your preferred location and time.
-            </p>
-            
-            <div className="space-y-5 mb-6">
-              <div className="flex items-center text-left">
-                <svg className="h-6 w-6 text-green-400 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-gray-300 text-lg">Choose your preferred date & time</span>
+              <h4 className="text-2xl font-semibold mb-4 text-gray-800">Schedule Your Service</h4>
+              <p className="text-gray-700 mb-6">
+                Book a mobile mechanic at your location in just a few steps.
+              </p>
+              
+              <div className="space-y-4 mb-6">
+                <div className="flex items-center text-left">
+                  <svg className="h-6 w-6 text-cyan-700 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-gray-700">Select your preferred date & time</span>
+                </div>
+                <div className="flex items-center text-left">
+                  <svg className="h-6 w-6 text-cyan-700 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-gray-700">Tell us about your service needs</span>
+                </div>
+                <div className="flex items-center text-left">
+                  <svg className="h-6 w-6 text-cyan-700 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-gray-700">Get instant confirmation</span>
+                </div>
               </div>
-              <div className="flex items-center text-left">
-                <svg className="h-6 w-6 text-green-400 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-gray-300 text-lg">Provide service details</span>
-              </div>
-              <div className="flex items-center text-left">
-                <svg className="h-6 w-6 text-green-400 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span className="text-gray-300 text-lg">Get confirmation instantly</span>
-              </div>
-            </div>
-            
-            <button 
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 px-6 rounded-md transition-colors duration-300 font-semibold text-xl shadow-lg flex items-center justify-center gap-3"
-              onClick={toggleBookingForm}
-              aria-label="Start booking process"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-              </svg>
-              Book Now
-            </button>
-          </div>
-        ) : (
-          // Booking form view - multi-step form
-          <div className="bg-gray-800 rounded-md p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h4 className="text-2xl font-semibold text-white">
-                {formStep === 1 && "Select Date & Time"}
-                {formStep === 2 && "Service Details"}
-                {formStep === 3 && "Contact Information"}
-              </h4>
+              
               <button 
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-md transition-all duration-300 font-semibold text-lg shadow-md flex items-center justify-center gap-2"
                 onClick={toggleBookingForm}
-                className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-700"
-                aria-label="Close booking form"
+                aria-label="Start booking process"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                 </svg>
+                Start Booking
               </button>
             </div>
-            
-            {/* Progress bar */}
-            <div className="mb-8">
-              <div className="relative pt-1">
-                <div className="flex mb-2 items-center justify-between">
-                  <div className="flex">
-                    <span className={`text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full ${formStep >= 1 ? 'bg-orange-500 text-white' : 'bg-gray-600 text-gray-300'}`}>
-                      1
-                    </span>
-                    <span className={`text-xs font-semibold inline-block ml-1 mr-2 py-1 px-2 uppercase rounded-full ${formStep >= 2 ? 'bg-orange-500 text-white' : 'bg-gray-600 text-gray-300'}`}>
-                      2
-                    </span>
-                    <span className={`text-xs font-semibold inline-block ml-1 py-1 px-2 uppercase rounded-full ${formStep >= 3 ? 'bg-orange-500 text-white' : 'bg-gray-600 text-gray-300'}`}>
-                      3
-                    </span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-xs font-semibold inline-block text-orange-500">
-                      Step {formStep} of 3
-                    </span>
-                  </div>
-                </div>
-                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-700">
-                  <div
-                    style={{ width: `${(formStep / 3) * 100}%` }}
-                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-orange-500"
-                  ></div>
+          ) : bookingConfirmed ? (
+            // Booking confirmation view
+            <div className="bg-gray-200 rounded-md p-6 border border-gray-300">
+              <div className="mb-6 flex justify-center">
+                <div className="bg-green-100 p-4 rounded-full">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className="h-12 w-12 text-green-600" 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M5 13l4 4L19 7" 
+                    />
+                  </svg>
                 </div>
               </div>
+              <h4 className="text-2xl font-semibold mb-4 text-gray-800">Booking Confirmed!</h4>
+              <p className="text-gray-700 mb-6">
+                Thank you for booking with us. We'll be at your location on <span className="font-semibold">{selectedDate ? formatDate(selectedDate) : ''}</span> at <span className="font-semibold">{selectedTime}</span>.
+              </p>
+              
+              <div className="bg-white p-4 rounded-lg border border-gray-300 mb-6">
+                <h5 className="font-medium text-gray-800 mb-2">Booking Details</h5>
+                <ul className="space-y-2">
+                  <li className="flex justify-between">
+                    <span className="text-gray-500">Service:</span>
+                    <span className="text-gray-800 font-medium">{serviceType}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-gray-500">Location:</span>
+                    <span className="text-gray-800 font-medium">{location}</span>
+                  </li>
+                  <li className="flex justify-between">
+                    <span className="text-gray-500">Date & Time:</span>
+                    <span className="text-gray-800 font-medium">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <p className="text-gray-700 mb-6">
+                A confirmation has been sent to your phone. If you need to make any changes, please contact us.
+              </p>
+              
+              <div className="flex gap-3">
+                <button 
+                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-3 px-4 rounded-md transition-all duration-300 font-medium text-base shadow-md"
+                  onClick={resetForm}
+                >
+                  Book Another Service
+                </button>
+                
+                <a 
+                  href={`tel:${CONTACT.PHONE}`}
+                  className="flex-1 bg-cyan-700 hover:bg-cyan-800 text-white py-3 px-4 rounded-md transition-all duration-300 font-medium text-base shadow-md flex items-center justify-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  Call Us
+                </a>
+              </div>
             </div>
-            
-            {formStep === 1 && (
-              <>
-                {/* Date selection */}
-                <div className="mb-8">
-                  <label className="block text-lg font-medium text-gray-300 mb-3 text-left">
-                    <span className="text-yellow-400">Select</span> Date
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {availableDates.map((date, index) => (
-                      <button 
-                        key={index} 
-                        data-date-element
-                        className={`cursor-pointer rounded-lg p-4 transition-all text-center bg-[#1e2b3d] ${
-                          isDateSelected(date)
-                            ? 'ring-2 ring-orange-400 shadow-lg scale-105 bg-[#29384e]'
-                            : 'hover:bg-[#29384e] hover:shadow-md'
-                        }`}
-                        onClick={() => handleDateSelection(date)}
-                        type="button"
-                      >
-                        <span className="block text-sm font-bold mb-1 text-white">
-                          {new Intl.DateTimeFormat('en-AU', { weekday: 'short' }).format(date)}
-                        </span>
-                        <span className="block text-3xl font-bold text-white">
-                          {new Intl.DateTimeFormat('en-AU', { day: 'numeric' }).format(date)}
-                        </span>
-                        <span className="block text-sm mt-1 text-white">
-                          {new Intl.DateTimeFormat('en-AU', { month: 'short' }).format(date)}
-                        </span>
-                      </button>
-                    ))}
+          ) : (
+            // Booking form view - multi-step form
+            <div className="bg-gray-200 rounded-md p-6 border border-gray-300">
+              <div className="flex justify-between items-center mb-6">
+                <h4 className="text-xl font-semibold text-gray-800">
+                  {formStep === 1 && "Select Date & Time"}
+                  {formStep === 2 && "Service Details"}
+                  {formStep === 3 && "Contact Information"}
+                </h4>
+                <button 
+                  onClick={toggleBookingForm}
+                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-300"
+                  aria-label="Close booking form"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              {/* Progress bar */}
+              <div className="mb-6">
+                <div className="relative pt-1">
+                  <div className="flex mb-2 items-center justify-between">
+                    <div className="flex">
+                      <span className={`text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full ${formStep >= 1 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
+                        1
+                      </span>
+                      <span className={`text-xs font-semibold inline-block ml-1 mr-2 py-1 px-2 uppercase rounded-full ${formStep >= 2 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
+                        2
+                      </span>
+                      <span className={`text-xs font-semibold inline-block ml-1 py-1 px-2 uppercase rounded-full ${formStep >= 3 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
+                        3
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs font-semibold inline-block text-orange-600">
+                        Step {formStep} of 3
+                      </span>
+                    </div>
+                  </div>
+                  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-300">
+                    <div
+                      style={{ width: `${(formStep / 3) * 100}%` }}
+                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-orange-500"
+                    ></div>
                   </div>
                 </div>
-                
-                {/* Time selection */}
-                <div className="mb-8">
-                  <label className="block text-lg font-medium text-gray-300 mb-3 text-left">
-                    <span className="text-yellow-400">Select</span> Time
-                  </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {timeSlots.map((time, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        className={`cursor-pointer rounded-lg p-4 transition-all text-center bg-[#1e2b3d] ${
-                          isTimeSelected(time)
-                            ? 'ring-2 ring-orange-400 shadow-lg scale-105 bg-[#29384e]' 
-                            : 'hover:bg-[#29384e] hover:shadow-md'
-                        }`}
-                        onClick={() => handleTimeSelection(time)}
-                      >
-                        <span className="block text-lg font-bold text-white">{time.split(' ')[0]}</span>
-                        <span className="block text-sm font-medium text-gray-300">{time.split(' ')[1]}</span>
-                      </button>
-                    ))}
+              </div>
+              
+              {formStep === 1 && (
+                <>
+                  {/* Date selection */}
+                  <div className="mb-6">
+                    <label className="block text-base font-medium text-gray-700 mb-3 text-left">
+                      Select Date:
+                    </label>
+                    <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+                      {availableDates.map((date, index) => {
+                        const selected = isDateSelected(date);
+                        return (
+                          <button 
+                            key={index} 
+                            data-date-element
+                            className={`cursor-pointer rounded-lg p-3 transition-all text-center border ${
+                              selected
+                                ? 'bg-cyan-700 text-white shadow-md border-cyan-800' 
+                                : 'bg-gray-100 hover:bg-gray-300 text-gray-800 border-gray-300'
+                            }`}
+                            onClick={() => handleDateSelection(date)}
+                            type="button"
+                          >
+                            <span className="block text-sm font-medium mb-1">
+                              {new Intl.DateTimeFormat('en-AU', { weekday: 'short' }).format(date)}
+                            </span>
+                            <span className="block text-xl font-bold">
+                              {new Intl.DateTimeFormat('en-AU', { day: 'numeric' }).format(date)}
+                            </span>
+                            <span className="block text-xs mt-1">
+                              {new Intl.DateTimeFormat('en-AU', { month: 'short' }).format(date)}
+                            </span>
+                            {selected && (
+                              <div className="mt-1">
+                                <svg className="h-5 w-5 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex justify-end">
-                  <button 
-                    type="button"
-                    disabled={!canProceedToStep2}
-                    className={`px-8 py-4 rounded-lg text-white font-semibold flex items-center gap-2 ${
-                      canProceedToStep2 
-                        ? 'bg-gray-600 hover:bg-gray-500' 
-                        : 'bg-gray-700 cursor-not-allowed opacity-60'
-                    }`}
-                    onClick={handleNextStep}
-                  >
-                    Next Step
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
-              </>
-            )}
-            
-            {formStep === 2 && (
-              <>
-                {/* Service details */}
-                <div className="mb-6">
-                  <label className="block text-lg font-medium text-gray-300 mb-3 text-left">Service Type</label>
-                  <select 
-                    className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white text-base focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    value={serviceType}
-                    onChange={(e) => setServiceType(e.target.value)}
-                  >
-                    <option value="Mobile Diesel Mechanic">Mobile Diesel Mechanic</option>
-                    <option value="Plant Repairs">Plant Repairs</option>
-                    <option value="Truck Servicing">Truck Servicing</option>
-                    <option value="Auto Electrical">Auto Electrical</option>
-                    <option value="Air Conditioning">Air Conditioning</option>
-                  </select>
-                </div>
-                
-                {/* Location */}
-                <div className="mb-10">
-                  <label className="block text-lg font-medium text-gray-300 mb-3 text-left">Service Location</label>
-                  <input 
-                    type="text" 
-                    placeholder="Enter your address" 
-                    className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white text-base focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </div>
-                
-                <div className="flex justify-between">
-                  <button 
-                    type="button"
-                    className="px-6 py-3 rounded-lg text-white font-semibold bg-gray-700 hover:bg-gray-600 flex items-center gap-2"
-                    onClick={handlePrevStep}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    Back
-                  </button>
-                  <button 
-                    type="button"
-                    disabled={!canProceedToStep3}
-                    className={`px-6 py-3 rounded-lg text-white font-semibold flex items-center gap-2 ${
-                      canProceedToStep3 
-                        ? 'bg-orange-500 hover:bg-orange-600' 
-                        : 'bg-gray-600 cursor-not-allowed opacity-60'
-                    }`}
-                    onClick={handleNextStep}
-                  >
-                    Next Step
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
-              </>
-            )}
-            
-            {formStep === 3 && (
-              <>
-                {/* Contact details */}
-                <div className="mb-6">
-                  <label className="block text-lg font-medium text-gray-300 mb-3 text-left">Your Name</label>
-                  <input 
-                    type="text" 
-                    className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white text-base focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                
-                <div className="mb-6">
-                  <label className="block text-lg font-medium text-gray-300 mb-3 text-left">Phone Number</label>
-                  <input 
-                    type="tel" 
-                    className="w-full bg-gray-700 border border-gray-600 rounded-lg py-3 px-4 text-white text-base focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                </div>
-                
-                <div className="mb-8">
-                  <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-                    <h5 className="font-medium text-white mb-2">Booking Summary</h5>
-                    <ul className="space-y-2 text-left">
-                      <li className="flex justify-between">
-                        <span className="text-gray-400">Date:</span>
-                        <span className="text-white">{selectedDate ? formatDate(selectedDate) : ''}</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span className="text-gray-400">Time:</span>
-                        <span className="text-white">{selectedTime}</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span className="text-gray-400">Service:</span>
-                        <span className="text-white">{serviceType}</span>
-                      </li>
-                      <li className="flex justify-between">
-                        <span className="text-gray-400">Location:</span>
-                        <span className="text-white">{location}</span>
-                      </li>
-                    </ul>
+                  
+                  {/* Time selection */}
+                  <div className="mb-8">
+                    <label className="block text-base font-medium text-gray-700 mb-3 text-left">
+                      Select Time:
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {timeSlots.map((time, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          className={`cursor-pointer rounded-lg p-3 transition-all text-center ${
+                            isTimeSelected(time)
+                              ? 'bg-cyan-700 text-white shadow-md' 
+                              : 'bg-gray-100 hover:bg-gray-300 text-gray-800'
+                          }`}
+                          onClick={() => handleTimeSelection(time)}
+                        >
+                          <span className="block text-lg font-medium">{time}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex justify-between">
-                  <button 
-                    type="button"
-                    className="px-6 py-3 rounded-lg text-white font-semibold bg-gray-700 hover:bg-gray-600 flex items-center gap-2"
-                    onClick={handlePrevStep}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    Back
-                  </button>
-                  <button 
-                    type="button"
-                    disabled={!canSubmit || isSubmitting}
-                    className={`px-6 py-3 rounded-lg text-white font-semibold flex items-center gap-2 ${
-                      canSubmit && !isSubmitting
-                        ? 'bg-orange-500 hover:bg-orange-600' 
-                        : 'bg-gray-600 cursor-not-allowed opacity-60'
-                    }`}
-                    onClick={handleSubmit}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  
+                  <div className="flex justify-end">
+                    <button 
+                      type="button"
+                      disabled={!canProceedToStep2}
+                      className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 ${
+                        canProceedToStep2 
+                          ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
+                      onClick={handleNextStep}
+                    >
+                      Next Step
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </>
+              )}
+              
+              {formStep === 2 && (
+                <>
+                  {/* Service details */}
+                  <div className="mb-5">
+                    <label className="block text-base font-medium text-gray-700 mb-2 text-left">Service Type</label>
+                    <select 
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={serviceType}
+                      onChange={(e) => setServiceType(e.target.value)}
+                    >
+                      <option value="Mobile Diesel Mechanic">Mobile Diesel Mechanic</option>
+                      <option value="Plant Repairs">Plant Repairs</option>
+                      <option value="Truck Servicing">Truck Servicing</option>
+                      <option value="Auto Electrical">Auto Electrical</option>
+                      <option value="Air Conditioning">Air Conditioning</option>
+                    </select>
+                  </div>
+                  
+                  {/* Location with Google Places autocomplete */}
+                  <div className="mb-5 relative">
+                    <label className="block text-base font-medium text-gray-700 mb-2 text-left">
+                      Service Location
+                      <span className="ml-1 text-xs text-gray-500">(powered by Google Maps)</span>
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        Confirm Booking
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </>
+                      </div>
+                      <input 
+                        type="text" 
+                        placeholder="Enter your address" 
+                        className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        value={location}
+                        onChange={handleLocationChange}
+                        ref={locationInputRef}
+                        aria-label="Service location address"
+                        id="location-input"
+                      />
+                    </div>
+                    {googleMapsError ? (
+                      <div className="mt-1 text-sm text-red-500">
+                        {googleMapsError}. Please enter your address manually.
+                      </div>
+                    ) : !googleMapsLoaded && (
+                      <div className="mt-1 text-sm text-gray-500">
+                        Loading Google Maps...
+                      </div>
                     )}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        )}
-        
-        <p className="text-sm text-gray-400 mt-4">
-          Available Monday to Saturday, 7:00 AM - 6:00 PM
-        </p>
+                  </div>
+                  
+                  {/* Service details/notes */}
+                  <div className="mb-8">
+                    <label className="block text-base font-medium text-gray-700 mb-2 text-left">Additional Details (Optional)</label>
+                    <textarea 
+                      placeholder="Describe your repair needs or specific issues" 
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      rows={3}
+                      value={details}
+                      onChange={(e) => setDetails(e.target.value)}
+                    ></textarea>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <button 
+                      type="button"
+                      className="px-5 py-2 rounded-lg text-gray-700 font-medium bg-gray-300 hover:bg-gray-400 flex items-center gap-2"
+                      onClick={handlePrevStep}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Back
+                    </button>
+                    <button 
+                      type="button"
+                      disabled={!canProceedToStep3}
+                      className={`px-5 py-2 rounded-lg font-medium flex items-center gap-2 ${
+                        canProceedToStep3 
+                          ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
+                      onClick={handleNextStep}
+                    >
+                      Next Step
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </>
+              )}
+              
+              {formStep === 3 && (
+                <>
+                  {/* Contact details */}
+                  <div className="mb-5">
+                    <label className="block text-base font-medium text-gray-700 mb-2 text-left">Your Name *</label>
+                    <input 
+                      type="text" 
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="mb-5">
+                    <label className="block text-base font-medium text-gray-700 mb-2 text-left">Phone Number *</label>
+                    <input 
+                      type="tel" 
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="(04xx) xxx xxx"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="mb-5">
+                    <label className="block text-base font-medium text-gray-700 mb-2 text-left">Email (Optional)</label>
+                    <input 
+                      type="email" 
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                  
+                  <div className="mb-6">
+                    <div className="bg-white rounded-lg p-4 border border-gray-300">
+                      <h5 className="font-medium text-gray-800 mb-2">Booking Summary</h5>
+                      <ul className="space-y-2 text-left">
+                        <li className="flex justify-between">
+                          <span className="text-gray-500">Date & Time:</span>
+                          <span className="text-gray-800 font-medium">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</span>
+                        </li>
+                        <li className="flex justify-between">
+                          <span className="text-gray-500">Service:</span>
+                          <span className="text-gray-800 font-medium">{serviceType}</span>
+                        </li>
+                        <li className="flex justify-between">
+                          <span className="text-gray-500">Location:</span>
+                          <span className="text-gray-800 font-medium">{location}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <button 
+                      type="button"
+                      className="px-5 py-2 rounded-lg text-gray-700 font-medium bg-gray-300 hover:bg-gray-400 flex items-center gap-2"
+                      onClick={handlePrevStep}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      Back
+                    </button>
+                    <button 
+                      type="button"
+                      disabled={!canSubmit || isSubmitting}
+                      className={`px-5 py-2 rounded-lg font-medium flex items-center gap-2 ${
+                        canSubmit && !isSubmitting
+                          ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
+                      onClick={handleSubmit}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Confirm Booking
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+          
+          <p className="text-sm text-gray-500 mt-2 text-center">
+            Available Monday to Saturday, 7:00 AM - 6:00 PM
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 } 
