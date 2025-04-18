@@ -4,20 +4,43 @@ import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Service } from '@/lib/services';
+import { 
+  Wrench, 
+  Truck, 
+  Tractor, 
+  Construction, 
+  Thermometer,
+  Battery,
+  ToolIcon
+} from 'lucide-react';
 
-interface ServiceCardProps extends Omit<Service, 'id' | 'icon'> {
-  icon: React.ComponentType<{ className?: string }>;
+type ServiceCardProps = Omit<Service, 'id'> & {
   className?: string;
-}
+};
+
+// Map icon string to Lucide component
+const IconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  wrench: Wrench,
+  truck: Truck,
+  tractor: Tractor,
+  construction: Construction,
+  thermometer: Thermometer,
+  battery: Battery,
+  // Add fallback
+  default: ToolIcon
+};
 
 export default function ServiceCard({
   title,
   description,
-  icon: Icon,
+  icon,
   alt,
   backgroundImage,
   className,
 }: ServiceCardProps) {
+  // Get the proper icon component from the map or use the default
+  const IconComponent = IconMap[icon] || IconMap.default;
+
   return (
     <div className={cn(
       "bg-white rounded-lg shadow-md hover:shadow-lg p-6 transition-all duration-300 hover:-translate-y-1 border border-gray-200 relative overflow-hidden h-full flex flex-col",
@@ -40,7 +63,7 @@ export default function ServiceCard({
       <div className={`${backgroundImage ? 'relative z-20' : ''} flex-1 flex flex-col`}>
         <div className="mb-4">
           <div className="bg-cyan-50 p-3 rounded-full inline-flex items-center justify-center mb-3 w-12 h-12">
-            <Icon className="text-cyan-600 w-6 h-6" />
+            <IconComponent className="text-cyan-600 w-6 h-6" />
           </div>
           <h3 className="text-xl font-medium text-cyan-700 mb-2">{title}</h3>
         </div>
