@@ -18,6 +18,9 @@ declare global {
   }
 }
 
+// Valid service regions
+const VALID_REGIONS = ['QLD', 'Queensland', 'NSW', 'New South Wales'];
+
 export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -34,6 +37,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const [googleMapsError, setGoogleMapsError] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [isValidLocation, setIsValidLocation] = useState(true);
 
   const calendlyEmbedRef = useRef<HTMLDivElement>(null);
   const locationInputRef = useRef<HTMLInputElement>(null);
@@ -56,6 +61,14 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const handleGoogleMapsError = () => {
     console.error("Failed to load Google Maps script");
     setGoogleMapsError("Failed to load Google Maps API");
+  };
+
+  // Check if the address is in a valid service region (QLD or NSW)
+  const isValidServiceRegion = (address: string): boolean => {
+    const upperAddress = address.toUpperCase();
+    return VALID_REGIONS.some(region => 
+      upperAddress.includes(region.toUpperCase())
+    );
   };
   
   // Initialize Google Places autocomplete
@@ -89,7 +102,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       // Create autocomplete object, restricting to Australia
       autocompleteRef.current = new window.google.maps.places.Autocomplete(locationInputRef.current, {
         componentRestrictions: { country: "au" },
-        fields: ["formatted_address", "geometry", "name"],
+        fields: ["formatted_address", "geometry", "name", "address_components"],
         types: ["address"]
       });
       
@@ -98,7 +111,18 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
         const place = autocompleteRef.current.getPlace();
         if (place && place.formatted_address) {
           console.log("Place selected:", place.formatted_address);
-          setLocation(place.formatted_address);
+          
+          // Check if the address is in Queensland or NSW
+          if (isValidServiceRegion(place.formatted_address)) {
+            setLocation(place.formatted_address);
+            setLocationError(null);
+            setIsValidLocation(true);
+          } else {
+            // Set the location but mark it as invalid
+            setLocation(place.formatted_address);
+            setLocationError("We will be soon operating here. Only QLD and NSW available");
+            setIsValidLocation(false);
+          }
         }
       });
       
@@ -153,6 +177,29 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       return () => clearTimeout(timer);
     }
   }, [isMounted, showBookingForm, formStep, googleMapsLoaded]);
+
+  // Handle location input changes - validate manually entered addresses
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocation(value);
+    
+    // Clear error if user is typing (they may be entering a valid address)
+    if (locationError) {
+      setLocationError(null);
+      setIsValidLocation(true);
+    }
+  };
+
+  // Validate location on blur for manually entered addresses
+  const handleLocationBlur = () => {
+    if (location && !isValidServiceRegion(location)) {
+      setLocationError("We will be soon operating here. Only QLD and NSW available");
+      setIsValidLocation(false);
+    } else if (location) {
+      setLocationError(null);
+      setIsValidLocation(true);
+    }
+  };
 
   // Generate next 7 available dates (excluding Sundays)
   const getAvailableDates = () => {
@@ -210,6 +257,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     setDetails('');
     setFormStep(1);
     setBookingConfirmed(false);
+    setLocationError(null);
+    setIsValidLocation(true);
   };
 
   // Function to handle form step navigation
@@ -255,14 +304,14 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const handleTimeSelection = (time: string) => {
     setSelectedTime(time);
   };
-  
-  // Handle location input changes
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value);
-  };
 
   // Handle form submission
   const handleSubmit = () => {
+    // Don't submit if location is invalid
+    if (locationError) {
+      return;
+    }
+    
     setIsSubmitting(true);
     
     // Simulate API call
@@ -287,8 +336,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
   // Check if form can proceed to next step
   const canProceedToStep2 = selectedDate !== null && selectedTime !== null;
-  const canProceedToStep3 = serviceType !== '' && location !== '';
-  const canSubmit = name !== '' && phone !== '';
+  const canProceedToStep3 = serviceType !== '' && location !== '' && isValidLocation;
+  const canSubmit = name !== '' && phone !== '' && isValidLocation;
 
   // Function to check if a time is selected
   const isTimeSelected = (time: string): boolean => {
@@ -403,7 +452,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </li>
                   <li className="flex justify-between">
                     <span className="text-gray-500">Location:</span>
-                    <span className="text-gray-800 font-medium">{location}</span>
+                    <span className={`font-medium ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</span>
                   </li>
                   <li className="flex justify-between">
                     <span className="text-gray-500">Date & Time:</span>
@@ -606,15 +655,23 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       <input 
                         type="text" 
                         placeholder="Enter your address" 
-                        className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 pl-10 pr-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                        className={`w-full bg-gray-100 border ${locationError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-3 pl-10 pr-4 text-gray-800 focus:outline-none focus:ring-2 ${locationError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
                         value={location}
                         onChange={handleLocationChange}
+                        onBlur={handleLocationBlur}
                         ref={locationInputRef}
                         aria-label="Service location address"
                         id="location-input"
                       />
                     </div>
-                    {googleMapsError ? (
+                    {locationError ? (
+                      <div className="mt-1 text-sm text-red-500 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        {locationError}
+                      </div>
+                    ) : googleMapsError ? (
                       <div className="mt-1 text-sm text-red-500">
                         {googleMapsError}. Please enter your address manually.
                       </div>
@@ -623,6 +680,9 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         Loading Google Maps...
                       </div>
                     )}
+                    <div className="mt-1 text-xs text-cyan-700">
+                      We currently service Queensland and New South Wales areas
+                    </div>
                   </div>
                   
                   {/* Service details/notes */}
@@ -718,7 +778,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         </li>
                         <li className="flex justify-between">
                           <span className="text-gray-500">Location:</span>
-                          <span className="text-gray-800 font-medium">{location}</span>
+                          <span className={`font-medium ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</span>
                         </li>
                       </ul>
                     </div>
@@ -737,9 +797,9 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     </button>
                     <button 
                       type="button"
-                      disabled={!canSubmit || isSubmitting}
+                      disabled={!canSubmit || isSubmitting || locationError !== null}
                       className={`px-5 py-2 rounded-lg font-medium flex items-center gap-2 ${
-                        canSubmit && !isSubmitting
+                        canSubmit && !isSubmitting && locationError === null
                           ? 'bg-orange-500 hover:bg-orange-600 text-white' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
