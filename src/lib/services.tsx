@@ -23,6 +23,7 @@ export const services: Service[] = [
     title: "Mobile Plant Repairs",
     description: "Comprehensive onsite earthmoving equipment and plant machinery repairs. We service excavators, bulldozers, loaders, and all heavy equipment at your worksite.",
     icon: "construction",
+    backgroundImage: IMAGE_PATHS.MOBILE_PLANT_REPAIRS,
     alt: "Mobile plant repair technician working on excavator"
   },
   {
