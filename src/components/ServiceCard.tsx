@@ -29,7 +29,7 @@ export default function ServiceCard({
     )}>
       {backgroundImage && (
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gray-100/85 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/60 to-gray-700/70 z-10"></div>
           <Image 
             src={backgroundImage}
             alt={`${title} background`}
@@ -53,9 +53,9 @@ export default function ServiceCard({
           </div>
           <h3 className="text-xl font-semibold text-cyan-700">{title}</h3>
         </div>
-        <p className="text-gray-700">{description}</p>
+        <p className={`${backgroundImage ? 'text-gray-100' : 'text-gray-700'}`}>{description}</p>
         <div className="mt-4 pt-4 border-t border-gray-300">
-          <a href="#contact" className="text-cyan-700 hover:text-cyan-800 font-medium flex items-center">
+          <a href="#contact" className={`${backgroundImage ? 'text-cyan-300 hover:text-cyan-200' : 'text-cyan-700 hover:text-cyan-800'} font-medium flex items-center`}>
             Request Service
             <svg 
               xmlns="http://www.w3.org/2000/svg" 

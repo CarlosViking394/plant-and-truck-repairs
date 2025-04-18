@@ -84,12 +84,12 @@ export default function Home() {
       <section id="about" className="relative py-20 px-4 bg-gray-100 overflow-hidden">
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-200/90 via-gray-100/80 to-gray-100/70 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-800/70 to-gray-700/60 z-10"></div>
           <Image
             src={IMAGE_PATHS.MECHANIC}
             alt="Mechanic background"
             fill
-            className="object-cover object-center opacity-20"
+            className="object-cover object-center opacity-40"
             sizes="100vw"
             quality={80}
           />
@@ -107,7 +107,7 @@ export default function Home() {
                     className="object-cover"
                   />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <div className="flex items-center">
                     <div className="h-10 w-10 rounded-full bg-cyan-600 flex items-center justify-center mr-3">
@@ -121,38 +121,38 @@ export default function Home() {
               </div>
             </div>
             <div className="md:w-1/2">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-cyan-700">Experienced Mobile Mechanics</h2>
-              <p className="text-gray-700 mb-4 text-lg">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Experienced Mobile Mechanics</h2>
+              <p className="text-gray-200 mb-4 text-lg">
                 With over 15 years of experience in mobile plant repairs and truck servicing, 
                 we provide fast, reliable service wherever you need it. Our team of qualified 
                 diesel mechanics specializes in minimizing downtime for your equipment and vehicles.
               </p>
-              <p className="text-gray-700 mb-6 text-lg">
+              <p className="text-gray-200 mb-6 text-lg">
                 From emergency repairs to scheduled maintenance, we're equipped to handle 
                 all aspects of mobile diesel mechanic work, earthmoving equipment repairs, 
                 and truck servicing throughout the region.
               </p>
               
-              <div className="bg-gray-200/90 p-4 rounded-lg border border-gray-300 shadow-sm mb-6">
-                <h3 className="text-xl font-semibold mb-3 text-cyan-700">Why Choose Us?</h3>
+              <div className="bg-gray-800/80 p-4 rounded-lg border border-gray-700 shadow-sm mb-6">
+                <h3 className="text-xl font-semibold mb-3 text-cyan-400">Why Choose Us?</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start">
                     <svg className="h-5 w-5 text-orange-500 mr-2 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-gray-700">Fast response times throughout South East Queensland</span>
+                    <span className="text-gray-200">Fast response times throughout South East Queensland</span>
                   </li>
                   <li className="flex items-start">
                     <svg className="h-5 w-5 text-orange-500 mr-2 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-gray-700">Fully equipped mobile workshop for on-site repairs</span>
+                    <span className="text-gray-200">Fully equipped mobile workshop for on-site repairs</span>
                   </li>
                   <li className="flex items-start">
                     <svg className="h-5 w-5 text-orange-500 mr-2 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-gray-700">Licensed technicians with extensive industry experience</span>
+                    <span className="text-gray-200">Licensed technicians with extensive industry experience</span>
                   </li>
                 </ul>
               </div>
