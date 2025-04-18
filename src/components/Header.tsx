@@ -1,27 +1,71 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   
-  // Handle scroll events to change header style when scrolled
+  // Handle scroll events with throttling to improve performance
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    
+    // Determine if user has scrolled enough (more than 10px) to trigger header behavior
+    if (Math.abs(currentScrollY - lastScrollY) < 10) {
+      return;
+    }
+    
+    // Show/hide header based on scroll direction
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      // Scrolling down & not at the top - hide header
+      setIsVisible(false);
+    } else {
+      // Scrolling up or at the top - show header
+      setIsVisible(true);
+    }
+    
+    // Apply different styling when scrolled
+    setIsScrolled(currentScrollY > 20);
+    
+    // Save current position
+    setLastScrollY(currentScrollY);
+  }, [lastScrollY]);
+  
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+    // Add throttling to avoid excessive calculations
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    
+    const throttledHandleScroll = () => {
+      if (!timeoutId) {
+        timeoutId = setTimeout(() => {
+          handleScroll();
+          timeoutId = null;
+        }, 50); // Reduced from 100ms to 50ms for more responsive feel
+      }
     };
     
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', throttledHandleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', throttledHandleScroll);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [handleScroll]);
   
   return (
-    <header className={`sticky top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-black shadow-md py-2' : 'bg-black py-4'
-    }`}>
+    <header 
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out transform ${
+        isScrolled ? 'bg-black/95 backdrop-blur-sm shadow-lg py-2' : 'bg-black py-4'
+      } ${
+        isVisible 
+          ? 'translate-y-0 opacity-100' 
+          : '-translate-y-full opacity-0'
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
