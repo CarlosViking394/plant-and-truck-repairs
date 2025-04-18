@@ -22,7 +22,7 @@ export default function Hero({
 }: HeroProps) {
   return (
     <section className={cn(
-      "relative bg-gray-100 text-gray-800 py-24 min-h-[80vh] flex items-center",
+      "relative bg-gray-800 text-gray-100 py-24 min-h-[80vh] flex items-center",
       className
     )}>
       {/* Background image with overlay */}
@@ -32,19 +32,19 @@ export default function Hero({
           alt="SEQ Mobile Plant & Truck Repairs - Professional diesel mechanic services"
           fill
           priority
-          className="object-cover object-center"
+          className="object-cover object-center opacity-70"
           sizes="100vw"
           quality={90}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-200/90 via-gray-100/80 to-gray-200/70 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-800/70 to-gray-700/60 z-10"></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-cyan-700">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-cyan-300">
             {title}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-700">
+          <p className="text-xl md:text-2xl mb-8 text-gray-100">
             {subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -65,7 +65,7 @@ export default function Hero({
             </a>
             <a 
               href="tel:+61468601750" 
-              className="bg-transparent hover:bg-gray-200 text-gray-700 border border-gray-300 font-semibold py-3 px-8 rounded-md text-lg transition-all duration-300 inline-flex items-center justify-center gap-2"
+              className="bg-transparent hover:bg-gray-700 text-gray-100 border border-gray-500 font-semibold py-3 px-8 rounded-md text-lg transition-all duration-300 inline-flex items-center justify-center gap-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
@@ -78,9 +78,9 @@ export default function Hero({
 
       {/* Floating card with brand elements */}
       <div className="absolute bottom-0 right-0 mr-8 mb-8 hidden lg:block">
-        <div className="bg-gray-200/80 backdrop-blur-sm p-6 rounded-lg border border-gray-300 shadow-lg transform rotate-2 max-w-xs">
-          <div className="text-cyan-700 font-bold mb-2 text-xl">Professional Mobile Services</div>
-          <div className="text-gray-700 text-sm">On-site repairs & maintenance for all heavy equipment</div>
+        <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-lg border border-gray-600 shadow-lg transform rotate-2 max-w-xs">
+          <div className="text-cyan-300 font-bold mb-2 text-xl">Professional Mobile Services</div>
+          <div className="text-gray-200 text-sm">On-site repairs & maintenance for all heavy equipment</div>
         </div>
       </div>
     </section>
