@@ -3,59 +3,56 @@
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { IMAGE_PATHS } from "@/lib/constants";
+import { Service } from '@/lib/services';
 
-interface ServiceCardProps {
-  title: string;
-  description: string;
-  icon: string;
-  alt: string;
-  backgroundImage?: string;
+interface ServiceCardProps extends Omit<Service, 'id' | 'icon'> {
+  icon: React.ComponentType<{ className?: string }>;
   className?: string;
 }
 
 export default function ServiceCard({
   title,
   description,
-  icon,
+  icon: Icon,
   alt,
   backgroundImage,
   className,
 }: ServiceCardProps) {
   return (
     <div className={cn(
-      "bg-gray-100 rounded-lg shadow-md p-6 transition-transform duration-300 hover:translate-y-[-5px] border border-gray-300 relative overflow-hidden",
+      "bg-white rounded-lg shadow-md hover:shadow-lg p-6 transition-all duration-300 hover:-translate-y-1 border border-gray-200 relative overflow-hidden h-full flex flex-col",
       className
     )}>
       {backgroundImage && (
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/60 to-gray-700/70 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-700/80 z-10"></div>
           <Image 
             src={backgroundImage}
             alt={`${title} background`}
             fill
             className="object-cover object-center"
-            sizes="(max-width: 768px) 100vw, 33vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            quality={80}
           />
         </div>
       )}
       
-      <div className={`${backgroundImage ? 'relative z-20' : ''}`}>
-        <div className="flex items-center mb-4">
-          <div className="bg-gray-200 p-3 rounded-full mr-4 border border-gray-300">
-            <Image 
-              src={icon} 
-              width={32} 
-              height={32} 
-              alt={alt}
-              className="text-cyan-700"
-            />
+      <div className={`${backgroundImage ? 'relative z-20' : ''} flex-1 flex flex-col`}>
+        <div className="mb-4">
+          <div className="bg-cyan-50 p-3 rounded-full inline-flex items-center justify-center mb-3 w-12 h-12">
+            <Icon className="text-cyan-600 w-6 h-6" />
           </div>
-          <h3 className="text-xl font-semibold text-cyan-700">{title}</h3>
+          <h3 className="text-xl font-medium text-cyan-700 mb-2">{title}</h3>
         </div>
-        <p className={`${backgroundImage ? 'text-gray-100' : 'text-gray-700'}`}>{description}</p>
-        <div className="mt-4 pt-4 border-t border-gray-300">
-          <a href="#contact" className={`${backgroundImage ? 'text-cyan-300 hover:text-cyan-200' : 'text-cyan-700 hover:text-cyan-800'} font-medium flex items-center`}>
+        <p className={`${backgroundImage ? 'text-gray-100' : 'text-gray-700'} mb-4 flex-1`}>{description}</p>
+        <div className="mt-auto pt-2">
+          <a 
+            href="#contact" 
+            className={`
+              ${backgroundImage ? 'text-cyan-300 hover:text-cyan-200' : 'text-cyan-600 hover:text-cyan-800'} 
+              font-medium flex items-center hover:underline transition-colors
+            `}
+          >
             Request Service
             <svg 
               xmlns="http://www.w3.org/2000/svg" 

@@ -3,6 +3,7 @@ import ContactSection from "../components/ContactSection";
 import ServiceCard from "../components/ServiceCard";
 import Hero from "../components/Hero";
 import { COMPANY, IMAGE_PATHS } from "@/lib/constants";
+import { services } from "@/lib/services";
 
 export const metadata = {
   title: "SEQ Mobile Plant & Truck Repairs | Professional Mobile Diesel Mechanic",
@@ -10,47 +11,6 @@ export const metadata = {
 };
 
 export default function Home() {
-  const services = [
-    {
-      title: "Mobile Diesel Mechanic",
-      description: "On-site diesel engine diagnostics, repairs, and maintenance for all makes and models. Our mobile mechanics come to your location, saving you time and reducing equipment downtime.",
-      icon: "/icons/diesel-mechanic.svg",
-      alt: "Mobile diesel mechanic servicing a truck engine",
-      backgroundImage: IMAGE_PATHS.MOBILE_DIESEL_MECHANIC
-    },
-    {
-      title: "Mobile Plant Repairs",
-      description: "Comprehensive onsite earthmoving equipment and plant machinery repairs. We service excavators, bulldozers, loaders, and all heavy equipment at your worksite.",
-      icon: "/icons/plant-repairs.svg",
-      alt: "Mobile plant repair technician working on excavator"
-    },
-    {
-      title: "Earthmoving Repairs and Servicing",
-      description: "Specialized repairs and preventative maintenance for all earthmoving equipment. Keep your machinery running at peak performance with our expert servicing.",
-      icon: "/icons/earthmoving.svg",
-      alt: "Earthmoving equipment being serviced by mechanic",
-      backgroundImage: IMAGE_PATHS.EARTHMOVING
-    },
-    {
-      title: "Truck Repairs and Service",
-      description: "Complete truck repair and maintenance services. From routine servicing to major repairs, we keep your trucks on the road and operating efficiently.",
-      icon: "/icons/truck-repair.svg",
-      alt: "Truck maintenance and repair service"
-    },
-    {
-      title: "Air-conditioning Service and Repair",
-      description: "Expert vehicle air-conditioning diagnostics, repair, and regas services. We ensure your AC systems work efficiently in all conditions.",
-      icon: "/icons/air-conditioning.svg",
-      alt: "Vehicle air conditioning repair and service"
-    },
-    {
-      title: "Auto Electrical",
-      description: "Comprehensive auto electrical repairs and diagnostics for all vehicles. We troubleshoot and fix everything from batteries to complex electronic systems.",
-      icon: "/icons/auto-electrical.svg",
-      alt: "Auto electrical repair service"
-    }
-  ];
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 text-gray-800">
       <Hero 
@@ -66,10 +26,10 @@ export default function Home() {
           <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
             Specialized mobile repairs for all your diesel, plant, truck, and equipment needs
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {services.map((service) => (
               <ServiceCard 
-                key={index}
+                key={service.id}
                 title={service.title}
                 description={service.description}
                 icon={service.icon}
@@ -115,7 +75,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </div>
-                    <span className="text-cyan-500 font-semibold text-lg">SEQ Mobile Plant & Truck Repairs</span>
+                    <span className="text-cyan-300 font-semibold text-lg">SEQ Mobile Plant & Truck Repairs</span>
                   </div>
                 </div>
               </div>
