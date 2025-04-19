@@ -47,7 +47,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-800/70 to-gray-700/60 z-10"></div>
           <Image
             src={IMAGE_PATHS.MECHANIC}
-            alt="Mechanic background"
+            alt=""
             fill
             className="object-cover object-center opacity-40"
             sizes="100vw"
@@ -95,11 +95,14 @@ export default function Home() {
               </div>
               
               <div className="flex justify-center">
-                <a href="#contact" className="btn-primary bg-cyan-800 hover:bg-cyan-900 text-white py-3 px-8 rounded-md transition-all duration-300 inline-flex items-center justify-center gap-2 shadow-lg hover:-translate-y-1">
-                  <span>Contact Us Today</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
+                <a href="#contact" className="group relative overflow-hidden bg-cyan-500 text-white font-medium py-4 px-10 rounded-full transition-all duration-300 inline-flex items-center justify-center gap-3 shadow-xl hover:shadow-cyan-500/20 transform hover:scale-105">
+                  <span className="relative z-10 text-lg">Contact Us Today</span>
+                  <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 </a>
               </div>
             </div>

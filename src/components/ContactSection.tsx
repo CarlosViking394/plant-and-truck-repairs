@@ -15,17 +15,19 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const images = [
     IMAGE_PATHS.OUTBACK_ROAD,
-    IMAGE_PATHS.SOUTHEAST_TRUCK
+    IMAGE_PATHS.SOUTHEAST_TRUCK,
+    IMAGE_PATHS.FRONT_PAGE,
+    IMAGE_PATHS.GOLD_COAST
   ];
   
   // Transition effect between images
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev === 0 ? 1 : 0));
+      setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     }, 8000); // Change image every 8 seconds
     
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
   
   return (
     <section id={id} className={cn(
@@ -43,7 +45,10 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
           >
             <Image 
               src={src}
-              alt={index === 0 ? "Australian outback road" : "Truck in South East Queensland"}
+              alt={index === 0 ? "Australian outback road" : 
+                  index === 1 ? "Truck in South East Queensland" :
+                  index === 2 ? "Heavy equipment servicing" :
+                  "Gold Coast coastline with truck"}
               fill
               className="object-cover"
               priority={index === 0}
@@ -119,7 +124,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
             </div>
           </div>
           
-          <div className="mt-24 bg-gray-100/90 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-gray-300 relative">
+          <div className="mt-24 bg-gray-100/90 backdrop-blur-sm p-6 rounded-lg shadow-xl relative">
             {/* Decorative element */}
             <div className="absolute -top-4 -right-4 h-16 w-16 bg-cyan-500/20 rounded-full blur-xl"></div>
             <div className="absolute -bottom-8 -left-8 h-24 w-24 bg-orange-500/10 rounded-full blur-xl"></div>

@@ -7,14 +7,18 @@ export const IMAGE_PATHS = {
   MECHANIC: "/images/mechanic.jpg",
   LOGO: "/logo-seq.svg",
   LOGO_WHITE: "/logo-white.svg",
+  LOGO_NEW: "/Images/BIG LOWRES.jpg",
+  LOGO_SMALL: "/Images/VSMALL PNG-min FAVICON.png",
   HERO_BG: "/images/hero-bg.jpg",
   FRONT_PAGE: "/images/hero-image.jpg",
   EARTHMOVING: "/images/Earthmoving.jpg",
+  EARTHMOVING_NEW: "/Images/pexels-radwanmenzer-14704776.jpg",
   MOBILE_DIESEL_MECHANIC: "/images/mobile_diesel_mechanic_final.jpg",
   MOBILE_PLANT_REPAIRS: "/images/MobilePlantRepairs.png",
   WHO_WE_ARE: "/images/whoweare.png",
   OUTBACK_ROAD: "/images/inthemiddleofoz.png",
   SOUTHEAST_TRUCK: "/images/southEastQTruck.png",
+  GOLD_COAST: "/images/GoldCoast.png",
 } as const;
 
 /**

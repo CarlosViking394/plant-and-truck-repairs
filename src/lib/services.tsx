@@ -31,8 +31,8 @@ export const services: Service[] = [
     title: "Earthmoving Repairs and Servicing",
     description: "Specialized repairs and preventative maintenance for all earthmoving equipment. Keep your machinery running at peak performance with our expert servicing.",
     icon: "tractor",
-    backgroundImage: IMAGE_PATHS.EARTHMOVING,
-    alt: "Earthmoving equipment being serviced by mechanic"
+    backgroundImage: IMAGE_PATHS.EARTHMOVING_NEW,
+    alt: "Hitachi excavator at construction site"
   },
   {
     id: "truck-repairs",

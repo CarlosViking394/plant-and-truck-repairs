@@ -23,18 +23,20 @@ export default function Hero({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const backgroundImages = [
     IMAGE_PATHS.OUTBACK_ROAD,
-    IMAGE_PATHS.SOUTHEAST_TRUCK
+    IMAGE_PATHS.SOUTHEAST_TRUCK,
+    IMAGE_PATHS.FRONT_PAGE,
+    IMAGE_PATHS.GOLD_COAST
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(prevIndex => 
-        prevIndex === 0 ? 1 : 0
+        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
       );
     }, 6000); // Change image every 6 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [backgroundImages.length]);
 
   return (
     <section className={cn(
@@ -55,7 +57,12 @@ export default function Hero({
           >
             <Image
               src={image}
-              alt={`SEQ Mobile Plant & Truck Repairs - Background ${index + 1}`}
+              alt={`SEQ Mobile Plant & Truck Repairs - ${
+                index === 0 ? "Outback Road" : 
+                index === 1 ? "South East Queensland Truck" : 
+                index === 2 ? "Heavy Equipment Servicing" :
+                "Gold Coast Highway"
+              }`}
               fill
               priority
               className="object-cover object-center"
