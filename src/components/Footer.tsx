@@ -13,10 +13,10 @@ export default function Footer() {
           <div className="md:col-span-1 lg:col-span-1">
             <div className="flex items-center mb-4">
               <Image 
-                src="/logo-seq.svg" 
+                src="/Images/VSMALL PNG-min FAVICON.png" 
                 alt="SEQ Mobile Plant & Truck Repairs Logo" 
                 width={150} 
-                height={50} 
+                height={60} 
                 className="mr-3"
               />
             </div>
@@ -170,9 +170,18 @@ export default function Footer() {
         
         <div className="border-t border-gray-800 mt-10 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} South East Queensland Mobile Plant & Truck Repairs. All rights reserved.
-            </p>
+            <div className="flex items-center">
+              <Image
+                src="/Images/VSMALL PNG-min FAVICON.png"
+                alt="SEQ Mobile Plant & Truck Repairs Logo"
+                width={24}
+                height={24}
+                className="mr-2"
+              />
+              <p className="text-gray-400 text-sm mb-4 md:mb-0">
+                &copy; {new Date().getFullYear()} South East Queensland Mobile Plant & Truck Repairs. All rights reserved.
+              </p>
+            </div>
             <div className="flex space-x-6">
               <Link href="#" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
                 Privacy Policy

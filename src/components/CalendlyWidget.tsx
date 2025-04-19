@@ -33,6 +33,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [details, setDetails] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStep, setFormStep] = useState(1);
@@ -380,11 +381,30 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   // Check if form can proceed to next step
   const canProceedToStep2 = selectedDate !== null && selectedTime !== null;
   const canProceedToStep3 = serviceType !== '' && location !== '' && isValidLocation;
-  const canSubmit = name !== '' && phone !== '' && isValidLocation;
+  const canSubmit = name !== '' && phone !== '' && isValidLocation && (email === '' || !emailError);
 
   // Function to check if a time is selected
   const isTimeSelected = (time: string): boolean => {
     return selectedTime === time;
+  };
+
+  // Validate email format
+  const validateEmail = (email: string): boolean => {
+    if (!email) return true; // Email is optional
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  // Handle email change with validation
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    
+    if (value && !validateEmail(value)) {
+      setEmailError("Please enter a valid email address");
+    } else {
+      setEmailError(null);
+    }
   };
 
   return (
@@ -404,12 +424,12 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
         >
           {!showBookingForm ? (
             // Initial booking information view
-            <div className="bg-gray-200 rounded-md p-6 border border-gray-300">
-              <div className="mb-6 flex justify-center">
-                <div className="bg-cyan-700/20 p-4 rounded-full">
+            <div className="bg-gray-200 rounded-md p-4 sm:p-6 border border-gray-300">
+              <div className="mb-4 sm:mb-6 flex justify-center">
+                <div className="bg-cyan-700/20 p-3 sm:p-4 rounded-full">
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className="h-12 w-12 text-cyan-700" 
+                    className="h-10 w-10 sm:h-12 sm:w-12 text-cyan-700" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
@@ -423,38 +443,38 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </svg>
                 </div>
               </div>
-              <h4 className="text-2xl font-semibold mb-4 text-gray-800">Schedule Your Service</h4>
-              <p className="text-gray-700 mb-6">
+              <h4 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-gray-800">Schedule Your Service</h4>
+              <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
                 Book a mobile mechanic at your location in just a few steps.
               </p>
               
-              <div className="space-y-4 mb-6">
+              <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                 <div className="flex items-center text-left">
-                  <svg className="h-6 w-6 text-cyan-700 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-700 mr-3 sm:mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-gray-700">Select your preferred date & time</span>
+                  <span className="text-sm sm:text-base text-gray-700">Select your preferred date & time</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <svg className="h-6 w-6 text-cyan-700 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-700 mr-3 sm:mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-gray-700">Tell us about your service needs</span>
+                  <span className="text-sm sm:text-base text-gray-700">Tell us about your service needs</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <svg className="h-6 w-6 text-cyan-700 mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-700 mr-3 sm:mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-gray-700">Get instant confirmation</span>
+                  <span className="text-sm sm:text-base text-gray-700">Get instant confirmation</span>
                 </div>
               </div>
               
               <button 
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-6 rounded-md transition-all duration-300 font-semibold text-lg shadow-md flex items-center justify-center gap-2"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-md transition-all duration-300 font-semibold text-base sm:text-lg shadow-md flex items-center justify-center gap-2"
                 onClick={toggleBookingForm}
                 aria-label="Start booking process"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                 </svg>
                 Start Booking
@@ -486,25 +506,25 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                 Thank you for booking with us. We'll be at your location on <span className="font-semibold">{selectedDate ? formatDate(selectedDate) : ''}</span> at <span className="font-semibold">{selectedTime}</span>.
               </p>
               
-              <div className="bg-white p-4 rounded-lg border border-gray-300 mb-6">
-                <h5 className="font-medium text-gray-800 mb-2">Booking Details</h5>
-                <ul className="space-y-2">
-                  <li className="flex justify-between">
-                    <span className="text-gray-500">Service:</span>
-                    <span className="text-gray-800 font-medium">{serviceType}</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-gray-500">Location:</span>
-                    <span className={`font-medium ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-gray-500">Date & Time:</span>
-                    <span className="text-gray-800 font-medium">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</span>
-                  </li>
-                </ul>
+              <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-300 mb-4 sm:mb-6">
+                <h5 className="font-medium text-gray-800 mb-3 text-sm sm:text-base border-b pb-2">Booking Details</h5>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Service</p>
+                    <p className="text-gray-800 font-medium text-sm sm:text-base">{serviceType}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Location</p>
+                    <p className={`font-medium text-sm sm:text-base break-words ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 mb-1">Date & Time</p>
+                    <p className="text-gray-800 font-medium text-sm sm:text-base">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</p>
+                  </div>
+                </div>
               </div>
               
-              <p className="text-gray-700 mb-6">
+              <p className="text-sm text-gray-700 mb-4 sm:mb-6">
                 A confirmation has been sent to your phone. If you need to make any changes, please contact us.
               </p>
               
@@ -530,36 +550,36 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
             </div>
           ) : (
             // Booking form view - multi-step form
-            <div className="bg-gray-200 rounded-md p-4 sm:p-6 border border-gray-300 mx-auto w-full">
-              <div className="flex justify-between items-center mb-3 sm:mb-6">
-                <h4 className="text-lg sm:text-xl font-semibold text-gray-800">
+            <div className="bg-gray-200 rounded-md p-3 sm:p-6 border border-gray-300 mx-auto w-full">
+              <div className="flex justify-between items-center mb-2 sm:mb-6">
+                <h4 className="text-base sm:text-xl font-semibold text-gray-800">
                   {formStep === 1 && "Select Date & Time"}
                   {formStep === 2 && "Service Details"}
                   {formStep === 3 && "Contact Information"}
                 </h4>
                 <button 
                   onClick={toggleBookingForm}
-                  className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-300"
+                  className="text-gray-500 hover:text-gray-700 p-1.5 sm:p-2 rounded-full hover:bg-gray-300"
                   aria-label="Close booking form"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
               
               {/* Progress bar */}
-              <div className="mb-3 sm:mb-6">
+              <div className="mb-2 sm:mb-6">
                 <div className="relative pt-1">
-                  <div className="flex mb-2 items-center justify-between">
+                  <div className="flex mb-1 sm:mb-2 items-center justify-between">
                     <div className="flex">
-                      <span className={`text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full ${formStep >= 1 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
+                      <span className={`text-xs font-semibold inline-block py-1 px-1.5 sm:px-2 uppercase rounded-full ${formStep >= 1 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
                         1
                       </span>
-                      <span className={`text-xs font-semibold inline-block ml-1 mr-2 py-1 px-2 uppercase rounded-full ${formStep >= 2 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
+                      <span className={`text-xs font-semibold inline-block ml-1 mr-2 py-1 px-1.5 sm:px-2 uppercase rounded-full ${formStep >= 2 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
                         2
                       </span>
-                      <span className={`text-xs font-semibold inline-block ml-1 py-1 px-2 uppercase rounded-full ${formStep >= 3 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
+                      <span className={`text-xs font-semibold inline-block ml-1 py-1 px-1.5 sm:px-2 uppercase rounded-full ${formStep >= 3 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
                         3
                       </span>
                     </div>
@@ -581,18 +601,18 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
               {formStep === 1 && (
                 <>
                   {/* Date selection */}
-                  <div className="mb-4 sm:mb-6">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2 sm:mb-3 text-left">
+                  <div className="mb-3 sm:mb-6">
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-3 text-left">
                       Select Date:
                     </label>
-                    <div className="grid grid-cols-3 md:grid-cols-4 gap-1 sm:gap-2">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
                       {availableDates.map((date, index) => {
                         const selected = isDateSelected(date);
                         return (
                           <button 
                             key={index} 
                             data-date-element
-                            className={`cursor-pointer rounded-lg p-3 transition-all text-center border ${
+                            className={`cursor-pointer rounded-lg p-2 sm:p-3 transition-all text-center border ${
                               selected
                                 ? 'bg-cyan-700 text-white shadow-md border-cyan-800' 
                                 : 'bg-gray-100 hover:bg-gray-300 text-gray-800 border-gray-300'
@@ -600,18 +620,18 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                             onClick={() => handleDateSelection(date)}
                             type="button"
                           >
-                            <span className="block text-sm font-medium mb-1">
+                            <span className="block text-xs sm:text-sm font-medium">
                               {new Intl.DateTimeFormat('en-AU', { weekday: 'short' }).format(date)}
                             </span>
-                            <span className="block text-xl font-bold">
+                            <span className="block text-base sm:text-xl font-bold">
                               {new Intl.DateTimeFormat('en-AU', { day: 'numeric' }).format(date)}
                             </span>
-                            <span className="block text-xs mt-1">
+                            <span className="block text-xs mt-0.5 sm:mt-1">
                               {new Intl.DateTimeFormat('en-AU', { month: 'short' }).format(date)}
                             </span>
                             {selected && (
-                              <div className="mt-1">
-                                <svg className="h-5 w-5 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <div className="mt-0.5 sm:mt-1">
+                                <svg className="h-4 w-4 sm:h-5 sm:w-5 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
                               </div>
@@ -623,23 +643,23 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </div>
                   
                   {/* Time selection */}
-                  <div className="mb-4 sm:mb-8">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2 sm:mb-3 text-left">
+                  <div className="mb-3 sm:mb-8">
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-3 text-left">
                       Select Time:
                     </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
                       {timeSlots.map((time, index) => (
                         <button
                           key={index}
                           type="button"
-                          className={`cursor-pointer rounded-lg p-3 transition-all text-center ${
+                          className={`cursor-pointer rounded-lg p-1.5 sm:p-3 transition-all text-center ${
                             isTimeSelected(time)
                               ? 'bg-cyan-700 text-white shadow-md' 
                               : 'bg-gray-100 hover:bg-gray-300 text-gray-800'
                           }`}
                           onClick={() => handleTimeSelection(time)}
                         >
-                          <span className="block text-lg font-medium">{time}</span>
+                          <span className="block text-sm sm:text-lg font-medium">{time}</span>
                         </button>
                       ))}
                     </div>
@@ -649,7 +669,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <button 
                       type="button"
                       disabled={!canProceedToStep2}
-                      className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 ${
+                      className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium flex items-center gap-1 sm:gap-2 text-sm sm:text-base ${
                         canProceedToStep2 
                           ? 'bg-orange-500 hover:bg-orange-600 text-white' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -657,7 +677,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       onClick={handleNextStep}
                     >
                       Next Step
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                       </svg>
                     </button>
@@ -669,7 +689,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                 <>
                   {/* Service details */}
                   <div className="mb-3 sm:mb-5">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Service Type</label>
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Service Type</label>
                     <select 
                       className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       value={serviceType}
@@ -685,7 +705,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   
                   {/* Location with Google Places autocomplete */}
                   <div className="mb-3 sm:mb-5 relative">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">
                       Service Location
                       <span className="ml-1 text-xs text-gray-500">(powered by Google Maps)</span>
                     </label>
@@ -732,7 +752,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   
                   {/* Service details/notes */}
                   <div className="mb-4 sm:mb-8">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Additional Details (Optional)</label>
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Additional Details (Optional)</label>
                     <textarea 
                       placeholder="Describe your repair needs or specific issues" 
                       className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
@@ -776,7 +796,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                 <>
                   {/* Contact details */}
                   <div className="mb-3 sm:mb-5">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Your Name *</label>
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Your Name *</label>
                     <input 
                       type="text" 
                       className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
@@ -787,7 +807,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </div>
                   
                   <div className="mb-3 sm:mb-5">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Phone Number *</label>
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Phone Number *</label>
                     <input 
                       type="tel" 
                       className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
@@ -799,43 +819,51 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </div>
                   
                   <div className="mb-3 sm:mb-5">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Email (Optional)</label>
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Email (Optional)</label>
                     <input 
                       type="email" 
-                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className={`w-full bg-gray-100 border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 ${emailError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={handleEmailChange}
                       placeholder="your@email.com"
                     />
+                    {emailError && (
+                      <div className="mt-1 text-xs text-red-500 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        {emailError}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="mb-4 sm:mb-6">
                     <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-300">
-                      <h5 className="font-medium text-gray-800 mb-2 text-sm sm:text-base">Booking Summary</h5>
-                      <ul className="space-y-2 text-left">
-                        <li className="flex justify-between">
-                          <span className="text-gray-500">Date & Time:</span>
-                          <span className="text-gray-800 font-medium">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span className="text-gray-500">Service:</span>
-                          <span className="text-gray-800 font-medium">{serviceType}</span>
-                        </li>
-                        <li className="flex justify-between">
-                          <span className="text-gray-500">Location:</span>
-                          <span className={`font-medium ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</span>
-                        </li>
-                      </ul>
+                      <h5 className="font-medium text-gray-800 mb-3 text-sm sm:text-base border-b pb-2">Booking Summary</h5>
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-xs text-gray-500 mb-1">Date & Time</p>
+                          <p className="text-gray-800 font-medium text-sm sm:text-base">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 mb-1">Service</p>
+                          <p className="text-gray-800 font-medium text-sm sm:text-base">{serviceType}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500 mb-1">Location</p>
+                          <p className={`font-medium text-sm sm:text-base break-words ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   
                   <div className="flex justify-between">
                     <button 
                       type="button"
-                      className="px-5 py-2 rounded-lg text-gray-700 font-medium bg-gray-300 hover:bg-gray-400 flex items-center gap-2"
+                      className="px-3 sm:px-5 py-2 rounded-lg text-gray-700 font-medium bg-gray-300 hover:bg-gray-400 flex items-center gap-1 sm:gap-2 text-sm sm:text-base"
                       onClick={handlePrevStep}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       Back
@@ -843,7 +871,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <button 
                       type="button"
                       disabled={!canSubmit || isSubmitting || locationError !== null}
-                      className={`px-5 py-2 rounded-lg font-medium flex items-center gap-2 ${
+                      className={`px-3 sm:px-5 py-2 rounded-lg font-medium flex items-center gap-1 sm:gap-2 text-sm sm:text-base ${
                         canSubmit && !isSubmitting && locationError === null
                           ? 'bg-orange-500 hover:bg-orange-600 text-white' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -852,7 +880,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     >
                       {isSubmitting ? (
                         <>
-                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
@@ -860,8 +888,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         </>
                       ) : (
                         <>
-                          Confirm Booking
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          Confirm
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                           </svg>
                         </>

@@ -23,7 +23,7 @@ export const services: Service[] = [
     title: "Mobile Plant Repairs",
     description: "Comprehensive onsite earthmoving equipment and plant machinery repairs. We service excavators, bulldozers, loaders, and all heavy equipment at your worksite.",
     icon: "construction",
-    backgroundImage: IMAGE_PATHS.MOBILE_PLANT_REPAIRS,
+    backgroundImage: IMAGE_PATHS.EARTHMOVING,
     alt: "Mobile plant repair technician working on excavator"
   },
   {
@@ -39,6 +39,7 @@ export const services: Service[] = [
     title: "Truck Repairs and Service",
     description: "Complete truck repair and maintenance services. From routine servicing to major repairs, we keep your trucks on the road and operating efficiently.",
     icon: "truck",
+    backgroundImage: IMAGE_PATHS.TRUCK_REPAIRS,
     alt: "Truck maintenance and repair service"
   },
   {
@@ -46,6 +47,7 @@ export const services: Service[] = [
     title: "Air-conditioning Service and Repair",
     description: "Expert vehicle air-conditioning diagnostics, repair, and regas services. We ensure your AC systems work efficiently in all conditions.",
     icon: "thermometer",
+    backgroundImage: IMAGE_PATHS.AIR_CONDITIONING,
     alt: "Vehicle air conditioning repair and service"
   },
   {
@@ -53,6 +55,7 @@ export const services: Service[] = [
     title: "Auto Electrical",
     description: "Comprehensive auto electrical repairs and diagnostics for all vehicles. We troubleshoot and fix everything from batteries to complex electronic systems.",
     icon: "battery",
+    backgroundImage: IMAGE_PATHS.AUTO_ELECTRICAL,
     alt: "Auto electrical repair service"
   }
 ]; 
