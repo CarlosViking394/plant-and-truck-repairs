@@ -24,8 +24,7 @@ export default function Hero({
   const backgroundImages = [
     IMAGE_PATHS.OUTBACK_ROAD,
     IMAGE_PATHS.SOUTHEAST_TRUCK,
-    IMAGE_PATHS.FRONT_PAGE,
-    IMAGE_PATHS.GOLD_COAST
+    IMAGE_PATHS.FRONT_PAGE
   ];
 
   useEffect(() => {
@@ -60,8 +59,7 @@ export default function Hero({
               alt={`SEQ Mobile Plant & Truck Repairs - ${
                 index === 0 ? "Outback Road" : 
                 index === 1 ? "South East Queensland Truck" : 
-                index === 2 ? "Heavy Equipment Servicing" :
-                "Gold Coast Highway"
+                "Heavy Equipment Servicing"
               }`}
               fill
               priority
