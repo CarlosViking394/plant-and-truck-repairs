@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { IMAGE_PATHS } from '@/lib/constants';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -71,12 +72,13 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image 
-              src="/logo-seq.svg" 
+              src={IMAGE_PATHS.LOGO_SMALL}
               alt="SEQ Mobile Plant & Truck Repairs Logo" 
-              width={180} 
+              width={200} 
               height={60} 
               className="mr-3"
               priority
+              style={{ objectFit: 'contain' }}
             />
           </Link>
           

@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { IMAGE_PATHS } from '@/lib/constants';
@@ -20,31 +20,66 @@ export default function Hero({
   ctaLink,
   className,
 }: HeroProps) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const backgroundImages = [
+    IMAGE_PATHS.OUTBACK_ROAD,
+    IMAGE_PATHS.SOUTHEAST_TRUCK,
+    IMAGE_PATHS.FRONT_PAGE,
+    IMAGE_PATHS.GOLD_COAST
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex(prevIndex => 
+        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 6000); // Change image every 6 seconds
+
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
+
   return (
     <section className={cn(
-      "relative bg-gray-100 text-gray-800 py-24 min-h-[80vh] flex items-center",
+      "relative bg-gray-800 text-gray-100 py-24 min-h-[80vh] flex items-center",
       className
     )}>
-      {/* Background image with overlay */}
+      {/* Background images with transition */}
       <div className="absolute inset-0 overflow-hidden z-0">
-        <Image
-          src={IMAGE_PATHS.FRONT_PAGE}
-          alt="SEQ Mobile Plant & Truck Repairs - Professional diesel mechanic services"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-          quality={90}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-200/90 via-gray-100/80 to-gray-200/70 z-10"></div>
+        {backgroundImages.map((image, index) => (
+          <div 
+            key={index} 
+            className="absolute inset-0 transition-opacity duration-1500 ease-in-out"
+            style={{ 
+              opacity: index === currentImageIndex ? 1 : 0,
+              zIndex: index === currentImageIndex ? 0 : -1,
+              transition: 'opacity 1.5s ease-in-out'
+            }}
+          >
+            <Image
+              src={image}
+              alt={`SEQ Mobile Plant & Truck Repairs - ${
+                index === 0 ? "Outback Road" : 
+                index === 1 ? "South East Queensland Truck" : 
+                index === 2 ? "Heavy Equipment Servicing" :
+                "Gold Coast Highway"
+              }`}
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="100vw"
+              quality={90}
+            />
+          </div>
+        ))}
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-800/70 to-gray-700/60 z-10"></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-cyan-700">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-cyan-300">
             {title}
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-700">
+          <p className="text-xl md:text-2xl mb-8 text-gray-100">
             {subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -65,7 +100,7 @@ export default function Hero({
             </a>
             <a 
               href="tel:+61468601750" 
-              className="bg-transparent hover:bg-gray-200 text-gray-700 border border-gray-300 font-semibold py-3 px-8 rounded-md text-lg transition-all duration-300 inline-flex items-center justify-center gap-2"
+              className="bg-transparent hover:bg-gray-700 text-gray-100 border border-gray-500 font-semibold py-3 px-8 rounded-md text-lg transition-all duration-300 inline-flex items-center justify-center gap-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
@@ -78,9 +113,9 @@ export default function Hero({
 
       {/* Floating card with brand elements */}
       <div className="absolute bottom-0 right-0 mr-8 mb-8 hidden lg:block">
-        <div className="bg-gray-200/80 backdrop-blur-sm p-6 rounded-lg border border-gray-300 shadow-lg transform rotate-2 max-w-xs">
-          <div className="text-cyan-700 font-bold mb-2 text-xl">Professional Mobile Services</div>
-          <div className="text-gray-700 text-sm">On-site repairs & maintenance for all heavy equipment</div>
+        <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-lg border border-gray-600 shadow-lg transform rotate-2 max-w-xs">
+          <div className="text-cyan-300 font-bold mb-2 text-xl">Professional Mobile Services</div>
+          <div className="text-gray-200 text-sm">On-site repairs & maintenance for all heavy equipment</div>
         </div>
       </div>
     </section>
