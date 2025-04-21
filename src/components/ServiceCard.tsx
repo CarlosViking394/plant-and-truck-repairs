@@ -43,19 +43,19 @@ export default function ServiceCard({
 
   return (
     <div className={cn(
-      "bg-white rounded-lg shadow-md hover:shadow-lg p-6 transition-all duration-300 hover:-translate-y-1 border border-gray-200 relative overflow-hidden h-full flex flex-col",
+      "bg-white rounded-lg shadow-md hover:shadow-xl p-6 transition-all duration-300 group border border-gray-200 relative overflow-hidden h-full flex flex-col sm:hover:-translate-y-1",
       className
     )}>
       {backgroundImage && (
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-700/80 z-10"></div>
+        <div className="absolute inset-0 z-0 transition-all duration-300 group-hover:brightness-117">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-700/80 z-10 transition-opacity duration-300 group-hover:opacity-75 sm:opacity-80 sm:group-hover:opacity-75"></div>
           <Image 
             src={backgroundImage}
             alt={`${title} background`}
             fill
-            className="object-cover object-center"
+            className="object-cover object-center transition-transform duration-300 sm:group-hover:scale-105 md:scale-100 sm:scale-100 scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            quality={80}
+            quality={85}
           />
         </div>
       )}

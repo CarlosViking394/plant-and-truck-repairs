@@ -83,27 +83,30 @@ export default function Hero({
           <div className="flex flex-col sm:flex-row gap-4">
             <a 
               href="#booking-widget" 
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-md text-lg transition-all duration-300 inline-flex items-center justify-center gap-2 shadow-md hover:-translate-y-1 hover:shadow-lg"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-md text-lg inline-flex items-center justify-center gap-2 shadow-md btn-magnetic"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform group-hover:rotate-12 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              Book a Service
+              <span className="relative z-10">Book a Service</span>
             </a>
             <a 
               href={ctaLink} 
-              className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-8 rounded-md text-lg transition-all duration-300 inline-block text-center shadow-md"
+              className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-8 rounded-md text-lg inline-block text-center shadow-md btn-expand group"
             >
-              {ctaText}
+              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">{ctaText}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1 inline-block -mt-1 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
             </a>
             <a 
               href="tel:+61468601750" 
-              className="bg-transparent hover:bg-gray-700 text-gray-100 border border-gray-500 font-semibold py-3 px-8 rounded-md text-lg transition-all duration-300 inline-flex items-center justify-center gap-2"
+              className="bg-transparent hover:bg-gray-700 text-gray-100 border border-gray-500 font-semibold py-3 px-8 rounded-md text-lg inline-flex items-center justify-center gap-2 btn-glow group overflow-hidden"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-all duration-300 group-hover:scale-110 group-hover:text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
-              Call Now
+              <span className="group-hover:text-cyan-300 transition-colors duration-300">Call Now</span>
             </a>
           </div>
         </div>

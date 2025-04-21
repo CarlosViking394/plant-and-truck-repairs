@@ -13,10 +13,16 @@ interface ContactSectionProps {
 
 export default function ContactSection({ id, className }: ContactSectionProps) {
   const [currentImage, setCurrentImage] = useState(0);
+  const [gradientImageIndex, setGradientImageIndex] = useState(0);
   const images = [
     IMAGE_PATHS.OUTBACK_ROAD,
     IMAGE_PATHS.SOUTHEAST_TRUCK,
     IMAGE_PATHS.FRONT_PAGE
+  ];
+  
+  const gradientImages = [
+    '/images/backgrounds/coolbackgrounds-gradient-aqua.png',
+    '/images/backgrounds/coolbackgrounds-gradient-salt.png'
   ];
   
   // Transition effect between images
@@ -28,13 +34,22 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
     return () => clearInterval(interval);
   }, [images.length]);
   
+  // Transition effect between gradient images (day/night effect) for mobile
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setGradientImageIndex(prev => prev === 0 ? 1 : 0);
+    }, 10000); // Change gradient every 10 seconds for day/night effect
+    
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <section id={id} className={cn(
       "py-16 px-4 relative overflow-hidden", 
       className
     )}>
-      {/* Background images with transition */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Desktop Background images with transition */}
+      <div className="absolute inset-0 overflow-hidden hidden md:block">
         {images.map((src, index) => (
           <div 
             key={src}
@@ -56,6 +71,29 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
       
+      {/* Mobile Gradient Background with day/night transition */}
+      <div className="absolute inset-0 overflow-hidden md:hidden">
+        <div 
+          className={`absolute inset-0 transition-opacity duration-3000 ease-in-out ${
+            gradientImageIndex === 0 ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ 
+            transition: 'opacity 3s cubic-bezier(0.4, 0, 0.2, 1)',
+            background: 'linear-gradient(45deg, #00c6ff, #0072ff)'  // Day gradient (aqua)
+          }}
+        />
+        <div 
+          className={`absolute inset-0 transition-opacity duration-3000 ease-in-out ${
+            gradientImageIndex === 1 ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ 
+            transition: 'opacity 3s cubic-bezier(0.4, 0, 0.2, 1)',
+            background: 'linear-gradient(45deg, #4a6cb3, #283e7c)'  // Night gradient (salt)
+          }}
+        />
+        <div className={`absolute inset-0 ${gradientImageIndex === 0 ? 'bg-black/20' : 'bg-black/35'} transition-colors duration-3000`}></div>
+      </div>
+      
       <div className="container mx-auto relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8 sm:mb-12">
@@ -67,7 +105,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
           
           <div className="max-w-2xl mx-auto relative">
             {/* Floating card effect */}
-            <div id="booking-widget" className="bg-gray-100/90 backdrop-blur-sm p-4 sm:p-8 rounded-lg shadow-xl border-2 border-orange-500 relative overflow-hidden scroll-mt-24 transform hover:-translate-y-1 transition-all duration-300 hover:shadow-2xl z-10 w-[120%] -ml-[10%]">
+            <div id="booking-widget" className="bg-gray-100/90 backdrop-blur-sm p-4 sm:p-8 rounded-lg shadow-xl border-2 border-orange-500 relative overflow-hidden scroll-mt-24 transform hover:-translate-y-1 transition-all duration-300 hover:shadow-2xl z-10 w-[94%] mx-auto">
               <div className="absolute top-0 right-0 bg-orange-500 text-white px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold shadow-md">
                 FAST BOOKING
               </div>
