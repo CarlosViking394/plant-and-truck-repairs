@@ -109,7 +109,7 @@ export default function Home() {
             
             <div className="md:w-1/2 order-1 md:order-2">
               <div className="flex flex-col gap-6">
-                <div className="relative rounded-xl overflow-hidden shadow-lg border border-gray-300">
+                <div className="relative rounded-xl overflow-hidden shadow-lg">
                   <div className="aspect-w-4 aspect-h-3 w-full">
                     <Image 
                       src={IMAGE_PATHS.MECHANIC} 
@@ -135,7 +135,7 @@ export default function Home() {
                   <Image 
                     src={IMAGE_PATHS.WHO_WE_ARE} 
                     alt="Emergency truck repairs in rainy conditions"
-                    width={600}
+                    width={623}
                     height={600}
                     className="object-cover rounded-2xl"
                   />

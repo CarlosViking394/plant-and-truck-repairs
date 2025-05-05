@@ -65,7 +65,7 @@ export default function ServiceCard({
           <div className="bg-cyan-50 p-3 rounded-full inline-flex items-center justify-center mb-3 w-12 h-12">
             <IconComponent className="text-cyan-600 w-6 h-6" />
           </div>
-          <h3 className="text-xl font-medium text-cyan-700 mb-2">{title}</h3>
+          <h3 className={`text-xl font-semibold ${backgroundImage ? 'text-white' : 'text-cyan-500'} mb-2`}>{title}</h3>
         </div>
         <p className={`${backgroundImage ? 'text-gray-100' : 'text-gray-700'} mb-4 flex-1`}>{description}</p>
         <div className="mt-auto pt-2">
