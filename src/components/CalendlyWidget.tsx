@@ -184,19 +184,11 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   
   // Initialize autocomplete when the form step changes to 2 and input is available
   useEffect(() => {
-    if (
-      isMounted && 
-      showBookingForm && 
-      formStep === 2 && 
-      googleMapsLoaded && 
-      window.google && 
-      window.google.maps && 
-      window.google.maps.places
-    ) {
-      // Use setTimeout to ensure the DOM is fully rendered
+    if (isMounted && showBookingForm && formStep === 2 && googleMapsLoaded) {
       const timer = setTimeout(() => {
         if (locationInputRef.current) {
           initializeAutocomplete();
+          
           // Focus on the input after initialization
           locationInputRef.current.focus();
         }
@@ -204,7 +196,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       
       return () => clearTimeout(timer);
     }
-  }, [isMounted, showBookingForm, formStep, googleMapsLoaded]);
+  }, [isMounted, showBookingForm, formStep, googleMapsLoaded, initializeAutocomplete]);
 
   // Handle location input changes - validate manually entered addresses
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -279,7 +271,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
         }
       }
     }
-  }, [showBookingForm, formStep, selectedDate]);
+  }, [showBookingForm, formStep, selectedDate, availableDates]);
 
   // Function to toggle booking form visibility
   const toggleBookingForm = () => {

@@ -122,7 +122,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                   <li>Select a service type and preferred date</li>
                   <li>Provide your contact information</li>
                   <li>Our team will confirm your booking by phone</li>
-                  <li>We'll arrive at your location at the scheduled date</li>
+                  <li>We&apos;ll arrive at your location at the scheduled date</li>
                 </ol>
               </div>
               
