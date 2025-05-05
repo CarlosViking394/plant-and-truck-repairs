@@ -29,8 +29,8 @@ export const IMAGE_PATHS = {
  */
 export const CONTACT = {
   PHONE: "+61468601750",
-  PHONE_DISPLAY: "(0468) 601-750",
-  EMAIL: "contact@plantandtruckrepairs.com.au",
+  PHONE_DISPLAY: "0468-601-750",
+  EMAIL: "plantandtruckrepairs@gmail.com",
   ADDRESS: "South East Queensland, Australia",
 } as const;
 

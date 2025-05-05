@@ -27,11 +27,12 @@ const COMING_SOON_REGIONS = ['Sydney', 'Newcastle', 'Central Coast', 'Wollongong
 export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>("7:30 AM"); // Default to opening time
   const [serviceType, setServiceType] = useState('Mobile Diesel Mechanic');
   const [location, setLocation] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState<string | null>(null);
   const [details, setDetails] = useState('');
@@ -292,7 +293,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   // Reset the form
   const resetForm = () => {
     setSelectedDate(null);
-    setSelectedTime(null);
+    setSelectedTime("7:30 AM"); // Default time
     setServiceType('Mobile Diesel Mechanic');
     setLocation('');
     setName('');
@@ -350,49 +351,66 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   };
 
   // Handle form submission
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Don't submit if location is invalid
     if (locationError) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // In a real implementation, this would call an API endpoint
-      console.log({
-        date: selectedDate ? formatDate(selectedDate) : '',
-        time: selectedTime,
-        service: serviceType,
-        location: location,
-        name: name,
-        phone: phone,
-        email: email,
-        details: details
+    try {
+      const res = await fetch('/api/sendBookingEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          serviceType,
+          selectedDate: selectedDate?.toDateString(),
+          selectedTime,
+          location,
+          details,
+        }),
       });
-      
-      // Show success
+
+      if (!res.ok) {
+        const { message } = await res.json();
+        throw new Error(message || 'Failed to send booking email');
+      }
+
       setBookingConfirmed(true);
+    } catch (err: any) {
+      console.error('Booking email error:', err);
+      // You can set an error state here if desired
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
-  };
-
-  // Check if form can proceed to next step
-  const canProceedToStep2 = selectedDate !== null && selectedTime !== null;
-  const canProceedToStep3 = serviceType !== '' && location !== '' && isValidLocation;
-  const canSubmit = name !== '' && phone !== '' && isValidLocation && (email === '' || !emailError);
-
-  // Function to check if a time is selected
-  const isTimeSelected = (time: string): boolean => {
-    return selectedTime === time;
+    }
   };
 
   // Validate email format
   const validateEmail = (email: string): boolean => {
-    if (!email) return true; // Email is optional
+    if (!email) return false; // Email is now required
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
+  };
+
+  // Validate Australian phone number format
+  const validatePhone = (phoneNumber: string): boolean => {
+    if (!phoneNumber) return false; // Phone is required
+    
+    // Remove all non-digit characters for validation
+    const digitsOnly = phoneNumber.replace(/\D/g, '');
+    
+    // Australian mobile numbers: 04xx xxx xxx (10 digits)
+    // Also accept +614xxxxxxxx format (11 digits with leading 614)
+    if (digitsOnly.length === 10 && digitsOnly.startsWith('04')) {
+      return true;
+    } else if (digitsOnly.length === 11 && digitsOnly.startsWith('614')) {
+      return true;
+    }
+    
+    return false;
   };
 
   // Handle email change with validation
@@ -400,11 +418,35 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     const value = e.target.value;
     setEmail(value);
     
-    if (value && !validateEmail(value)) {
+    if (!value) {
+      setEmailError("Email is required");
+    } else if (!validateEmail(value)) {
       setEmailError("Please enter a valid email address");
     } else {
       setEmailError(null);
     }
+  };
+
+  // Handle phone change with validation
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPhone(value);
+    
+    if (!validatePhone(value)) {
+      setPhoneError("Please enter a valid Australian mobile number (04XX XXX XXX)");
+    } else {
+      setPhoneError(null);
+    }
+  };
+
+  // Check if form can proceed to next step
+  const canProceedToStep2 = selectedDate !== null;
+  const canProceedToStep3 = serviceType !== '' && location !== '' && isValidLocation;
+  const canSubmit = name !== '' && phone !== '' && !phoneError && email !== '' && !emailError && isValidLocation;
+
+  // Function to check if a time is selected
+  const isTimeSelected = (time: string): boolean => {
+    return selectedTime === time;
   };
 
   return (
@@ -503,7 +545,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
               </div>
               <h4 className="text-2xl font-semibold mb-4 text-gray-800">Booking Confirmed!</h4>
               <p className="text-gray-700 mb-6">
-                Thank you for booking with us. We'll be at your location on <span className="font-semibold">{selectedDate ? formatDate(selectedDate) : ''}</span> at <span className="font-semibold">{selectedTime}</span>.
+                Thank you for working with us. We will get in contact with you to confirm your booking for <span className="font-semibold">{selectedDate ? formatDate(selectedDate) : ''}</span>.
               </p>
               
               <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-300 mb-4 sm:mb-6">
@@ -518,8 +560,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <p className={`font-medium text-sm sm:text-base break-words ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 mb-1">Date & Time</p>
-                    <p className="text-gray-800 font-medium text-sm sm:text-base">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</p>
+                    <p className="text-xs text-gray-500 mb-1">Date</p>
+                    <p className="text-gray-800 font-medium text-sm sm:text-base">{selectedDate ? formatDate(selectedDate) : ''}</p>
                   </div>
                 </div>
               </div>
@@ -553,7 +595,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
             <div className="bg-gray-200 rounded-md p-3 sm:p-6 border border-gray-300 mx-auto w-full">
               <div className="flex justify-between items-center mb-2 sm:mb-6">
                 <h4 className="text-base sm:text-xl font-semibold text-gray-800">
-                  {formStep === 1 && "Select Date & Time"}
+                  {formStep === 1 && "Select Date"}
                   {formStep === 2 && "Service Details"}
                   {formStep === 3 && "Contact Information"}
                 </h4>
@@ -601,7 +643,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
               {formStep === 1 && (
                 <>
                   {/* Date selection */}
-                  <div className="mb-3 sm:mb-6">
+                  <div className="mb-6 sm:mb-8">
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-3 text-left">
                       Select Date:
                     </label>
@@ -639,29 +681,6 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                           </button>
                         );
                       })}
-                    </div>
-                  </div>
-                  
-                  {/* Time selection */}
-                  <div className="mb-3 sm:mb-8">
-                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-3 text-left">
-                      Select Time:
-                    </label>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
-                      {timeSlots.map((time, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          className={`cursor-pointer rounded-lg p-1.5 sm:p-3 transition-all text-center ${
-                            isTimeSelected(time)
-                              ? 'bg-cyan-700 text-white shadow-md' 
-                              : 'bg-gray-100 hover:bg-gray-300 text-gray-800'
-                          }`}
-                          onClick={() => handleTimeSelection(time)}
-                        >
-                          <span className="block text-sm sm:text-lg font-medium">{time}</span>
-                        </button>
-                      ))}
                     </div>
                   </div>
                   
@@ -810,22 +829,31 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Phone Number *</label>
                     <input 
                       type="tel" 
-                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className={`w-full bg-gray-100 border ${phoneError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 ${phoneError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="(04xx) xxx xxx"
+                      onChange={handlePhoneChange}
+                      placeholder="04XX XXX XXX"
                       required
                     />
+                    {phoneError && (
+                      <div className="mt-1 text-xs text-red-500 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        {phoneError}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="mb-3 sm:mb-5">
-                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Email (Optional)</label>
+                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Email *</label>
                     <input 
                       type="email" 
                       className={`w-full bg-gray-100 border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 ${emailError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
                       value={email}
                       onChange={handleEmailChange}
                       placeholder="your@email.com"
+                      required
                     />
                     {emailError && (
                       <div className="mt-1 text-xs text-red-500 flex items-center">
@@ -842,8 +870,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       <h5 className="font-medium text-gray-800 mb-3 text-sm sm:text-base border-b pb-2">Booking Summary</h5>
                       <div className="space-y-3">
                         <div>
-                          <p className="text-xs text-gray-500 mb-1">Date & Time</p>
-                          <p className="text-gray-800 font-medium text-sm sm:text-base">{selectedDate ? formatDate(selectedDate) : ''} at {selectedTime}</p>
+                          <p className="text-xs text-gray-500 mb-1">Date</p>
+                          <p className="text-gray-800 font-medium text-sm sm:text-base">{selectedDate ? formatDate(selectedDate) : ''}</p>
                         </div>
                         <div>
                           <p className="text-xs text-gray-500 mb-1">Service</p>
@@ -902,7 +930,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
           )}
           
           <p className="text-sm text-gray-500 mt-2 text-center">
-            Available Monday to Saturday, 7:00 AM - 6:00 PM
+            Available Monday to Saturday, 7:30 AM - 4:00 PM
           </p>
         </div>
       </div>

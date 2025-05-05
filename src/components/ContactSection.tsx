@@ -121,8 +121,8 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                 <ol className="list-decimal list-inside space-y-1 sm:space-y-2 text-sm sm:text-base text-gray-700 pl-2">
                   <li>Select a service type and preferred date</li>
                   <li>Provide your contact information</li>
-                  <li>Our team will confirm your booking</li>
-                  <li>We'll arrive at your location at the scheduled time</li>
+                  <li>Our team will confirm your booking by phone</li>
+                  <li>We'll arrive at your location at the scheduled date</li>
                 </ol>
               </div>
               

@@ -106,8 +106,9 @@ export default function Home() {
             
             <div className="md:w-1/2 order-1 md:order-2">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-cyan-600/30 aspect-[4/3]">
-                <Image 
-                  src={IMAGE_PATHS.WHO_WE_ARE} 
+                <Image
+                  src={IMAGE_PATHS.WHO_WE_ARE}
+
                   alt="Emergency truck repairs in rainy conditions"
                   fill
                   className="object-cover"
