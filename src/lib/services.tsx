@@ -15,7 +15,7 @@ export const services: Service[] = [
     title: "Mobile Diesel Mechanic",
     description: "On-site diesel engine diagnostics, repairs, and maintenance for all makes and models. Our mobile mechanics come to your location, saving you time and reducing equipment downtime.",
     icon: "wrench",
-    backgroundImage: IMAGE_PATHS.MOBILE_DIESEL_MECHANIC,
+    backgroundImage: "/images/mobile_diesel_mechanic_final.jpg",
     alt: "Mobile diesel mechanic servicing a truck engine"
   },
   {
@@ -23,7 +23,7 @@ export const services: Service[] = [
     title: "Mobile Plant Repairs",
     description: "Comprehensive onsite earthmoving equipment and plant machinery repairs. We service excavators, bulldozers, loaders, and all heavy equipment at your worksite.",
     icon: "construction",
-    backgroundImage: IMAGE_PATHS.EARTHMOVING,
+    backgroundImage: "/images/MobilePlantRepairs.png",
     alt: "Mobile plant repair technician working on excavator"
   },
   {
@@ -31,7 +31,7 @@ export const services: Service[] = [
     title: "Earthmoving Repairs and Servicing",
     description: "Specialized repairs and preventative maintenance for all earthmoving equipment. Keep your machinery running at peak performance with our expert servicing.",
     icon: "tractor",
-    backgroundImage: IMAGE_PATHS.EARTHMOVING_NEW,
+    backgroundImage: "/images/pexels-radwanmenzer-14704776.jpg",
     alt: "Hitachi excavator at construction site"
   },
   {
@@ -39,7 +39,7 @@ export const services: Service[] = [
     title: "Truck Repairs and Service",
     description: "Complete truck repair and maintenance services. From routine servicing to major repairs, we keep your trucks on the road and operating efficiently.",
     icon: "truck",
-    backgroundImage: IMAGE_PATHS.TRUCK_REPAIRS,
+    backgroundImage: "/images/truck-repairs.png",
     alt: "Truck maintenance and repair service"
   },
   {
@@ -47,7 +47,7 @@ export const services: Service[] = [
     title: "Air-conditioning Service and Repair",
     description: "Expert vehicle air-conditioning diagnostics, repair, and regas services. We ensure your AC systems work efficiently in all conditions.",
     icon: "thermometer",
-    backgroundImage: IMAGE_PATHS.AIR_CONDITIONING,
+    backgroundImage: "/images/truck-repairs.png",
     alt: "Vehicle air conditioning repair and service"
   },
   {
@@ -55,7 +55,7 @@ export const services: Service[] = [
     title: "Auto Electrical",
     description: "Comprehensive auto electrical repairs and diagnostics for all vehicles. We troubleshoot and fix everything from batteries to complex electronic systems.",
     icon: "battery",
-    backgroundImage: IMAGE_PATHS.AUTO_ELECTRICAL,
+    backgroundImage: "/images/truck-repairs.png",
     alt: "Auto electrical repair service"
   }
 ]; 

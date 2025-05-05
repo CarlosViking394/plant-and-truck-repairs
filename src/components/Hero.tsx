@@ -8,8 +8,8 @@ import { IMAGE_PATHS } from '@/lib/constants';
 interface HeroProps {
   title: string;
   subtitle: string;
-  ctaText: string;
-  ctaLink: string;
+  ctaText?: string;
+  ctaLink?: string;
   className?: string;
 }
 
@@ -22,9 +22,9 @@ export default function Hero({
 }: HeroProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const backgroundImages = [
-    IMAGE_PATHS.OUTBACK_ROAD,
-    IMAGE_PATHS.SOUTHEAST_TRUCK,
-    IMAGE_PATHS.FRONT_PAGE
+    "/images/inthemiddleofoz.png", 
+    "/images/southEastQTruck.png",
+    "/images/front-page.jpg"
   ];
 
   useEffect(() => {
@@ -90,15 +90,17 @@ export default function Hero({
               </svg>
               <span className="relative z-10">Book a Service</span>
             </a>
-            <a 
-              href={ctaLink} 
-              className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-8 rounded-md text-lg inline-block text-center shadow-md btn-expand group"
-            >
-              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">{ctaText}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1 inline-block -mt-1 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </a>
+            {ctaText && ctaLink && (
+              <a 
+                href={ctaLink} 
+                className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-8 rounded-md text-lg inline-block text-center shadow-md btn-expand group"
+              >
+                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">{ctaText}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1 inline-block -mt-1 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </a>
+            )}
             <a 
               href="tel:+61468601750" 
               className="bg-transparent hover:bg-gray-700 text-gray-100 border border-gray-500 font-semibold py-3 px-8 rounded-md text-lg inline-flex items-center justify-center gap-2 btn-glow group overflow-hidden"

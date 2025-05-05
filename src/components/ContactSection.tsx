@@ -15,14 +15,15 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [gradientImageIndex, setGradientImageIndex] = useState(0);
   const images = [
-    IMAGE_PATHS.OUTBACK_ROAD,
-    IMAGE_PATHS.SOUTHEAST_TRUCK,
-    IMAGE_PATHS.FRONT_PAGE
+    "/images/inthemiddleofoz.png",
+    "/images/southEastQTruck.png",
+    "/images/front-page.jpg"
   ];
   
+  // Using images we already have instead of missing gradients
   const gradientImages = [
-    '/images/backgrounds/coolbackgrounds-gradient-aqua.png',
-    '/images/backgrounds/coolbackgrounds-gradient-salt.png'
+    '/images/front-page.jpg',
+    '/images/mobile_diesel_mechanic_final.jpg'
   ];
   
   // Transition effect between images
