@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { IMAGE_PATHS } from '@/lib/constants';
 
 export default function Footer() {
   return (
@@ -13,14 +14,14 @@ export default function Footer() {
           <div className="md:col-span-1 lg:col-span-1">
             <div className="flex items-center mb-4">
               <Image 
-                src="/Images/VSMALL PNG-min FAVICON.png" 
+                src={IMAGE_PATHS.LOGO_SMALL}
                 alt="SEQ Mobile Plant & Truck Repairs Logo" 
                 width={150} 
                 height={60} 
                 className="mr-3"
               />
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-gray-300 mb-4">
               Professional mobile diesel mechanic services. We specialize in plant repairs, 
               earthmoving equipment, truck servicing, air conditioning and auto electrical repairs.
             </p>
@@ -172,24 +173,24 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center">
               <Image
-                src="/Images/VSMALL PNG-min FAVICON.png"
+                src={IMAGE_PATHS.LOGO_SMALL}
                 alt="SEQ Mobile Plant & Truck Repairs Logo"
                 width={24}
                 height={24}
                 className="mr-2"
               />
-              <p className="text-gray-400 text-sm mb-4 md:mb-0">
+              <p className="text-gray-300 text-sm mb-4 md:mb-0">
                 &copy; {new Date().getFullYear()} South East Queensland Mobile Plant & Truck Repairs. All rights reserved.
               </p>
             </div>
             <div className="flex space-x-6">
-              <Link href="#" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
+              <Link href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
+              <Link href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
                 Terms of Service
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
+              <Link href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-colors">
                 Sitemap
               </Link>
             </div>

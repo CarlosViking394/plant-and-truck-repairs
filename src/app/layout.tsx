@@ -20,13 +20,13 @@ export const metadata = {
   keywords: "diesel mechanic, mobile plant repairs, earthmoving repairs, truck repairs, air-conditioning service, auto electrical, mobile diesel mechanic",
   icons: {
     icon: [
-      { url: '/Images/VSMALL PNG-min FAVICON.png', sizes: '32x32', type: 'image/png' },
+      { url: IMAGE_PATHS.LOGO_SMALL, sizes: '32x32', type: 'image/png' },
     ],
     apple: [
-      { url: '/Images/VSMALL PNG-min FAVICON.png' },
+      { url: IMAGE_PATHS.LOGO_SMALL },
     ],
     shortcut: [
-      { url: '/Images/VSMALL PNG-min FAVICON.png' },
+      { url: IMAGE_PATHS.LOGO_SMALL },
     ],
   },
 };
@@ -41,11 +41,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
-        <link rel="icon" href="/Images/VSMALL PNG-min FAVICON.png" sizes="any" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/Images/VSMALL PNG-min FAVICON.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/Images/VSMALL PNG-min FAVICON.png" />
-        <link rel="shortcut icon" href="/Images/VSMALL PNG-min FAVICON.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/Images/VSMALL PNG-min FAVICON.png" />
+        <link rel="icon" href={IMAGE_PATHS.LOGO_SMALL} sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href={IMAGE_PATHS.LOGO_SMALL} />
+        <link rel="icon" type="image/png" sizes="16x16" href={IMAGE_PATHS.LOGO_SMALL} />
+        <link rel="shortcut icon" href={IMAGE_PATHS.LOGO_SMALL} />
+        <link rel="apple-touch-icon" sizes="180x180" href={IMAGE_PATHS.LOGO_SMALL} />
         <style dangerouslySetInnerHTML={{ __html: `
           /* Hide Vercel development indicator */
           #__next-build-watcher,
