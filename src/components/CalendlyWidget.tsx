@@ -351,32 +351,41 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   };
 
   // Handle form submission
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Don't submit if location is invalid
     if (locationError) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // In a real implementation, this would call an API endpoint
-      console.log({
-        date: selectedDate ? formatDate(selectedDate) : '',
-        time: selectedTime,
-        service: serviceType,
-        location: location,
-        name: name,
-        phone: phone,
-        email: email,
-        details: details
+    try {
+      const res = await fetch('/api/sendBookingEmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          serviceType,
+          selectedDate: selectedDate?.toDateString(),
+          selectedTime,
+          location,
+          details,
+        }),
       });
-      
-      // Show success
+
+      if (!res.ok) {
+        const { message } = await res.json();
+        throw new Error(message || 'Failed to send booking email');
+      }
+
       setBookingConfirmed(true);
+    } catch (err: any) {
+      console.error('Booking email error:', err);
+      // You can set an error state here if desired
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   // Validate email format
@@ -536,7 +545,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
               </div>
               <h4 className="text-2xl font-semibold mb-4 text-gray-800">Booking Confirmed!</h4>
               <p className="text-gray-700 mb-6">
-                Thank you for booking with us. We'll be at your location on <span className="font-semibold">{selectedDate ? formatDate(selectedDate) : ''}</span>.
+                Thank you for working with us. We will get in contact with you to confirm your booking for <span className="font-semibold">{selectedDate ? formatDate(selectedDate) : ''}</span>.
               </p>
               
               <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-300 mb-4 sm:mb-6">
