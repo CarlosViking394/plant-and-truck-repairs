@@ -55,7 +55,7 @@ export const services: Service[] = [
     title: "Auto Electrical",
     description: "Comprehensive auto electrical repairs and diagnostics for all vehicles. We troubleshoot and fix everything from batteries to complex electronic systems.",
     icon: "battery",
-    backgroundImage: "/images/truck-repairs.png",
+    backgroundImage: "/images/autoelectrical.png",
     alt: "Auto electrical repair service"
   }
 ]; 
