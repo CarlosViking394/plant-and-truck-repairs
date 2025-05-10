@@ -154,7 +154,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                   </a>
                 </div>
                 
-                <p className="text-xs sm:text-sm text-gray-500 mt-3 text-center">
+                <p className="text-xs sm:text-sm text-gray-300 mt-3 text-center">
                   Available 7 days for emergency mobile repairs in South East Queensland
                 </p>
               </div>
