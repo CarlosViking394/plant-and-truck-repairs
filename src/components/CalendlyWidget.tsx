@@ -118,6 +118,14 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       return; // Exit without error - we'll retry when the element is available
     }
     
+    // Check if user is actively typing in textarea - don't initialize in this case
+    const activeElement = document.activeElement;
+    const isTextAreaActive = activeElement && activeElement.tagName === 'TEXTAREA';
+    if (isTextAreaActive && activeElement.hasAttribute('data-focused')) {
+      console.log("User is typing in textarea, skipping autocomplete initialization");
+      return;
+    }
+    
     try {
       console.log("Initializing autocomplete on input element");
       
@@ -185,18 +193,35 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   // Initialize autocomplete when the form step changes to 2 and input is available
   useEffect(() => {
     if (isMounted && showBookingForm && formStep === 2 && googleMapsLoaded) {
+      // Check if user is actively typing in a textarea before proceeding
+      const activeElement = document.activeElement;
+      const isTextAreaActive = activeElement && activeElement.tagName === 'TEXTAREA';
+      
+      if (isTextAreaActive) {
+        // Skip autocomplete initialization if user is currently typing in a textarea
+        return;
+      }
+      
       const timer = setTimeout(() => {
         if (locationInputRef.current) {
-          initializeAutocomplete();
+          // Only initialize if no textarea is currently focused
+          const activeElementNow = document.activeElement;
+          const isTextAreaActiveNow = activeElementNow && activeElementNow.tagName === 'TEXTAREA';
           
-          // Focus on the input after initialization
-          locationInputRef.current.focus();
+          if (!isTextAreaActiveNow) {
+            initializeAutocomplete();
+            
+            // Only focus if it was a deliberate user action
+            if (locationInputRef.current.hasAttribute('data-user-initiated')) {
+              locationInputRef.current.focus();
+            }
+          }
         }
       }, 200);
       
       return () => clearTimeout(timer);
     }
-  }, [isMounted, showBookingForm, formStep, googleMapsLoaded, initializeAutocomplete]);
+  }, [isMounted, showBookingForm, formStep, googleMapsLoaded]);
 
   // Handle location input changes - validate manually entered addresses
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -217,7 +242,20 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   };
 
   // Reinitialize autocomplete when input is focused after validation error
-  const handleLocationFocus = () => {
+  const handleLocationFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Prevent focus jump from textarea by checking if user is actively typing in textarea
+    const activeElement = document.activeElement;
+    const isTextAreaActive = activeElement && activeElement.tagName === 'TEXTAREA';
+    
+    // If focus event is not intentional (e.g., from clicking directly) and a textarea is active, prevent focus change
+    if (isTextAreaActive && !e.target.hasAttribute('data-user-initiated')) {
+      // Return focus to the textarea element that was active
+      setTimeout(() => {
+        (activeElement as HTMLElement).focus();
+      }, 0);
+      return;
+    }
+
     // If we have an error and Google is loaded but autocomplete not working
     if (locationError && googleMapsLoaded && !autocompleteRef.current && locationInputRef.current) {
       // Reset the autocomplete reference
@@ -439,6 +477,27 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   // Function to check if a time is selected
   const isTimeSelected = (time: string): boolean => {
     return selectedTime === time;
+  };
+
+  // Add this new function to handle direct clicks on the location input
+  const handleLocationMouseDown = (e: React.MouseEvent<HTMLInputElement>) => {
+    // Mark this as a user-initiated focus
+    e.currentTarget.setAttribute('data-user-initiated', 'true');
+    
+    // Remove the attribute after focus is handled
+    setTimeout(() => {
+      e.currentTarget.removeAttribute('data-user-initiated');
+    }, 100);
+  };
+
+  // Add this new function to ensure textarea keeps focus
+  const handleTextareaFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    // Prevent any automatic focus change within a short period
+    e.currentTarget.setAttribute('data-focused', 'true');
+    
+    setTimeout(() => {
+      e.currentTarget.removeAttribute('data-focused');
+    }, 500);
   };
 
   return (
@@ -735,6 +794,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         onChange={handleLocationChange}
                         onBlur={handleLocationBlur}
                         onFocus={handleLocationFocus}
+                        onMouseDown={handleLocationMouseDown}
                         ref={locationInputRef}
                         aria-label="Service location address"
                         id="location-input"
@@ -770,6 +830,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       rows={2}
                       value={details}
                       onChange={(e) => setDetails(e.target.value)}
+                      onFocus={handleTextareaFocus}
                     ></textarea>
                   </div>
                   
