@@ -20,16 +20,16 @@ export const services: Service[] = [
   },
   {
     id: "mobile-plant-repairs",
-    title: "Mobile Plant Repairs",
-    description: "Comprehensive onsite earthmoving equipment and plant machinery repairs. We service excavators, bulldozers, loaders, and all heavy equipment at your worksite.",
-    icon: "construction",
-    backgroundImage: "/images/MobilePlantRepairs.png",
-    alt: "Mobile plant repair technician working on excavator"
+    title: "Power Generation Maintenance",
+    description: "Maintenance and repair services for generators and power systems. We ensure your power generation equipment runs reliably when you need it most, with preventative maintenance and emergency repairs.",
+    icon: "bolt",
+    backgroundImage: "/images/Power.png",
+    alt: "Generator maintenance and power system repairs"
   },
   {
     id: "earthmoving-repairs",
     title: "Earthmoving Repairs and Servicing",
-    description: "Specialized repairs and preventative maintenance for all earthmoving equipment. Keep your machinery running at peak performance with our expert servicing.",
+    description: "Repairs and preventative maintenance for all earthmoving equipment. Keep your machinery running at peak performance with our expert servicing.",
     icon: "tractor",
     backgroundImage: "/images/pexels-radwanmenzer-14704776.jpg",
     alt: "Hitachi excavator at construction site"
