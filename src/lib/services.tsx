@@ -47,7 +47,7 @@ export const services: Service[] = [
     title: "Air-conditioning Service and Repair",
     description: "Expert vehicle air-conditioning diagnostics, repair, and regas services. We ensure your AC systems work efficiently in all conditions.",
     icon: "thermometer",
-    backgroundImage: "/images/truck-repairs.png",
+    backgroundImage: "/images/airconditioner.png",
     alt: "Vehicle air conditioning repair and service"
   },
   {
