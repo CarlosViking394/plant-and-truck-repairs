@@ -27,7 +27,21 @@ export default function Home() {
             Specialized mobile repairs for all your diesel, plant, truck, and equipment needs
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service) => (
+            {services.slice(0, 6).map((service) => (
+              <ServiceCard 
+                key={service.id}
+                title={service.title}
+                description={service.description}
+                icon={service.icon}
+                alt={service.alt}
+                backgroundImage={service.backgroundImage}
+              />
+            ))}
+          </div>
+          
+          {/* Last two services centered */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 mt-8 lg:w-2/3 mx-auto">
+            {services.slice(6).map((service) => (
               <ServiceCard 
                 key={service.id}
                 title={service.title}

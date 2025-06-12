@@ -28,7 +28,7 @@ export const services: Service[] = [
   },
   {
     id: "earthmoving-repairs",
-    title: "Earthmoving Repairs and Servicing",
+    title: "Earthmoving Repairs & Maintenance",
     description: "Repairs and preventative maintenance for all earthmoving equipment. Keep your machinery running at peak performance with our expert servicing.",
     icon: "tractor",
     backgroundImage: "/images/pexels-radwanmenzer-14704776.jpg",
@@ -36,7 +36,7 @@ export const services: Service[] = [
   },
   {
     id: "truck-repairs",
-    title: "Truck Repairs and Service",
+    title: "Truck Repairs & Maintenance",
     description: "Complete truck repair and maintenance services. From routine servicing to major repairs, we keep your trucks on the road and operating efficiently.",
     icon: "truck",
     backgroundImage: "/images/truck-repairs.png",
@@ -44,7 +44,7 @@ export const services: Service[] = [
   },
   {
     id: "air-conditioning",
-    title: "Air-conditioning Service and Repair",
+    title: "Air-conditioning Service & Maintenance",
     description: "Expert vehicle air-conditioning diagnostics, repair, and regas services. We ensure your AC systems work efficiently in all conditions.",
     icon: "thermometer",
     backgroundImage: "/images/airconditioner.png",
@@ -57,5 +57,21 @@ export const services: Service[] = [
     icon: "battery",
     backgroundImage: "/images/autoelectrical.png",
     alt: "Auto electrical repair service"
+  },
+  {
+    id: "agriculture-equipment",
+    title: "Agriculture Equipment Repairs & Maintenance",
+    description: "Specialized repair and maintenance services for all types of agricultural machinery. We help keep your farm equipment running efficiently throughout the growing season.",
+    icon: "leaf",
+    backgroundImage: "/images/agricultural.png",
+    alt: "Agriculture equipment repair and maintenance service"
+  },
+  {
+    id: "material-handling",
+    title: "Material Handling Repairs & Maintenance",
+    description: "Expert maintenance and repair services for forklifts, pallet jacks, and other material handling equipment. We ensure your warehouse and logistics operations run smoothly.",
+    icon: "dolly",
+    backgroundImage: "/images/MaterialHandling.png",
+    alt: "Material handling equipment repair and maintenance"
   }
 ]; 
