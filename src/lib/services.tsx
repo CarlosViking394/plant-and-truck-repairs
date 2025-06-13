@@ -61,7 +61,7 @@ export const services: Service[] = [
   {
     id: "agriculture-equipment",
     title: "Agriculture Equipment Repairs & Maintenance",
-    description: "Specialized repair and maintenance services for all types of agricultural machinery. We help keep your farm equipment running efficiently throughout the growing season.",
+    description: "Repair and maintenance services for all types of agricultural machinery. We help keep your farm equipment running efficiently throughout the growing season.",
     icon: "leaf",
     backgroundImage: "/images/agricultural.png",
     alt: "Agriculture equipment repair and maintenance service"
