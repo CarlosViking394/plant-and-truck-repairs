@@ -22,7 +22,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-gray-300 mb-4">
-              Professional mobile diesel mechanic services. We specialize in plant repairs, 
+              Professional mobile diesel mechanic services. We are in SEQ, plant repairs, 
               earthmoving equipment, truck servicing, air conditioning and auto electrical repairs.
             </p>
             <div className="flex space-x-4">
