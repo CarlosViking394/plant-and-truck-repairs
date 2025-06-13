@@ -61,7 +61,7 @@ export const services: Service[] = [
   {
     id: "agriculture-equipment",
     title: "Agriculture Equipment Repairs & Maintenance",
-    description: "Repair and maintenance services for all types of agricultural machinery. We help keep your farm equipment running efficiently throughout the growing season.",
+    description: "Maintenance services for all types of agricultural machinery. We help keep your farm equipment running efficiently throughout the growing season.",
     icon: "leaf",
     backgroundImage: "/images/agricultural.png",
     alt: "Agriculture equipment repair and maintenance service"
@@ -69,7 +69,7 @@ export const services: Service[] = [
   {
     id: "material-handling",
     title: "Material Handling Repairs & Maintenance",
-    description: "Expert maintenance and repair services for forklifts, pallet jacks, and other material handling equipment. We ensure your warehouse and logistics operations run smoothly.",
+    description: "Maintenance and repair services for forklifts, and other material handling equipment. We ensure your warehouse and logistics operations run smoothly.",
     icon: "dolly",
     backgroundImage: "/images/MaterialHandling.png",
     alt: "Material handling equipment repair and maintenance"

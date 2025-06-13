@@ -7,7 +7,7 @@ import { services } from "@/lib/services";
 
 export const metadata = {
   title: "SEQ Mobile Plant & Truck Repairs | Professional Mobile Diesel Mechanic",
-  description: "Professional mobile diesel mechanic specializing in earthmoving repairs, truck servicing, air conditioning and auto electrical repairs. Available 24/7 for emergency mobile plant repairs.",
+  description: "Professional mobile diesel mechanic in earthmoving repairs, truck servicing, air conditioning and auto electrical repairs. Available 24/7 for emergency mobile plant repairs.",
 };
 
 export default function Home() {
