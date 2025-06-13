@@ -76,7 +76,7 @@ export default function Home() {
               <p className="text-gray-200 mb-4 text-lg">
                 With over {COMPANY.YEARS_EXPERIENCE} years of experience in mobile plant repairs and truck servicing, 
                 we provide fast, reliable service wherever you need it. Our team of qualified 
-                diesel mechanics specializes in minimizing downtime for your equipment and vehicles.
+                diesel mechanics specialises in minimising downtime for your equipment and vehicles.
               </p>
               <p className="text-gray-200 mb-6 text-lg">
                 From emergency repairs to scheduled maintenance, we&apos;re equipped to handle 
