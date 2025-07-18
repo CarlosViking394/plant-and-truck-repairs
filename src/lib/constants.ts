@@ -8,7 +8,7 @@ export const IMAGE_PATHS = {
   LOGO: "/logo-seq.svg",
   LOGO_WHITE: "/logo-white.svg",
   LOGO_NEW: "/images/big-lowres.jpg",
-  LOGO_SMALL: "/images/vsmall-png-min-favicon.png",
+  LOGO_SMALL: "/icons/LOGO-MPTRSVG.svg",
   HERO_BG: "/images/hero-bg.jpg",
   FRONT_PAGE: "/images/hero-image.jpg",
   EARTHMOVING: "/images/earthmoving.jpg",
