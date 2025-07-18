@@ -74,9 +74,9 @@ export default function Header() {
             <Image 
               src={IMAGE_PATHS.LOGO_SMALL}
               alt="SEQ Mobile Plant & Truck Repairs Logo" 
-              width={198} 
-              height={60} 
-              className="mr-3 w-[198px] h-[60px] md:w-[208px] md:h-[62px]"
+              width={240} 
+              height={72} 
+              className="mr-3 w-[240px] h-[72px] md:w-[280px] md:h-[84px]"
               priority
               style={{ objectFit: 'contain' }}
             />
