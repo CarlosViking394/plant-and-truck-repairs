@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "SEQ Mobile Plant & Truck Repairs | Professional Mobile Diesel Mechanic",
+  title: "M.P.T.R Mobile Plant & Truck Repairs | Professional Mobile Diesel Mechanic",
   description: "Professional mobile diesel mechanic in SEQ, plant repairs, earthmoving equipment, truck servicing, air conditioning and auto electrical repairs.",
   keywords: "diesel mechanic, mobile plant repairs, earthmoving repairs, truck repairs, air-conditioning service, auto electrical, mobile diesel mechanic",
   icons: {

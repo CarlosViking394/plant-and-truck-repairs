@@ -6,7 +6,7 @@ import { COMPANY, IMAGE_PATHS } from "@/lib/constants";
 import { services } from "@/lib/services";
 
 export const metadata = {
-  title: "SEQ Mobile Plant & Truck Repairs | Professional Mobile Diesel Mechanic",
+  title: "M.P.T.R Mobile Plant & Truck Repairs | Professional Mobile Diesel Mechanic",
   description: "Professional mobile diesel mechanic in earthmoving repairs, truck servicing, air conditioning and auto electrical repairs. Available 24/7 for emergency mobile plant repairs.",
 };
 
@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 text-gray-800">
       <Hero 
-        title="SEQ Mobile Plant & Truck Repairs" 
+        title="M.P.T.R Mobile Plant & Truck Repairs" 
         subtitle="Professional mobile diesel mechanics at your service"
         ctaText="Learn More"
         ctaLink="#services"

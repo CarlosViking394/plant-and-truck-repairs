@@ -15,7 +15,7 @@ export default function Footer() {
             <div className="flex items-center mb-4">
               <Image 
                 src={IMAGE_PATHS.LOGO_SMALL}
-                alt="SEQ Mobile Plant & Truck Repairs Logo" 
+                alt="M.P.T.R  Mobile Plant & Truck Repairs Logo" 
                 width={150} 
                 height={60} 
                 className="mr-3"
@@ -174,7 +174,7 @@ export default function Footer() {
             <div className="flex items-center">
               <Image
                 src={IMAGE_PATHS.LOGO_SMALL}
-                alt="SEQ Mobile Plant & Truck Repairs Logo"
+                alt="M.P.T.R Mobile Plant & Truck Repairs Logo"
                 width={24}
                 height={24}
                 className="mr-2"
