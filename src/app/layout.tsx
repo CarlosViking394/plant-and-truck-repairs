@@ -20,7 +20,7 @@ export const metadata = {
   keywords: "diesel mechanic, mobile plant repairs, earthmoving repairs, truck repairs, air-conditioning service, auto electrical, mobile diesel mechanic",
   icons: {
     icon: [
-      { url: IMAGE_PATHS.LOGO_SMALL, sizes: '32x32', type: 'image/png' },
+      { url: IMAGE_PATHS.LOGO_SMALL, sizes: 'any', type: 'image/svg+xml' },
     ],
     apple: [
       { url: IMAGE_PATHS.LOGO_SMALL },
@@ -41,9 +41,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
+        <link rel="icon" type="image/svg+xml" href={IMAGE_PATHS.LOGO_SMALL} />
         <link rel="icon" href={IMAGE_PATHS.LOGO_SMALL} sizes="any" />
-        <link rel="icon" type="image/png" sizes="32x32" href={IMAGE_PATHS.LOGO_SMALL} />
-        <link rel="icon" type="image/png" sizes="16x16" href={IMAGE_PATHS.LOGO_SMALL} />
         <link rel="shortcut icon" href={IMAGE_PATHS.LOGO_SMALL} />
         <link rel="apple-touch-icon" sizes="180x180" href={IMAGE_PATHS.LOGO_SMALL} />
         <style dangerouslySetInnerHTML={{ __html: `
