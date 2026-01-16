@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function ThankYouPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 flex items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center px-4 py-16">
       <div className="max-w-lg w-full">
         {/* Success Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 text-center border border-gray-200">
