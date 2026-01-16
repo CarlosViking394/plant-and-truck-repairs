@@ -70,7 +70,7 @@ export default function Header() {
       }`}
     >
       {/* Top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-60"></div>
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-60"></div>
 
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
@@ -91,36 +91,36 @@ export default function Header() {
           <nav className="hidden md:flex items-center space-x-2 lg:space-x-6">
             <Link
               href="/"
-              className="relative text-white hover:text-cyan-400 font-medium px-3 py-2 transition-all duration-300 group"
+              className="relative text-white hover:text-orange-400 font-medium px-3 py-2 transition-all duration-300 group"
             >
               <span>Home</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               href="#services"
-              className="relative text-white hover:text-cyan-400 font-medium px-3 py-2 transition-all duration-300 group"
+              className="relative text-white hover:text-orange-400 font-medium px-3 py-2 transition-all duration-300 group"
             >
               <span>Services</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               href="#about"
-              className="relative text-white hover:text-cyan-400 font-medium px-3 py-2 transition-all duration-300 group"
+              className="relative text-white hover:text-orange-400 font-medium px-3 py-2 transition-all duration-300 group"
             >
               <span>About</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               href="#contact"
-              className="relative text-white hover:text-cyan-400 font-medium px-3 py-2 transition-all duration-300 group"
+              className="relative text-white hover:text-orange-400 font-medium px-3 py-2 transition-all duration-300 group"
             >
               <span>Contact</span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-400 transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
             <a
               href="tel:+61468601750"
-              className="ml-4 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white px-5 py-2.5 rounded-lg flex items-center transition-all duration-300 shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-0.5 font-medium"
+              className="ml-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-5 py-2.5 rounded-lg flex items-center transition-all duration-300 shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5 font-medium"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
@@ -157,28 +157,28 @@ export default function Header() {
             <div className="flex flex-col space-y-1">
               <Link
                 href="/"
-                className="text-white hover:text-cyan-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
+                className="text-white hover:text-orange-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="#services"
-                className="text-white hover:text-cyan-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
+                className="text-white hover:text-orange-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Services
               </Link>
               <Link
                 href="#about"
-                className="text-white hover:text-cyan-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
+                className="text-white hover:text-orange-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link
                 href="#contact"
-                className="text-white hover:text-cyan-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
+                className="text-white hover:text-orange-400 px-4 py-3 rounded-lg hover:bg-white/5 font-medium transition-all duration-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
@@ -187,7 +187,7 @@ export default function Header() {
               <div className="pt-2 mt-2 border-t border-gray-700/50">
                 <a
                   href="tel:+61468601750"
-                  className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white px-4 py-3 rounded-lg flex items-center transition-all duration-300 justify-center font-medium shadow-lg"
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-3 rounded-lg flex items-center transition-all duration-300 justify-center font-medium shadow-lg"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">

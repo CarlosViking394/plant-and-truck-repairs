@@ -9,8 +9,8 @@ export default function Footer() {
   return (
     <footer className="relative bg-gradient-to-b from-gray-900 via-gray-900 to-black text-white pt-16 pb-8 overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
-      <div className="absolute top-20 left-10 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-orange-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl"></div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -33,7 +33,7 @@ export default function Footer() {
             <div className="flex space-x-3">
               <a
                 href="#"
-                className="w-10 h-10 bg-gray-800 hover:bg-cyan-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
+                className="w-10 h-10 bg-gray-800 hover:bg-orange-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
                 aria-label="Facebook"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -42,7 +42,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 bg-gray-800 hover:bg-cyan-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
+                className="w-10 h-10 bg-gray-800 hover:bg-orange-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
                 aria-label="Twitter"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -51,7 +51,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 bg-gray-800 hover:bg-cyan-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
+                className="w-10 h-10 bg-gray-800 hover:bg-orange-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
                 aria-label="Instagram"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -64,7 +64,7 @@ export default function Footer() {
           {/* Services */}
           <div>
             <h3 className="text-lg font-bold mb-6 text-white flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-gradient-to-r from-cyan-500 to-transparent"></span>
+              <span className="w-8 h-0.5 bg-gradient-to-r from-orange-500 to-transparent"></span>
               Our Services
             </h3>
             <ul className="space-y-3">
@@ -81,9 +81,9 @@ export default function Footer() {
                 <li key={service}>
                   <Link
                     href="#services"
-                    className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-gray-400 hover:text-orange-400 transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-600 group-hover:text-cyan-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-600 group-hover:text-orange-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                     {service}
@@ -96,7 +96,7 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-lg font-bold mb-6 text-white flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-gradient-to-r from-cyan-500 to-transparent"></span>
+              <span className="w-8 h-0.5 bg-gradient-to-r from-orange-500 to-transparent"></span>
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -111,9 +111,9 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-cyan-400 transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-gray-400 hover:text-orange-400 transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-600 group-hover:text-cyan-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-600 group-hover:text-orange-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                     {link.name}
@@ -126,13 +126,13 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="text-lg font-bold mb-6 text-white flex items-center gap-2">
-              <span className="w-8 h-0.5 bg-gradient-to-r from-cyan-500 to-transparent"></span>
+              <span className="w-8 h-0.5 bg-gradient-to-r from-orange-500 to-transparent"></span>
               Contact Us
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="h-5 w-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -143,27 +143,27 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="h-5 w-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
-                <a href="tel:+61468601750" className="text-gray-400 hover:text-cyan-400 transition-colors">
+                <a href="tel:+61468601750" className="text-gray-400 hover:text-orange-400 transition-colors">
                   +61 468 601 750
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="h-5 w-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <a href="mailto:plantandtruckrepairs@gmail.com" className="text-gray-400 hover:text-cyan-400 transition-colors text-sm">
+                <a href="mailto:plantandtruckrepairs@gmail.com" className="text-gray-400 hover:text-orange-400 transition-colors text-sm">
                   plantandtruckrepairs@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="h-5 w-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
@@ -191,13 +191,13 @@ export default function Footer() {
               </p>
             </div>
             <div className="flex space-x-6">
-              <Link href="#" className="text-gray-500 hover:text-cyan-400 text-sm transition-colors">
+              <Link href="#" className="text-gray-500 hover:text-orange-400 text-sm transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="#" className="text-gray-500 hover:text-cyan-400 text-sm transition-colors">
+              <Link href="#" className="text-gray-500 hover:text-orange-400 text-sm transition-colors">
                 Terms of Service
               </Link>
-              <Link href="#" className="text-gray-500 hover:text-cyan-400 text-sm transition-colors">
+              <Link href="#" className="text-gray-500 hover:text-orange-400 text-sm transition-colors">
                 Sitemap
               </Link>
             </div>

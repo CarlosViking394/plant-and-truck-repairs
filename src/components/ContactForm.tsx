@@ -61,7 +61,7 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
+          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
           placeholder="John Smith"
         />
       </div>
@@ -79,7 +79,7 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
             placeholder="john@example.com"
           />
         </div>
@@ -95,7 +95,7 @@ export default function ContactForm() {
             value={formData.phone}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
             placeholder="04XX XXX XXX"
           />
         </div>
@@ -113,7 +113,7 @@ export default function ContactForm() {
             value={formData.service}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-gray-800 transition-all duration-200 appearance-none cursor-pointer"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 appearance-none cursor-pointer"
           >
             <option value="" disabled>Select a service</option>
             <option value="diesel-mechanic">Mobile Diesel Mechanic</option>
@@ -142,7 +142,7 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 text-gray-800 transition-all duration-200 resize-none placeholder:text-gray-400"
+          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 resize-none placeholder:text-gray-400"
           placeholder="Please provide details about the service you need..."
         ></textarea>
       </div>
@@ -155,7 +155,7 @@ export default function ContactForm() {
           className={`w-full py-4 px-6 rounded-xl text-white font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 ${
             formStatus === 'submitting'
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:-translate-y-0.5'
+              : 'bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5'
           }`}
         >
           {formStatus === 'submitting' ? (

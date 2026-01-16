@@ -44,6 +44,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isSelectingRef = useRef(false); // Flag to prevent blur validation during selection
 
   const calendlyEmbedRef = useRef<HTMLDivElement>(null);
   const locationInputRef = useRef<HTMLInputElement>(null);
@@ -94,9 +95,14 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
     setIsSearching(true);
     try {
+      // Add Queensland/Australia context to improve results for our service area
+      const searchQuery = query.toLowerCase().includes('qld') || query.toLowerCase().includes('queensland') || query.toLowerCase().includes('nsw')
+        ? query
+        : `${query}, Queensland, Australia`;
+
       // Search for addresses in Australia using Nominatim
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=au&addressdetails=1&limit=5`,
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&countrycodes=au&addressdetails=1&limit=5`,
         {
           headers: {
             'Accept': 'application/json',
@@ -165,6 +171,9 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
   // Handle suggestion selection
   const handleSuggestionSelect = (suggestion: AddressSuggestion) => {
+    // Set flag to prevent blur validation from interfering
+    isSelectingRef.current = true;
+
     const address = suggestion.display_name;
     setLocation(address);
     setShowSuggestions(false);
@@ -178,6 +187,11 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       setLocationError(getLocationErrorMessage(address));
       setIsValidLocation(false);
     }
+
+    // Reset the flag after a short delay
+    setTimeout(() => {
+      isSelectingRef.current = false;
+    }, 300);
   };
 
   // Handle location input focus
@@ -191,6 +205,11 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const handleLocationBlur = () => {
     // Delay to allow click on suggestion
     setTimeout(() => {
+      // Skip validation if user is selecting a suggestion
+      if (isSelectingRef.current) {
+        return;
+      }
+
       if (location && !isValidServiceRegion(location)) {
         setLocationError(getLocationErrorMessage(location));
         setIsValidLocation(false);
@@ -198,7 +217,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
         setLocationError(null);
         setIsValidLocation(true);
       }
-    }, 200);
+    }, 250);
   };
 
   // Generate next 7 available dates (excluding Sundays)
@@ -417,10 +436,10 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
             // Initial booking information view
             <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-5 sm:p-8 border border-gray-200 shadow-lg">
               <div className="mb-5 sm:mb-6 flex justify-center">
-                <div className="bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 p-4 sm:p-5 rounded-2xl border border-cyan-500/20">
+                <div className="bg-gradient-to-br from-orange-500/20 to-orange-600/10 p-4 sm:p-5 rounded-2xl border border-orange-500/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-10 w-10 sm:h-12 sm:w-12 text-cyan-600"
+                    className="h-10 w-10 sm:h-12 sm:w-12 text-orange-600"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -441,24 +460,24 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
               <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6 bg-white/60 rounded-lg p-4">
                 <div className="flex items-center text-left">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <span className="text-sm sm:text-base text-gray-700">Select your preferred date & time</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <span className="text-sm sm:text-base text-gray-700">Tell us about your service needs</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
@@ -614,8 +633,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                             data-date-element
                             className={`cursor-pointer rounded-xl p-2.5 sm:p-3 transition-all duration-300 text-center border-2 ${
                               selected
-                                ? 'bg-gradient-to-br from-cyan-600 to-cyan-700 text-white shadow-lg shadow-cyan-500/30 border-cyan-500 scale-[1.02]'
-                                : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-200 hover:border-cyan-300 hover:shadow-md'
+                                ? 'bg-gradient-to-br from-orange-600 to-orange-700 text-white shadow-lg shadow-orange-500/30 border-orange-500 scale-[1.02]'
+                                : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-200 hover:border-orange-300 hover:shadow-md'
                             }`}
                             onClick={() => handleDateSelection(date)}
                             type="button"
@@ -746,7 +765,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         {locationError}
                       </div>
                     )}
-                    <div className="mt-1 text-xs text-cyan-700">
+                    <div className="mt-1 text-xs text-orange-700">
                       We currently service Queensland and Northern NSW areas (Tweed Heads to Byron Bay region)
                     </div>
                   </div>

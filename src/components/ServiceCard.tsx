@@ -43,7 +43,7 @@ export default function ServiceCard({
   return (
     <div className={cn(
       "group bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-500 border border-gray-100 relative overflow-hidden h-full flex flex-col",
-      "sm:hover:-translate-y-2 hover:border-cyan-200/50",
+      "sm:hover:-translate-y-2 hover:border-orange-200/50",
       className
     )}>
       {backgroundImage && (
@@ -66,14 +66,14 @@ export default function ServiceCard({
           <div className={cn(
             "w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300",
             backgroundImage
-              ? "bg-gradient-to-br from-cyan-500/30 to-cyan-600/20 backdrop-blur-sm border border-cyan-400/30 group-hover:from-cyan-500/40 group-hover:to-cyan-600/30"
-              : "bg-gradient-to-br from-cyan-50 to-cyan-100 group-hover:from-cyan-100 group-hover:to-cyan-200"
+              ? "bg-gradient-to-br from-orange-500/30 to-orange-600/20 backdrop-blur-sm border border-orange-400/30 group-hover:from-orange-500/40 group-hover:to-orange-600/30"
+              : "bg-gradient-to-br from-orange-50 to-orange-100 group-hover:from-orange-100 group-hover:to-orange-200"
           )}>
             <IconComponent className={cn(
               "w-7 h-7 transition-all duration-300",
               backgroundImage
-                ? "text-cyan-300 group-hover:text-cyan-200 group-hover:scale-110"
-                : "text-cyan-600 group-hover:text-cyan-700 group-hover:scale-110"
+                ? "text-orange-300 group-hover:text-orange-200 group-hover:scale-110"
+                : "text-orange-600 group-hover:text-orange-700 group-hover:scale-110"
             )} />
           </div>
         </div>
@@ -82,8 +82,8 @@ export default function ServiceCard({
         <h3 className={cn(
           "text-xl font-bold mb-3 transition-colors duration-300",
           backgroundImage
-            ? "text-white group-hover:text-cyan-200"
-            : "text-gray-800 group-hover:text-cyan-700"
+            ? "text-white group-hover:text-orange-200"
+            : "text-gray-800 group-hover:text-orange-700"
         )}>
           {title}
         </h3>
@@ -105,8 +105,8 @@ export default function ServiceCard({
             className={cn(
               "inline-flex items-center gap-2 font-semibold transition-all duration-300 group/link",
               backgroundImage
-                ? "text-cyan-300 hover:text-cyan-200"
-                : "text-cyan-600 hover:text-cyan-700"
+                ? "text-orange-300 hover:text-orange-200"
+                : "text-orange-600 hover:text-orange-700"
             )}
           >
             <span>Request Service</span>
@@ -129,7 +129,7 @@ export default function ServiceCard({
       {/* Decorative gradient on hover */}
       {!backgroundImage && (
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl"></div>
         </div>
       )}

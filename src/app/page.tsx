@@ -23,19 +23,19 @@ export default function Home() {
       {/* Services Section */}
       <section id="services" className="py-20 md:py-28 px-4 bg-gradient-to-b from-gray-100 to-gray-200 relative overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-orange-500/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
 
         <div className="container mx-auto relative z-10">
           {/* Section header */}
           <div className="text-center mb-12 md:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full mb-4">
-              <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
-              <span className="text-cyan-700 text-sm font-medium">Professional Services</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full mb-4">
+              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+              <span className="text-orange-700 text-sm font-medium">Professional Services</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               <span className="text-gray-800">Our </span>
-              <span className="bg-gradient-to-r from-cyan-600 to-cyan-500 bg-clip-text text-transparent">Services</span>
+              <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">Services</span>
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Mobile repairs for all your diesel, plant, truck, and equipment needs
@@ -88,20 +88,20 @@ export default function Home() {
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-10 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl"></div>
 
         <div className="container mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             {/* Content */}
             <div className="lg:w-1/2 order-2 lg:order-1">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 border border-cyan-500/30 rounded-full mb-6">
-                <span className="w-2 h-2 bg-cyan-400 rounded-full"></span>
-                <span className="text-cyan-300 text-sm font-medium">About Us</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/20 border border-orange-500/30 rounded-full mb-6">
+                <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
+                <span className="text-orange-300 text-sm font-medium">About Us</span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
-                Experienced <span className="bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Mobile Mechanics</span>
+                Experienced <span className="bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">Mobile Mechanics</span>
               </h2>
 
               <p className="text-gray-300 mb-4 text-lg leading-relaxed">
@@ -119,7 +119,7 @@ export default function Home() {
               {/* Why choose us card */}
               <div className="bg-gray-800/60 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-gray-700/50 shadow-xl mb-8">
                 <h3 className="text-xl font-bold mb-5 text-white flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
@@ -148,7 +148,7 @@ export default function Home() {
               <div className="flex justify-center lg:justify-start">
                 <a
                   href="#contact"
-                  className="group bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:-translate-y-1"
+                  className="group bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-1"
                 >
                   <span>Contact Us Today</span>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -161,7 +161,7 @@ export default function Home() {
             {/* Image */}
             <div className="lg:w-1/2 order-1 lg:order-2">
               <div className="relative">
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-cyan-500/20 aspect-[4/3]">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-orange-500/20 aspect-[4/3]">
                   <Image
                     src={IMAGE_PATHS.WHO_WE_ARE}
                     alt="Emergency truck repairs in rainy conditions"
