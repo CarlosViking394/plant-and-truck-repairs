@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { CONTACT } from '@/lib/constants';
 
 interface CalendlyWidgetProps {
@@ -13,17 +12,10 @@ interface AddressSuggestion {
   place_id: string;
 }
 
-// Valid service regions
-const VALID_REGIONS = ['QLD', 'Queensland', 'Tweed Heads', 'Tweed', 'Northern Rivers', 'Byron Bay', 'Ballina', 'Lismore', 'Murwillumbah'];
-
-// NSW regions that are coming soon
-const COMING_SOON_REGIONS = ['Sydney', 'Newcastle', 'Central Coast', 'Wollongong', 'Coffs Harbour', 'Port Macquarie'];
-
 export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
-  const router = useRouter();
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>("7:30 AM"); // Default to opening time
+  const [selectedTime, setSelectedTime] = useState<string | null>("7:30 AM");
   const [serviceType, setServiceType] = useState('Mobile Diesel Mechanic');
   const [location, setLocation] = useState('');
   const [name, setName] = useState('');
@@ -36,15 +28,12 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [formStep, setFormStep] = useState(1);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [locationError, setLocationError] = useState<string | null>(null);
-  const [isValidLocation, setIsValidLocation] = useState(true);
 
-  // Address autocomplete state (using OpenStreetMap Nominatim - free)
+  // Address autocomplete state
   const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isSelectingRef = useRef(false); // Flag to prevent blur validation during selection
 
   const calendlyEmbedRef = useRef<HTMLDivElement>(null);
   const locationInputRef = useRef<HTMLInputElement>(null);
@@ -56,36 +45,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     return () => setIsMounted(false);
   }, []);
 
-  // Check if the address is in a valid service region (QLD or Northern NSW)
-  const isValidServiceRegion = (address: string): boolean => {
-    const upperAddress = address.toUpperCase();
-    return VALID_REGIONS.some(region =>
-      upperAddress.includes(region.toUpperCase())
-    );
-  };
-
-  // Check if address is in a region where service is coming soon
-  const isComingSoonRegion = (address: string): boolean => {
-    const upperAddress = address.toUpperCase();
-    return COMING_SOON_REGIONS.some(region =>
-      upperAddress.includes(region.toUpperCase())
-    );
-  };
-
-  // Get custom message based on location
-  const getLocationErrorMessage = (address: string): string => {
-    if (isComingSoonRegion(address)) {
-      const matchedRegion = COMING_SOON_REGIONS.find(region =>
-        address.toUpperCase().includes(region.toUpperCase())
-      ) || 'this region';
-
-      return `We're expanding to ${matchedRegion} soon! Currently servicing QLD and Northern NSW only.`;
-    }
-
-    return "Currently servicing QLD and Northern NSW (Tweed Heads to Byron Bay region) only.";
-  };
-
-  // Search for addresses using OpenStreetMap Nominatim API (free, no API key needed)
+  // Search for addresses using OpenStreetMap Nominatim API
   const searchAddress = useCallback(async (query: string) => {
     if (query.length < 3) {
       setAddressSuggestions([]);
@@ -95,12 +55,9 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
     setIsSearching(true);
     try {
-      // Add Queensland/Australia context to improve results for our service area
-      const searchQuery = query.toLowerCase().includes('qld') || query.toLowerCase().includes('queensland') || query.toLowerCase().includes('nsw')
-        ? query
-        : `${query}, Queensland, Australia`;
+      // Add Queensland/Australia context to improve results
+      const searchQuery = `${query}, Queensland, Australia`;
 
-      // Search for addresses in Australia using Nominatim
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&countrycodes=au&addressdetails=1&limit=5`,
         {
@@ -134,7 +91,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     }
     searchTimeoutRef.current = setTimeout(() => {
       searchAddress(query);
-    }, 300);
+    }, 400);
   }, [searchAddress]);
 
   // Handle click outside to close suggestions
@@ -154,44 +111,18 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Handle location input changes with debounced search
+  // Handle location input changes
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocation(value);
-
-    // Clear error if user is typing
-    if (locationError) {
-      setLocationError(null);
-      setIsValidLocation(true);
-    }
-
-    // Trigger debounced search
     debouncedSearch(value);
   };
 
   // Handle suggestion selection
   const handleSuggestionSelect = (suggestion: AddressSuggestion) => {
-    // Set flag to prevent blur validation from interfering
-    isSelectingRef.current = true;
-
-    const address = suggestion.display_name;
-    setLocation(address);
+    setLocation(suggestion.display_name);
     setShowSuggestions(false);
     setAddressSuggestions([]);
-
-    // Validate the selected address
-    if (isValidServiceRegion(address)) {
-      setLocationError(null);
-      setIsValidLocation(true);
-    } else {
-      setLocationError(getLocationErrorMessage(address));
-      setIsValidLocation(false);
-    }
-
-    // Reset the flag after a short delay
-    setTimeout(() => {
-      isSelectingRef.current = false;
-    }, 300);
   };
 
   // Handle location input focus
@@ -199,25 +130,6 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     if (addressSuggestions.length > 0) {
       setShowSuggestions(true);
     }
-  };
-
-  // Validate location on blur for manually entered addresses
-  const handleLocationBlur = () => {
-    // Delay to allow click on suggestion
-    setTimeout(() => {
-      // Skip validation if user is selecting a suggestion
-      if (isSelectingRef.current) {
-        return;
-      }
-
-      if (location && !isValidServiceRegion(location)) {
-        setLocationError(getLocationErrorMessage(location));
-        setIsValidLocation(false);
-      } else if (location) {
-        setLocationError(null);
-        setIsValidLocation(true);
-      }
-    }, 250);
   };
 
   // Generate next 7 available dates (excluding Sundays)
@@ -267,7 +179,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   // Reset the form
   const resetForm = () => {
     setSelectedDate(null);
-    setSelectedTime("7:30 AM"); // Default time
+    setSelectedTime("7:30 AM");
     setServiceType('Mobile Diesel Mechanic');
     setLocation('');
     setName('');
@@ -276,8 +188,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     setDetails('');
     setFormStep(1);
     setBookingConfirmed(false);
-    setLocationError(null);
-    setIsValidLocation(true);
+    setAddressSuggestions([]);
+    setShowSuggestions(false);
   };
 
   // Function to handle form step navigation
@@ -326,11 +238,6 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
   // Handle form submission
   const handleSubmit = async () => {
-    // Don't submit if location is invalid
-    if (locationError) {
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       const res = await fetch('/api/sendBookingEmail', {
@@ -418,8 +325,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
   // Check if form can proceed to next step
   const canProceedToStep2 = selectedDate !== null;
-  const canProceedToStep3 = serviceType !== '' && location !== '' && isValidLocation;
-  const canSubmit = name !== '' && phone !== '' && !phoneError && email !== '' && !emailError && isValidLocation;
+  const canProceedToStep3 = serviceType !== '' && location !== '';
+  const canSubmit = name !== '' && phone !== '' && !phoneError && email !== '' && !emailError;
 
   // Function to check if a time is selected
   const isTimeSelected = (time: string): boolean => {
@@ -436,10 +343,10 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
             // Initial booking information view
             <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-5 sm:p-8 border border-gray-200 shadow-lg">
               <div className="mb-5 sm:mb-6 flex justify-center">
-                <div className="bg-gradient-to-br from-orange-500/20 to-orange-600/10 p-4 sm:p-5 rounded-2xl border border-orange-500/20">
+                <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/10 p-4 sm:p-5 rounded-2xl border border-amber-500/20">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-10 w-10 sm:h-12 sm:w-12 text-orange-600"
+                    className="h-10 w-10 sm:h-12 sm:w-12 text-amber-600"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -460,24 +367,24 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
               <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6 bg-white/60 rounded-lg p-4">
                 <div className="flex items-center text-left">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-amber-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <span className="text-sm sm:text-base text-gray-700">Select your preferred date & time</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-amber-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <span className="text-sm sm:text-base text-gray-700">Tell us about your service needs</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-amber-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
@@ -486,7 +393,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
               </div>
 
               <button
-                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 font-bold text-base sm:text-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 flex items-center justify-center gap-2 hover:-translate-y-0.5"
+                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 font-bold text-base sm:text-lg shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 onClick={toggleBookingForm}
                 aria-label="Start booking process"
               >
@@ -531,7 +438,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Location</p>
-                    <p className={`font-medium text-sm sm:text-base break-words ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</p>
+                    <p className={`font-medium text-sm sm:text-base break-words text-gray-800`}>{location}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Date</p>
@@ -554,7 +461,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                 
                 <a 
                   href={`tel:${CONTACT.PHONE}`} 
-                  className="flex-1 flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-md transition-all duration-300 text-lg font-medium shadow-md hover:-translate-y-1"
+                  className="flex-1 flex items-center justify-center gap-3 bg-amber-500 hover:bg-amber-600 text-white py-3 px-4 rounded-md transition-all duration-300 text-lg font-medium shadow-md hover:-translate-y-1"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -592,7 +499,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       <div key={step} className="flex items-center">
                         <span className={`w-8 h-8 flex items-center justify-center text-sm font-bold rounded-full transition-all duration-300 ${
                           formStep >= step
-                            ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md'
+                            ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md'
                             : 'bg-gray-300 text-gray-500'
                         }`}>
                           {formStep > step ? (
@@ -605,7 +512,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         </span>
                         {step < 3 && (
                           <div className={`w-6 sm:w-10 h-1 mx-1 rounded-full transition-all duration-300 ${
-                            formStep > step ? 'bg-orange-500' : 'bg-gray-300'
+                            formStep > step ? 'bg-amber-500' : 'bg-gray-300'
                           }`}></div>
                         )}
                       </div>
@@ -633,8 +540,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                             data-date-element
                             className={`cursor-pointer rounded-xl p-2.5 sm:p-3 transition-all duration-300 text-center border-2 ${
                               selected
-                                ? 'bg-gradient-to-br from-orange-600 to-orange-700 text-white shadow-lg shadow-orange-500/30 border-orange-500 scale-[1.02]'
-                                : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-200 hover:border-orange-300 hover:shadow-md'
+                                ? 'bg-gradient-to-br from-amber-600 to-amber-700 text-white shadow-lg shadow-amber-500/30 border-amber-500 scale-[1.02]'
+                                : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-200 hover:border-amber-300 hover:shadow-md'
                             }`}
                             onClick={() => handleDateSelection(date)}
                             type="button"
@@ -667,7 +574,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       disabled={!canProceedToStep2}
                       className={`px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold flex items-center gap-2 text-sm sm:text-base transition-all duration-300 ${
                         canProceedToStep2
-                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5'
+                          ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                       onClick={handleNextStep}
@@ -687,7 +594,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   <div className="mb-3 sm:mb-5">
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Service Type</label>
                     <select 
-                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                       value={serviceType}
                       onChange={(e) => setServiceType(e.target.value)}
                     >
@@ -714,10 +621,9 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       <input
                         type="text"
                         placeholder="Start typing your address..."
-                        className={`w-full bg-gray-100 border ${locationError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-3 pl-10 pr-10 text-gray-800 focus:outline-none focus:ring-2 ${locationError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
+                        className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 pl-10 pr-10 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                         value={location}
                         onChange={handleLocationChange}
-                        onBlur={handleLocationBlur}
                         onFocus={handleLocationFocus}
                         ref={locationInputRef}
                         aria-label="Service location address"
@@ -745,7 +651,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                             key={suggestion.place_id}
                             type="button"
                             className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none border-b border-gray-100 last:border-b-0 flex items-start gap-2"
-                            onClick={() => handleSuggestionSelect(suggestion)}
+                            onMouseDown={() => handleSuggestionSelect(suggestion)}
                           >
                             <svg className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -757,16 +663,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       </div>
                     )}
 
-                    {locationError && (
-                      <div className="mt-1 text-sm text-red-500 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                        {locationError}
-                      </div>
-                    )}
-                    <div className="mt-1 text-xs text-orange-700">
-                      We currently service Queensland and Northern NSW areas (Tweed Heads to Byron Bay region)
+                    <div className="mt-1 text-xs text-gray-500">
+                      Servicing South East Queensland and Northern NSW
                     </div>
                   </div>
                   
@@ -775,7 +673,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Additional Details (Optional)</label>
                     <textarea
                       placeholder="Describe your repair needs or specific issues"
-                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                       rows={2}
                       value={details}
                       onChange={(e) => setDetails(e.target.value)}
@@ -798,7 +696,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                       disabled={!canProceedToStep3}
                       className={`px-5 py-2 rounded-lg font-medium flex items-center gap-2 ${
                         canProceedToStep3 
-                          ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                          ? 'bg-amber-500 hover:bg-amber-600 text-white' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                       onClick={handleNextStep}
@@ -819,7 +717,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Your Name *</label>
                     <input 
                       type="text" 
-                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
@@ -830,7 +728,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Phone Number *</label>
                     <input 
                       type="tel" 
-                      className={`w-full bg-gray-100 border ${phoneError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 ${phoneError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
+                      className={`w-full bg-gray-100 border ${phoneError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 ${phoneError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-amber-500 focus:border-amber-500'}`}
                       value={phone}
                       onChange={handlePhoneChange}
                       placeholder="04XX XXX XXX"
@@ -850,7 +748,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Email *</label>
                     <input 
                       type="email" 
-                      className={`w-full bg-gray-100 border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 ${emailError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
+                      className={`w-full bg-gray-100 border ${emailError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 ${emailError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-amber-500 focus:border-amber-500'}`}
                       value={email}
                       onChange={handleEmailChange}
                       placeholder="your@email.com"
@@ -880,7 +778,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         </div>
                         <div>
                           <p className="text-xs text-gray-500 mb-1">Location</p>
-                          <p className={`font-medium text-sm sm:text-base break-words ${locationError ? 'text-red-500' : 'text-gray-800'}`}>{location}</p>
+                          <p className={`font-medium text-sm sm:text-base break-words text-gray-800`}>{location}</p>
                         </div>
                       </div>
                     </div>
@@ -899,10 +797,9 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     </button>
                     <button 
                       type="button"
-                      disabled={!canSubmit || isSubmitting || locationError !== null}
+                      disabled={!canSubmit || isSubmitting }
                       className={`px-3 sm:px-5 py-2 rounded-lg font-medium flex items-center gap-1 sm:gap-2 text-sm sm:text-base ${
-                        canSubmit && !isSubmitting && locationError === null
-                          ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                        canSubmit && !isSubmitting                           ? 'bg-amber-500 hover:bg-amber-600 text-white' 
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                       onClick={handleSubmit}

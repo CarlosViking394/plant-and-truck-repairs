@@ -93,12 +93,12 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
         <div className="max-w-5xl mx-auto">
           {/* Section header */}
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/20 backdrop-blur-sm border border-orange-500/30 rounded-full mb-4">
-              <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
-              <span className="text-orange-200 text-sm font-medium">Book Online</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 rounded-full mb-4">
+              <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+              <span className="text-amber-200 text-sm font-medium">Book Online</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">
-              Book a <span className="bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">Service</span>
+              Book a <span className="bg-gradient-to-r from-amber-400 to-amber-300 bg-clip-text text-transparent">Service</span>
             </h2>
             <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
               Schedule your mobile plant or truck repair service online for fast, reliable service throughout South East Queensland.
@@ -107,10 +107,10 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
 
           {/* Booking widget card */}
           <div className="max-w-2xl mx-auto relative mb-16 sm:mb-20">
-            <div id="booking-widget" className="bg-white/95 backdrop-blur-md p-5 sm:p-8 rounded-2xl shadow-2xl border border-white/20 relative overflow-hidden scroll-mt-24 transition-all duration-500 hover:shadow-orange-500/10 z-10">
+            <div id="booking-widget" className="bg-white/95 backdrop-blur-md p-5 sm:p-8 rounded-2xl shadow-2xl border border-white/20 relative overflow-hidden scroll-mt-24 transition-all duration-500 hover:shadow-amber-500/10 z-10">
               {/* Badge */}
               <div className="absolute -top-px -right-px">
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1.5 text-xs sm:text-sm font-bold rounded-bl-xl rounded-tr-2xl shadow-lg">
+                <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-1.5 text-xs sm:text-sm font-bold rounded-bl-xl rounded-tr-2xl shadow-lg">
                   FAST BOOKING
                 </div>
               </div>
@@ -122,8 +122,8 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
               {/* How it works */}
               <div className="mb-6 sm:mb-8 p-4 sm:p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
                 <h4 className="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                  <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -131,19 +131,19 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                 </h4>
                 <ol className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600 pl-11">
                   <li className="flex items-start gap-3">
-                    <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                    <span className="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
                     <span>Select a service type and preferred date</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                    <span className="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
                     <span>Provide your contact information</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                    <span className="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
                     <span>Our team will confirm your booking by phone</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="w-6 h-6 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+                    <span className="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
                     <span>We&apos;ll arrive at your location at the scheduled date</span>
                   </li>
                 </ol>
@@ -158,7 +158,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <a
                     href={`tel:${CONTACT.PHONE}`}
-                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 text-base sm:text-lg font-bold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5"
+                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 text-base sm:text-lg font-bold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -168,7 +168,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
 
                   <a
                     href={`mailto:${CONTACT.EMAIL}`}
-                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 text-base sm:text-lg font-bold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5"
+                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 text-base sm:text-lg font-bold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -187,11 +187,11 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
           {/* Service areas */}
           <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-2xl relative overflow-hidden">
             {/* Decorative elements */}
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl"></div>
 
             <h3 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 text-center">
-              South East Queensland <span className="text-orange-600">Service Areas</span>
+              South East Queensland <span className="text-amber-600">Service Areas</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 relative">
@@ -202,8 +202,8 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
               ].map((location, idx) => (
                 <div key={idx} className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                   <h4 className="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
-                    <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -213,7 +213,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                   <ul className="text-gray-600 space-y-2 text-sm">
                     {location.areas.map((area) => (
                       <li key={area} className="flex items-center">
-                        <span className="w-2 h-2 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full mr-3"></span>
+                        <span className="w-2 h-2 bg-gradient-to-r from-amber-500 to-amber-400 rounded-full mr-3"></span>
                         {area}
                       </li>
                     ))}

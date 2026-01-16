@@ -44,14 +44,14 @@ export default function ThankYouPage() {
           {/* What Happens Next Section */}
           <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               What happens next?
             </h2>
             <ol className="space-y-4">
               <li className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center font-bold text-sm mr-3">
+                <span className="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center font-bold text-sm mr-3">
                   1
                 </span>
                 <div>
@@ -60,7 +60,7 @@ export default function ThankYouPage() {
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center font-bold text-sm mr-3">
+                <span className="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center font-bold text-sm mr-3">
                   2
                 </span>
                 <div>
@@ -69,7 +69,7 @@ export default function ThankYouPage() {
                 </div>
               </li>
               <li className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center font-bold text-sm mr-3">
+                <span className="flex-shrink-0 w-8 h-8 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center font-bold text-sm mr-3">
                   3
                 </span>
                 <div>
@@ -94,7 +94,7 @@ export default function ThankYouPage() {
 
             <a
               href={`tel:${CONTACT.PHONE}`}
-              className="flex-1 inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              className="flex-1 inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -107,7 +107,7 @@ export default function ThankYouPage() {
         {/* Additional Info */}
         <p className="text-center text-gray-500 text-sm mt-6">
           Questions? Call us at{' '}
-          <a href={`tel:${CONTACT.PHONE}`} className="text-orange-600 hover:text-orange-700 font-medium">
+          <a href={`tel:${CONTACT.PHONE}`} className="text-amber-600 hover:text-amber-700 font-medium">
             {CONTACT.PHONE_DISPLAY}
           </a>
         </p>

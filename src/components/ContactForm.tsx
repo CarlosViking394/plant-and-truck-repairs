@@ -52,7 +52,7 @@ export default function ContactForm() {
       {/* Name field */}
       <div>
         <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-          Full Name <span className="text-orange-500">*</span>
+          Full Name <span className="text-amber-500">*</span>
         </label>
         <input
           type="text"
@@ -61,7 +61,7 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
+          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
           placeholder="John Smith"
         />
       </div>
@@ -70,7 +70,7 @@ export default function ContactForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-            Email Address <span className="text-orange-500">*</span>
+            Email Address <span className="text-amber-500">*</span>
           </label>
           <input
             type="email"
@@ -79,14 +79,14 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
             placeholder="john@example.com"
           />
         </div>
 
         <div>
           <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-            Phone Number <span className="text-orange-500">*</span>
+            Phone Number <span className="text-amber-500">*</span>
           </label>
           <input
             type="tel"
@@ -95,7 +95,7 @@ export default function ContactForm() {
             value={formData.phone}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-800 transition-all duration-200 placeholder:text-gray-400"
             placeholder="04XX XXX XXX"
           />
         </div>
@@ -104,7 +104,7 @@ export default function ContactForm() {
       {/* Service dropdown */}
       <div>
         <label htmlFor="service" className="block text-sm font-semibold text-gray-700 mb-2">
-          Service Required <span className="text-orange-500">*</span>
+          Service Required <span className="text-amber-500">*</span>
         </label>
         <div className="relative">
           <select
@@ -113,7 +113,7 @@ export default function ContactForm() {
             value={formData.service}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 appearance-none cursor-pointer"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-800 transition-all duration-200 appearance-none cursor-pointer"
           >
             <option value="" disabled>Select a service</option>
             <option value="diesel-mechanic">Mobile Diesel Mechanic</option>
@@ -142,7 +142,7 @@ export default function ContactForm() {
           value={formData.message}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 text-gray-800 transition-all duration-200 resize-none placeholder:text-gray-400"
+          className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-gray-800 transition-all duration-200 resize-none placeholder:text-gray-400"
           placeholder="Please provide details about the service you need..."
         ></textarea>
       </div>
@@ -155,7 +155,7 @@ export default function ContactForm() {
           className={`w-full py-4 px-6 rounded-xl text-white font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 ${
             formStatus === 'submitting'
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5'
+              : 'bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5'
           }`}
         >
           {formStatus === 'submitting' ? (

@@ -19,20 +19,20 @@
   --primary: #1e293b;
   --primary-dark: #0f172a;
 
-  /* Accent Color Scale (Orange) */
-  --accent-50: #fff7ed;
-  --accent-100: #ffedd5;
-  --accent-200: #fed7aa;
-  --accent-300: #fdba74;
-  --accent-400: #fb923c;
-  --accent-500: #f97316;
-  --accent-600: #ea580c;
-  --accent-700: #c2410c;
-  --accent-800: #9a3412;
-  --accent-900: #7c2d12;
-  --secondary: #f97316;
-  --secondary-dark: #ea580c;
-  --accent: #ea580c;
+  /* Accent Color Scale (Amber/Yellow - matches logo) */
+  --accent-50: #fffbeb;
+  --accent-100: #fef3c7;
+  --accent-200: #fde68a;
+  --accent-300: #fcd34d;
+  --accent-400: #fbbf24;
+  --accent-500: #f59e0b;
+  --accent-600: #d97706;
+  --accent-700: #b45309;
+  --accent-800: #92400e;
+  --accent-900: #78350f;
+  --secondary: #f59e0b;
+  --secondary-dark: #d97706;
+  --accent: #d97706;
 
   /* Neutral/Gray Scale */
   --gray-50: #f9fafb;
@@ -62,7 +62,7 @@
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --shadow-glow-primary: 0 0 20px rgba(30, 41, 59, 0.4);
-  --shadow-glow-orange: 0 0 20px rgba(249, 115, 22, 0.3);
+  --shadow-glow-amber: 0 0 20px rgba(245, 158, 11, 0.3);
 
   /* Border Radius */
   --radius-sm: 0.25rem;
@@ -156,7 +156,7 @@ body {
 
 .btn-secondary:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg), var(--shadow-glow-orange);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-amber);
 }
 
 /* Add responsive styles for container */
