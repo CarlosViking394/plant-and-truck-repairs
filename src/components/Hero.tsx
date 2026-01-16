@@ -102,7 +102,7 @@ export default function Hero({
           <div className="flex flex-col sm:flex-row gap-4">
             <a
               href="#booking-widget"
-              className="group bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold py-4 px-8 rounded-xl text-lg inline-flex items-center justify-center gap-3 shadow-xl shadow-amber-500/25 hover:shadow-amber-500/40 transition-all duration-300 hover:-translate-y-1"
+              className="group bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 px-8 rounded-xl text-lg inline-flex items-center justify-center gap-3 shadow-lg shadow-black/20 hover:shadow-black/30 transition-all duration-300 hover:-translate-y-1"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform duration-300 group-hover:rotate-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
