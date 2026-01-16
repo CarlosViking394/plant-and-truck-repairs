@@ -1,22 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { CONTACT } from '@/lib/constants';
-import Script from 'next/script';
 
 interface CalendlyWidgetProps {
   className?: string;
 }
 
-// Get API key from environment variable
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyDLOii6uO3MQcIndVJiV5yhtR45o7mv4pE";
-
-declare global {
-  interface Window {
-    initAutocomplete: () => void;
-    google: any;
-  }
+interface AddressSuggestion {
+  display_name: string;
+  place_id: string;
 }
 
 // Valid service regions
@@ -41,241 +35,170 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formStep, setFormStep] = useState(1);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
-  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
-  const [googleMapsError, setGoogleMapsError] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [isValidLocation, setIsValidLocation] = useState(true);
 
+  // Address autocomplete state (using OpenStreetMap Nominatim - free)
+  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const calendlyEmbedRef = useRef<HTMLDivElement>(null);
   const locationInputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<any>(null);
-  
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+
   // Component mounted effect
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, []);
-  
-  // Handle Google Maps script loading
-  const handleGoogleMapsLoaded = () => {
-    console.log("Google Maps script loaded successfully");
-    // Don't initialize here - wait for the input to be available
-    // The visibility state change will trigger another useEffect
-    setGoogleMapsLoaded(true);
-  };
-  
-  const handleGoogleMapsError = () => {
-    console.error("Failed to load Google Maps script");
-    setGoogleMapsError("Failed to load Google Maps API");
-  };
 
   // Check if the address is in a valid service region (QLD or Northern NSW)
   const isValidServiceRegion = (address: string): boolean => {
     const upperAddress = address.toUpperCase();
-    return VALID_REGIONS.some(region => 
+    return VALID_REGIONS.some(region =>
       upperAddress.includes(region.toUpperCase())
     );
   };
-  
+
   // Check if address is in a region where service is coming soon
   const isComingSoonRegion = (address: string): boolean => {
     const upperAddress = address.toUpperCase();
-    return COMING_SOON_REGIONS.some(region => 
+    return COMING_SOON_REGIONS.some(region =>
       upperAddress.includes(region.toUpperCase())
     );
   };
-  
+
   // Get custom message based on location
   const getLocationErrorMessage = (address: string): string => {
     if (isComingSoonRegion(address)) {
-      // Extract the matched region for a more personalized message
-      const matchedRegion = COMING_SOON_REGIONS.find(region => 
+      const matchedRegion = COMING_SOON_REGIONS.find(region =>
         address.toUpperCase().includes(region.toUpperCase())
       ) || 'this region';
-      
+
       return `We're expanding to ${matchedRegion} soon! Currently servicing QLD and Northern NSW only.`;
     }
-    
-    // Default message for other areas
+
     return "Currently servicing QLD and Northern NSW (Tweed Heads to Byron Bay region) only.";
   };
-  
-  // Initialize Google Places autocomplete
-  const initializeAutocomplete = () => {
-    // Only run on client-side and when component is mounted
-    if (typeof window === 'undefined' || !isMounted) {
+
+  // Search for addresses using OpenStreetMap Nominatim API (free, no API key needed)
+  const searchAddress = useCallback(async (query: string) => {
+    if (query.length < 3) {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
-    
-    if (!window.google || !window.google.maps || !window.google.maps.places) {
-      console.error("Google Maps API not available");
-      setGoogleMapsError("Google Maps API not available");
-      return;
-    }
-    
-    // Check if input ref is available and visible
-    if (!locationInputRef.current) {
-      console.log("Location input ref not available yet");
-      return; // Exit without error - we'll retry when the element is available
-    }
-    
-    // Check if user is actively typing in textarea - don't initialize in this case
-    const activeElement = document.activeElement;
-    const isTextAreaActive = activeElement && activeElement.tagName === 'TEXTAREA';
-    if (isTextAreaActive && activeElement.hasAttribute('data-focused')) {
-      console.log("User is typing in textarea, skipping autocomplete initialization");
-      return;
-    }
-    
+
+    setIsSearching(true);
     try {
-      console.log("Initializing autocomplete on input element");
-      
-      // Check if autocomplete is already initialized on this input
-      if (autocompleteRef.current) {
-        console.log("Autocomplete already initialized");
-        return;
-      }
-      
-      // Create autocomplete object, restricting to Australia
-      autocompleteRef.current = new window.google.maps.places.Autocomplete(locationInputRef.current, {
-        componentRestrictions: { country: "au" },
-        fields: ["formatted_address", "geometry", "name", "address_components"],
-        types: ["address"]
-      });
-      
-      // Add event listener for place selection
-      autocompleteRef.current.addListener("place_changed", () => {
-        const place = autocompleteRef.current.getPlace();
-        if (place && place.formatted_address) {
-          console.log("Place selected:", place.formatted_address);
-          
-          // Check if the address is in Queensland or Northern NSW
-          if (isValidServiceRegion(place.formatted_address)) {
-            setLocation(place.formatted_address);
-            setLocationError(null);
-            setIsValidLocation(true);
-          } else {
-            // Set the location but mark it as invalid
-            setLocation(place.formatted_address);
-            setLocationError(getLocationErrorMessage(place.formatted_address));
-            setIsValidLocation(false);
+      // Search for addresses in Australia using Nominatim
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=au&addressdetails=1&limit=5`,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'MPTR-Booking-Widget/1.0'
           }
         }
-      });
-      
-      setGoogleMapsLoaded(true);
-      setGoogleMapsError(null);
-      console.log("Autocomplete successfully initialized");
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setAddressSuggestions(data.map((item: { display_name: string; place_id: string }) => ({
+          display_name: item.display_name,
+          place_id: item.place_id
+        })));
+        setShowSuggestions(data.length > 0);
+      }
     } catch (error) {
-      console.error("Error initializing autocomplete:", error);
-      setGoogleMapsError("Error initializing autocomplete");
+      console.error('Address search error:', error);
+      setAddressSuggestions([]);
+    } finally {
+      setIsSearching(false);
     }
-  };
-  
-  // Set up the global callback for Maps API
+  }, []);
+
+  // Debounced address search
+  const debouncedSearch = useCallback((query: string) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = setTimeout(() => {
+      searchAddress(query);
+    }, 300);
+  }, [searchAddress]);
+
+  // Handle click outside to close suggestions
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.initAutocomplete = () => {
-        console.log("Google Maps callback received");
-        setGoogleMapsLoaded(true);
-      };
-    }
-    
-    return () => {
-      // Clean up event listeners
-      if (autocompleteRef.current) {
-        // Google Maps doesn't provide a clean way to remove all listeners
-        // but we can set the reference to null
-        autocompleteRef.current = null;
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node) &&
+        locationInputRef.current &&
+        !locationInputRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
       }
     };
-  }, []);
-  
-  // Initialize autocomplete when the form step changes to 2 and input is available
-  useEffect(() => {
-    if (isMounted && showBookingForm && formStep === 2 && googleMapsLoaded) {
-      // Check if user is actively typing in a textarea before proceeding
-      const activeElement = document.activeElement;
-      const isTextAreaActive = activeElement && activeElement.tagName === 'TEXTAREA';
-      
-      if (isTextAreaActive) {
-        // Skip autocomplete initialization if user is currently typing in a textarea
-        return;
-      }
-      
-      const timer = setTimeout(() => {
-        if (locationInputRef.current) {
-          // Only initialize if no textarea is currently focused
-          const activeElementNow = document.activeElement;
-          const isTextAreaActiveNow = activeElementNow && activeElementNow.tagName === 'TEXTAREA';
-          
-          if (!isTextAreaActiveNow) {
-            initializeAutocomplete();
-            
-            // Only focus if it was a deliberate user action
-            if (locationInputRef.current.hasAttribute('data-user-initiated')) {
-              locationInputRef.current.focus();
-            }
-          }
-        }
-      }, 200);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isMounted, showBookingForm, formStep, googleMapsLoaded]);
 
-  // Handle location input changes - validate manually entered addresses
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Handle location input changes with debounced search
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocation(value);
-    
-    // Clear error if user is typing (they may be entering a valid address)
+
+    // Clear error if user is typing
     if (locationError) {
       setLocationError(null);
       setIsValidLocation(true);
-      
-      // If Google is loaded and autocomplete was previously initialized
-      // but not working after validation error, reinitialize it
-      if (googleMapsLoaded && !autocompleteRef.current && locationInputRef.current) {
-        initializeAutocomplete();
-      }
+    }
+
+    // Trigger debounced search
+    debouncedSearch(value);
+  };
+
+  // Handle suggestion selection
+  const handleSuggestionSelect = (suggestion: AddressSuggestion) => {
+    const address = suggestion.display_name;
+    setLocation(address);
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
+
+    // Validate the selected address
+    if (isValidServiceRegion(address)) {
+      setLocationError(null);
+      setIsValidLocation(true);
+    } else {
+      setLocationError(getLocationErrorMessage(address));
+      setIsValidLocation(false);
     }
   };
 
-  // Reinitialize autocomplete when input is focused after validation error
-  const handleLocationFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Prevent focus jump from textarea by checking if user is actively typing in textarea
-    const activeElement = document.activeElement;
-    const isTextAreaActive = activeElement && activeElement.tagName === 'TEXTAREA';
-    
-    // If focus event is not intentional (e.g., from clicking directly) and a textarea is active, prevent focus change
-    if (isTextAreaActive && !e.target.hasAttribute('data-user-initiated')) {
-      // Return focus to the textarea element that was active
-      setTimeout(() => {
-        (activeElement as HTMLElement).focus();
-      }, 0);
-      return;
-    }
-
-    // If we have an error and Google is loaded but autocomplete not working
-    if (locationError && googleMapsLoaded && !autocompleteRef.current && locationInputRef.current) {
-      // Reset the autocomplete reference
-      autocompleteRef.current = null;
-      // Reinitialize autocomplete
-      initializeAutocomplete();
+  // Handle location input focus
+  const handleLocationFocus = () => {
+    if (addressSuggestions.length > 0) {
+      setShowSuggestions(true);
     }
   };
 
   // Validate location on blur for manually entered addresses
   const handleLocationBlur = () => {
-    if (location && !isValidServiceRegion(location)) {
-      setLocationError(getLocationErrorMessage(location));
-      setIsValidLocation(false);
-    } else if (location) {
-      setLocationError(null);
-      setIsValidLocation(true);
-    }
+    // Delay to allow click on suggestion
+    setTimeout(() => {
+      if (location && !isValidServiceRegion(location)) {
+        setLocationError(getLocationErrorMessage(location));
+        setIsValidLocation(false);
+      } else if (location) {
+        setLocationError(null);
+        setIsValidLocation(true);
+      }
+    }, 200);
   };
 
   // Generate next 7 available dates (excluding Sundays)
@@ -484,38 +407,8 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     return selectedTime === time;
   };
 
-  // Add this new function to handle direct clicks on the location input
-  const handleLocationMouseDown = (e: React.MouseEvent<HTMLInputElement>) => {
-    // Mark this as a user-initiated focus
-    e.currentTarget.setAttribute('data-user-initiated', 'true');
-    
-    // Remove the attribute after focus is handled
-    setTimeout(() => {
-      e.currentTarget.removeAttribute('data-user-initiated');
-    }, 100);
-  };
-
-  // Add this new function to ensure textarea keeps focus
-  const handleTextareaFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-    // Prevent any automatic focus change within a short period
-    e.currentTarget.setAttribute('data-focused', 'true');
-    
-    setTimeout(() => {
-      e.currentTarget.removeAttribute('data-focused');
-    }, 500);
-  };
-
   return (
-    <>
-      {/* Google Maps API Script */}
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initAutocomplete`}
-        strategy="lazyOnload"
-        onLoad={handleGoogleMapsLoaded}
-        onError={handleGoogleMapsError}
-      />
-      
-      <div className={`${className} -mx-4 sm:mx-0`}>
+    <div className={`${className} -mx-4 sm:mx-0`}>
         <div 
           ref={calendlyEmbedRef}
           className="rounded-md overflow-hidden"
@@ -787,11 +680,10 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     </select>
                   </div>
                   
-                  {/* Location with Google Places autocomplete */}
+                  {/* Location with address autocomplete */}
                   <div className="mb-3 sm:mb-5 relative">
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">
                       Service Location
-                      <span className="ml-1 text-xs text-gray-500">(powered by Google Maps)</span>
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -800,34 +692,58 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </div>
-                      <input 
-                        type="text" 
-                        placeholder="Enter your address" 
-                        className={`w-full bg-gray-100 border ${locationError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-3 pl-10 pr-4 text-gray-800 focus:outline-none focus:ring-2 ${locationError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
+                      <input
+                        type="text"
+                        placeholder="Start typing your address..."
+                        className={`w-full bg-gray-100 border ${locationError ? 'border-red-500' : 'border-gray-300'} rounded-lg py-3 pl-10 pr-10 text-gray-800 focus:outline-none focus:ring-2 ${locationError ? 'focus:ring-red-500 focus:border-red-500' : 'focus:ring-orange-500 focus:border-orange-500'}`}
                         value={location}
                         onChange={handleLocationChange}
                         onBlur={handleLocationBlur}
                         onFocus={handleLocationFocus}
-                        onMouseDown={handleLocationMouseDown}
                         ref={locationInputRef}
                         aria-label="Service location address"
                         id="location-input"
+                        autoComplete="off"
                       />
+                      {isSearching && (
+                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                          <svg className="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        </div>
+                      )}
                     </div>
-                    {locationError ? (
+
+                    {/* Address suggestions dropdown */}
+                    {showSuggestions && addressSuggestions.length > 0 && (
+                      <div
+                        ref={suggestionsRef}
+                        className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                      >
+                        {addressSuggestions.map((suggestion) => (
+                          <button
+                            key={suggestion.place_id}
+                            type="button"
+                            className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none border-b border-gray-100 last:border-b-0 flex items-start gap-2"
+                            onClick={() => handleSuggestionSelect(suggestion)}
+                          >
+                            <svg className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span className="line-clamp-2">{suggestion.display_name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {locationError && (
                       <div className="mt-1 text-sm text-red-500 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                         {locationError}
-                      </div>
-                    ) : googleMapsError ? (
-                      <div className="mt-1 text-sm text-red-500">
-                        {googleMapsError}. Please enter your address manually.
-                      </div>
-                    ) : !googleMapsLoaded && (
-                      <div className="mt-1 text-sm text-gray-500">
-                        Loading Google Maps...
                       </div>
                     )}
                     <div className="mt-1 text-xs text-cyan-700">
@@ -838,13 +754,12 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   {/* Service details/notes */}
                   <div className="mb-4 sm:mb-8">
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">Additional Details (Optional)</label>
-                    <textarea 
-                      placeholder="Describe your repair needs or specific issues" 
+                    <textarea
+                      placeholder="Describe your repair needs or specific issues"
                       className="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 sm:py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                       rows={2}
                       value={details}
                       onChange={(e) => setDetails(e.target.value)}
-                      onFocus={handleTextareaFocus}
                     ></textarea>
                   </div>
                   
@@ -1001,6 +916,5 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
           </p>
         </div>
       </div>
-    </>
   );
 } 
