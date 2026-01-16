@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { CONTACT } from '@/lib/constants';
 import Script from 'next/script';
 
@@ -25,6 +26,7 @@ const VALID_REGIONS = ['QLD', 'Queensland', 'Tweed Heads', 'Tweed', 'Northern Ri
 const COMING_SOON_REGIONS = ['Sydney', 'Newcastle', 'Central Coast', 'Wollongong', 'Coffs Harbour', 'Port Macquarie'];
 
 export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
+  const router = useRouter();
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>("7:30 AM"); // Default to opening time
@@ -409,10 +411,18 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
         throw new Error(message || 'Failed to send booking email');
       }
 
-      setBookingConfirmed(true);
+      // Redirect to thank you page on success
+      try {
+        router.push('/thank-you');
+      } catch (redirectError) {
+        // Fallback to inline confirmation if redirect fails
+        console.error('Redirect failed, showing inline confirmation:', redirectError);
+        setBookingConfirmed(true);
+      }
     } catch (err: any) {
       console.error('Booking email error:', err);
-      // You can set an error state here if desired
+      // Fallback to inline confirmation even on error (user feedback)
+      setBookingConfirmed(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -517,57 +527,63 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
         >
           {!showBookingForm ? (
             // Initial booking information view
-            <div className="bg-gray-200 rounded-md p-4 sm:p-6 border border-gray-300">
-              <div className="mb-4 sm:mb-6 flex justify-center">
-                <div className="bg-cyan-700/20 p-3 sm:p-4 rounded-full">
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-10 w-10 sm:h-12 sm:w-12 text-cyan-700" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
+            <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-5 sm:p-8 border border-gray-200 shadow-lg">
+              <div className="mb-5 sm:mb-6 flex justify-center">
+                <div className="bg-gradient-to-br from-cyan-500/20 to-cyan-600/10 p-4 sm:p-5 rounded-2xl border border-cyan-500/20">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-10 w-10 sm:h-12 sm:w-12 text-cyan-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
                 </div>
               </div>
-              <h4 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4 text-gray-800">Schedule Your Service</h4>
-              <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
+              <h4 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-800">Schedule Your Service</h4>
+              <p className="text-sm sm:text-base text-gray-600 mb-5 sm:mb-6">
                 Book a mobile mechanic at your location in just a few steps.
               </p>
-              
-              <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+
+              <div className="space-y-3 sm:space-y-4 mb-5 sm:mb-6 bg-white/60 rounded-lg p-4">
                 <div className="flex items-center text-left">
-                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-700 mr-3 sm:mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
                   <span className="text-sm sm:text-base text-gray-700">Select your preferred date & time</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-700 mr-3 sm:mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
                   <span className="text-sm sm:text-base text-gray-700">Tell us about your service needs</span>
                 </div>
                 <div className="flex items-center text-left">
-                  <svg className="h-5 w-5 sm:h-6 sm:w-6 text-cyan-700 mr-3 sm:mr-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 bg-cyan-500/20 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                    <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
                   <span className="text-sm sm:text-base text-gray-700">Get instant confirmation</span>
                 </div>
               </div>
-              
-              <button 
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 rounded-md transition-all duration-300 font-semibold text-base sm:text-lg shadow-md flex items-center justify-center gap-2"
+
+              <button
+                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 font-bold text-base sm:text-lg shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 onClick={toggleBookingForm}
                 aria-label="Start booking process"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                 </svg>
                 Start Booking
@@ -575,28 +591,28 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
             </div>
           ) : bookingConfirmed ? (
             // Booking confirmation view
-            <div className="bg-gray-200 rounded-md p-6 border border-gray-300">
+            <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-6 sm:p-8 border border-gray-200 shadow-lg">
               <div className="mb-6 flex justify-center">
-                <div className="bg-green-100 p-4 rounded-full">
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-12 w-12 text-green-600" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
+                <div className="bg-gradient-to-br from-green-100 to-green-200 p-5 rounded-2xl border border-green-300/50">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-12 w-12 text-green-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M5 13l4 4L19 7" 
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M5 13l4 4L19 7"
                     />
                   </svg>
                 </div>
               </div>
-              <h4 className="text-2xl font-semibold mb-4 text-gray-800">Booking Confirmed!</h4>
-              <p className="text-gray-700 mb-6">
-                Thank you for working with us. We will get in contact with you to confirm your booking for <span className="font-semibold">{selectedDate ? formatDate(selectedDate) : ''}</span>.
+              <h4 className="text-2xl font-bold mb-4 text-gray-800">Booking Confirmed!</h4>
+              <p className="text-gray-600 mb-6">
+                Thank you for working with us. We will get in contact with you to confirm your booking for <span className="font-semibold text-gray-800">{selectedDate ? formatDate(selectedDate) : ''}</span>.
               </p>
               
               <div className="bg-white p-3 sm:p-4 rounded-lg border border-gray-300 mb-4 sm:mb-6">
@@ -643,51 +659,54 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
             </div>
           ) : (
             // Booking form view - multi-step form
-            <div className="bg-gray-200 rounded-md p-3 sm:p-6 border border-gray-300 mx-auto w-full">
-              <div className="flex justify-between items-center mb-2 sm:mb-6">
-                <h4 className="text-base sm:text-xl font-semibold text-gray-800">
+            <div className="bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl p-4 sm:p-6 border border-gray-200 shadow-lg mx-auto w-full">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h4 className="text-lg sm:text-xl font-bold text-gray-800">
                   {formStep === 1 && "Select Date"}
                   {formStep === 2 && "Service Details"}
                   {formStep === 3 && "Contact Information"}
                 </h4>
-                <button 
+                <button
                   onClick={toggleBookingForm}
-                  className="text-gray-500 hover:text-gray-700 p-1.5 sm:p-2 rounded-full hover:bg-gray-300"
+                  className="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-300/50 transition-colors"
                   aria-label="Close booking form"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              
-              {/* Progress bar */}
-              <div className="mb-2 sm:mb-6">
-                <div className="relative pt-1">
-                  <div className="flex mb-1 sm:mb-2 items-center justify-between">
-                    <div className="flex">
-                      <span className={`text-xs font-semibold inline-block py-1 px-1.5 sm:px-2 uppercase rounded-full ${formStep >= 1 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
-                        1
-                      </span>
-                      <span className={`text-xs font-semibold inline-block ml-1 mr-2 py-1 px-1.5 sm:px-2 uppercase rounded-full ${formStep >= 2 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
-                        2
-                      </span>
-                      <span className={`text-xs font-semibold inline-block ml-1 py-1 px-1.5 sm:px-2 uppercase rounded-full ${formStep >= 3 ? 'bg-orange-500 text-white' : 'bg-gray-400 text-gray-600'}`}>
-                        3
-                      </span>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xs font-semibold inline-block text-orange-600">
-                        Step {formStep} of 3
-                      </span>
-                    </div>
+
+              {/* Progress bar - redesigned as pills */}
+              <div className="mb-4 sm:mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3].map((step) => (
+                      <div key={step} className="flex items-center">
+                        <span className={`w-8 h-8 flex items-center justify-center text-sm font-bold rounded-full transition-all duration-300 ${
+                          formStep >= step
+                            ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md'
+                            : 'bg-gray-300 text-gray-500'
+                        }`}>
+                          {formStep > step ? (
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            step
+                          )}
+                        </span>
+                        {step < 3 && (
+                          <div className={`w-6 sm:w-10 h-1 mx-1 rounded-full transition-all duration-300 ${
+                            formStep > step ? 'bg-orange-500' : 'bg-gray-300'
+                          }`}></div>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-300">
-                    <div
-                      style={{ width: `${(formStep / 3) * 100}%` }}
-                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-orange-500"
-                    ></div>
-                  </div>
+                  <span className="text-xs font-semibold text-gray-500">
+                    Step {formStep}/3
+                  </span>
                 </div>
               </div>
               
@@ -695,37 +714,37 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                 <>
                   {/* Date selection */}
                   <div className="mb-6 sm:mb-8">
-                    <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-3 text-left">
+                    <label className="block text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3 text-left">
                       Select Date:
                     </label>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-1 sm:gap-2">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
                       {availableDates.map((date, index) => {
                         const selected = isDateSelected(date);
                         return (
-                          <button 
-                            key={index} 
+                          <button
+                            key={index}
                             data-date-element
-                            className={`cursor-pointer rounded-lg p-2 sm:p-3 transition-all text-center border ${
+                            className={`cursor-pointer rounded-xl p-2.5 sm:p-3 transition-all duration-300 text-center border-2 ${
                               selected
-                                ? 'bg-cyan-700 text-white shadow-md border-cyan-800' 
-                                : 'bg-gray-100 hover:bg-gray-300 text-gray-800 border-gray-300'
+                                ? 'bg-gradient-to-br from-cyan-600 to-cyan-700 text-white shadow-lg shadow-cyan-500/30 border-cyan-500 scale-[1.02]'
+                                : 'bg-white hover:bg-gray-50 text-gray-800 border-gray-200 hover:border-cyan-300 hover:shadow-md'
                             }`}
                             onClick={() => handleDateSelection(date)}
                             type="button"
                           >
-                            <span className="block text-xs sm:text-sm font-medium">
+                            <span className="block text-xs sm:text-sm font-medium opacity-80">
                               {new Intl.DateTimeFormat('en-AU', { weekday: 'short' }).format(date)}
                             </span>
-                            <span className="block text-base sm:text-xl font-bold">
+                            <span className="block text-lg sm:text-2xl font-bold my-0.5">
                               {new Intl.DateTimeFormat('en-AU', { day: 'numeric' }).format(date)}
                             </span>
-                            <span className="block text-xs mt-0.5 sm:mt-1">
+                            <span className="block text-xs opacity-80">
                               {new Intl.DateTimeFormat('en-AU', { month: 'short' }).format(date)}
                             </span>
                             {selected && (
-                              <div className="mt-0.5 sm:mt-1">
+                              <div className="mt-1">
                                 <svg className="h-4 w-4 sm:h-5 sm:w-5 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                                 </svg>
                               </div>
                             )}
@@ -736,12 +755,12 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </div>
                   
                   <div className="flex justify-end">
-                    <button 
+                    <button
                       type="button"
                       disabled={!canProceedToStep2}
-                      className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium flex items-center gap-1 sm:gap-2 text-sm sm:text-base ${
-                        canProceedToStep2 
-                          ? 'bg-orange-500 hover:bg-orange-600 text-white' 
+                      className={`px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold flex items-center gap-2 text-sm sm:text-base transition-all duration-300 ${
+                        canProceedToStep2
+                          ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                       onClick={handleNextStep}

@@ -12,23 +12,40 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 text-gray-800">
-      <Hero 
-        title="M.P.T.R Mobile Plant & Truck Repairs" 
+    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800">
+      <Hero
+        title="M.P.T.R Mobile Plant & Truck Repairs"
         subtitle="Professional mobile diesel mechanics at your service"
         ctaText="Learn More"
         ctaLink="#services"
       />
-      
-      <section id="services" className="py-16 px-4 bg-gray-200">
-        <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-cyan-700">Our Services</h2>
-          <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
-            Mobile repairs for all your diesel, plant, truck, and equipment needs
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      {/* Services Section */}
+      <section id="services" className="py-20 md:py-28 px-4 bg-gradient-to-b from-gray-100 to-gray-200 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-orange-500/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+
+        <div className="container mx-auto relative z-10">
+          {/* Section header */}
+          <div className="text-center mb-12 md:mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full mb-4">
+              <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
+              <span className="text-cyan-700 text-sm font-medium">Professional Services</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+              <span className="text-gray-800">Our </span>
+              <span className="bg-gradient-to-r from-cyan-600 to-cyan-500 bg-clip-text text-transparent">Services</span>
+            </h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              Mobile repairs for all your diesel, plant, truck, and equipment needs
+            </p>
+          </div>
+
+          {/* Service cards grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {services.slice(0, 6).map((service) => (
-              <ServiceCard 
+              <ServiceCard
                 key={service.id}
                 title={service.title}
                 description={service.description}
@@ -38,11 +55,11 @@ export default function Home() {
               />
             ))}
           </div>
-          
+
           {/* Last two services centered */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8 mt-8 lg:w-2/3 mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mt-8 lg:w-2/3 mx-auto">
             {services.slice(6).map((service) => (
-              <ServiceCard 
+              <ServiceCard
                 key={service.id}
                 title={service.title}
                 description={service.description}
@@ -54,87 +71,116 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
-      <section id="about" className="relative py-20 px-4 bg-gray-100 overflow-hidden">
+
+      {/* About Section */}
+      <section id="about" className="relative py-24 md:py-32 px-4 bg-gray-900 overflow-hidden">
         {/* Background image with overlay */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-800/70 to-gray-700/60 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/85 to-gray-900/75 z-10"></div>
           <Image
             src={IMAGE_PATHS.MECHANIC}
             alt=""
             fill
-            className="object-cover object-center opacity-40"
+            className="object-cover object-center opacity-30"
             sizes="100vw"
             quality={80}
           />
         </div>
 
+        {/* Decorative elements */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl"></div>
+
         <div className="container mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="md:w-1/2 order-2 md:order-1">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Experienced Mobile Mechanics</h2>
-              <p className="text-gray-200 mb-4 text-lg">
-                With over {COMPANY.YEARS_EXPERIENCE} years of experience in mobile plant repairs and truck servicing, 
-                we provide fast, reliable service wherever you need it. Our team of qualified 
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+            {/* Content */}
+            <div className="lg:w-1/2 order-2 lg:order-1">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 border border-cyan-500/30 rounded-full mb-6">
+                <span className="w-2 h-2 bg-cyan-400 rounded-full"></span>
+                <span className="text-cyan-300 text-sm font-medium">About Us</span>
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
+                Experienced <span className="bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Mobile Mechanics</span>
+              </h2>
+
+              <p className="text-gray-300 mb-4 text-lg leading-relaxed">
+                With over {COMPANY.YEARS_EXPERIENCE} years of experience in mobile plant repairs and truck servicing,
+                we provide fast, reliable service wherever you need it. Our team of qualified
                 diesel mechanics specialises in minimising downtime for your equipment and vehicles.
               </p>
-              <p className="text-gray-200 mb-6 text-lg">
-                From emergency repairs to scheduled maintenance, we&apos;re equipped to handle 
-                all aspects of mobile diesel mechanic work, earthmoving equipment repairs, 
+
+              <p className="text-gray-300 mb-8 text-lg leading-relaxed">
+                From emergency repairs to scheduled maintenance, we&apos;re equipped to handle
+                all aspects of mobile diesel mechanic work, earthmoving equipment repairs,
                 and truck servicing throughout the region.
               </p>
-              
-              <div className="bg-gray-800/80 p-6 rounded-lg border border-gray-700 shadow-lg mb-8">
-                <h3 className="text-xl font-semibold mb-4 text-cyan-400">Why Choose Us?</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-orange-500 mr-2 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+
+              {/* Why choose us card */}
+              <div className="bg-gray-800/60 backdrop-blur-sm p-6 md:p-8 rounded-2xl border border-gray-700/50 shadow-xl mb-8">
+                <h3 className="text-xl font-bold mb-5 text-white flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
-                    <span className="text-gray-200">Fast response times throughout South East Queensland</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-orange-500 mr-2 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-200">Fully equipped mobile workshop for on-site repairs</span>
-                  </li>
-                  <li className="flex items-start">
-                    <svg className="h-5 w-5 text-orange-500 mr-2 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-gray-200">Licensed technicians with extensive industry experience</span>
-                  </li>
+                  </div>
+                  Why Choose Us?
+                </h3>
+                <ul className="space-y-4">
+                  {[
+                    'Fast response times throughout South East Queensland',
+                    'Fully equipped mobile workshop for on-site repairs',
+                    'Licensed technicians with extensive industry experience'
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-orange-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg className="h-3.5 w-3.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-gray-200">{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
-              
-              <div className="flex justify-center">
-                <a href="#contact" className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-cyan-500/30 transform hover:translate-y-[-2px]">
+
+              {/* CTA button */}
+              <div className="flex justify-center lg:justify-start">
+                <a
+                  href="#contact"
+                  className="group bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 flex items-center gap-3 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:-translate-y-1"
+                >
                   <span>Contact Us Today</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </a>
               </div>
             </div>
-            
-            <div className="md:w-1/2 order-1 md:order-2">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-cyan-600/30 aspect-[4/3]">
-                <Image
-                  src={IMAGE_PATHS.WHO_WE_ARE}
 
-                  alt="Emergency truck repairs in rainy conditions"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
+            {/* Image */}
+            <div className="lg:w-1/2 order-1 lg:order-2">
+              <div className="relative">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-cyan-500/20 aspect-[4/3]">
+                  <Image
+                    src={IMAGE_PATHS.WHO_WE_ARE}
+                    alt="Emergency truck repairs in rainy conditions"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+                {/* Floating badge */}
+                <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-xl shadow-xl font-bold hidden md:block">
+                  {COMPANY.YEARS_EXPERIENCE}+ Years Experience
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-      
+
       <ContactSection id="contact" />
     </div>
   );
-} 
+}

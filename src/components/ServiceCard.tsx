@@ -4,11 +4,11 @@ import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Service } from '@/lib/services';
-import { 
-  Wrench, 
-  Truck, 
-  Tractor, 
-  Construction, 
+import {
+  Wrench,
+  Truck,
+  Tractor,
+  Construction,
   Thermometer,
   Battery,
   Settings
@@ -26,7 +26,6 @@ const IconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   construction: Construction,
   thermometer: Thermometer,
   battery: Battery,
-  // Add fallback
   default: Settings
 };
 
@@ -43,55 +42,97 @@ export default function ServiceCard({
 
   return (
     <div className={cn(
-      "bg-white rounded-lg shadow-md hover:shadow-xl p-6 transition-all duration-300 group border border-gray-200 relative overflow-hidden h-full flex flex-col sm:hover:-translate-y-1",
+      "group bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-500 border border-gray-100 relative overflow-hidden h-full flex flex-col",
+      "sm:hover:-translate-y-2 hover:border-cyan-200/50",
       className
     )}>
       {backgroundImage && (
-        <div className="absolute inset-0 z-0 transition-all duration-300 group-hover:brightness-117">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-700/80 z-10 transition-opacity duration-300 group-hover:opacity-75 sm:opacity-80 sm:group-hover:opacity-75"></div>
-          <Image 
+        <div className="absolute inset-0 z-0 transition-all duration-500">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/75 to-gray-900/85 z-10 transition-all duration-500 group-hover:from-gray-900/70 group-hover:via-gray-800/65 group-hover:to-gray-900/75"></div>
+          <Image
             src={backgroundImage}
             alt={`${title} background`}
             fill
-            className="object-cover object-center transition-transform duration-300 sm:group-hover:scale-105 md:scale-100 sm:scale-100 scale-110"
+            className="object-cover object-center transition-transform duration-700 group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             quality={85}
           />
         </div>
       )}
-      
+
       <div className={`${backgroundImage ? 'relative z-20' : ''} flex-1 flex flex-col`}>
-        <div className="mb-4">
-          <div className="bg-cyan-50 p-3 rounded-full inline-flex items-center justify-center mb-3 w-12 h-12">
-            <IconComponent className="text-cyan-600 w-6 h-6" />
+        {/* Icon container with gradient background */}
+        <div className="mb-5">
+          <div className={cn(
+            "w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300",
+            backgroundImage
+              ? "bg-gradient-to-br from-cyan-500/30 to-cyan-600/20 backdrop-blur-sm border border-cyan-400/30 group-hover:from-cyan-500/40 group-hover:to-cyan-600/30"
+              : "bg-gradient-to-br from-cyan-50 to-cyan-100 group-hover:from-cyan-100 group-hover:to-cyan-200"
+          )}>
+            <IconComponent className={cn(
+              "w-7 h-7 transition-all duration-300",
+              backgroundImage
+                ? "text-cyan-300 group-hover:text-cyan-200 group-hover:scale-110"
+                : "text-cyan-600 group-hover:text-cyan-700 group-hover:scale-110"
+            )} />
           </div>
-          <h3 className={`text-xl font-semibold ${backgroundImage ? 'text-white' : 'text-cyan-500'} mb-2`}>{title}</h3>
         </div>
-        <p className={`${backgroundImage ? 'text-gray-100' : 'text-gray-700'} mb-4 flex-1`}>{description}</p>
-        <div className="mt-auto pt-2">
-          <a 
-            href="#contact" 
-            className={`
-              ${backgroundImage ? 'text-cyan-300 hover:text-cyan-200' : 'text-cyan-600 hover:text-cyan-800'} 
-              font-medium flex items-center hover:underline transition-colors
-            `}
+
+        {/* Title */}
+        <h3 className={cn(
+          "text-xl font-bold mb-3 transition-colors duration-300",
+          backgroundImage
+            ? "text-white group-hover:text-cyan-200"
+            : "text-gray-800 group-hover:text-cyan-700"
+        )}>
+          {title}
+        </h3>
+
+        {/* Description */}
+        <p className={cn(
+          "mb-5 flex-1 leading-relaxed",
+          backgroundImage
+            ? "text-gray-200"
+            : "text-gray-600"
+        )}>
+          {description}
+        </p>
+
+        {/* CTA Link */}
+        <div className="mt-auto pt-4 border-t border-gray-200/20">
+          <a
+            href="#contact"
+            className={cn(
+              "inline-flex items-center gap-2 font-semibold transition-all duration-300 group/link",
+              backgroundImage
+                ? "text-cyan-300 hover:text-cyan-200"
+                : "text-cyan-600 hover:text-cyan-700"
+            )}
           >
-            Request Service
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-5 w-5 ml-1" 
-              viewBox="0 0 20 20" 
+            <span>Request Service</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 transition-transform duration-300 group-hover/link:translate-x-1"
+              viewBox="0 0 20 20"
               fill="currentColor"
             >
-              <path 
-                fillRule="evenodd" 
-                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" 
-                clipRule="evenodd" 
+              <path
+                fillRule="evenodd"
+                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                clipRule="evenodd"
               />
             </svg>
           </a>
         </div>
       </div>
+
+      {/* Decorative gradient on hover */}
+      {!backgroundImage && (
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl"></div>
+        </div>
+      )}
     </div>
   );
-} 
+}

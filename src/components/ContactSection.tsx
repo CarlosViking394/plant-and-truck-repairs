@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import CalendlyWidget from './CalendlyWidget';
 import Image from 'next/image';
-import { CONTACT, IMAGE_PATHS } from '@/lib/constants';
+import { CONTACT } from '@/lib/constants';
 
 interface ContactSectionProps {
   id?: string;
@@ -19,48 +19,42 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
     "/images/southEastQTruck.png",
     "/images/front-page.jpg"
   ];
-  
-  // Using images we already have instead of missing gradients
-  const gradientImages = [
-    '/images/front-page.jpg',
-    '/images/mobile_diesel_mechanic_final.jpg'
-  ];
-  
+
   // Transition effect between images
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-    }, 8000); // Change image every 8 seconds
-    
+    }, 8000);
+
     return () => clearInterval(interval);
   }, [images.length]);
-  
-  // Transition effect between gradient images (day/night effect) for mobile
+
+  // Transition effect for mobile gradient
   useEffect(() => {
     const interval = setInterval(() => {
       setGradientImageIndex(prev => prev === 0 ? 1 : 0);
-    }, 10000); // Change gradient every 10 seconds for day/night effect
-    
+    }, 10000);
+
     return () => clearInterval(interval);
   }, []);
-  
+
   return (
     <section id={id} className={cn(
-      "py-16 px-4 relative overflow-hidden", 
+      "py-20 md:py-28 px-4 relative overflow-hidden",
       className
     )}>
       {/* Desktop Background images with transition */}
       <div className="absolute inset-0 overflow-hidden hidden md:block">
         {images.map((src, index) => (
-          <div 
+          <div
             key={src}
             className={`absolute inset-0 transition-opacity duration-2000 ease-in-out ${
               currentImage === index ? "opacity-100" : "opacity-0"
             }`}
           >
-            <Image 
+            <Image
               src={src}
-              alt={index === 0 ? "Australian outback road" : 
+              alt={index === 0 ? "Australian outback road" :
                   index === 1 ? "Truck in South East Queensland" :
                   "Heavy equipment servicing"}
               fill
@@ -69,83 +63,112 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 via-gray-900/50 to-gray-900/70"></div>
       </div>
-      
-      {/* Mobile Gradient Background with day/night transition */}
+
+      {/* Mobile Gradient Background */}
       <div className="absolute inset-0 overflow-hidden md:hidden">
-        <div 
+        <div
           className={`absolute inset-0 transition-opacity duration-3000 ease-in-out ${
             gradientImageIndex === 0 ? "opacity-100" : "opacity-0"
           }`}
-          style={{ 
+          style={{
             transition: 'opacity 3s cubic-bezier(0.4, 0, 0.2, 1)',
-            background: 'linear-gradient(45deg, #00c6ff, #0072ff)'  // Day gradient (aqua)
+            background: 'linear-gradient(135deg, #0891b2 0%, #0e7490 50%, #164e63 100%)'
           }}
         />
-        <div 
+        <div
           className={`absolute inset-0 transition-opacity duration-3000 ease-in-out ${
             gradientImageIndex === 1 ? "opacity-100" : "opacity-0"
           }`}
-          style={{ 
+          style={{
             transition: 'opacity 3s cubic-bezier(0.4, 0, 0.2, 1)',
-            background: 'linear-gradient(45deg, #4a6cb3, #283e7c)'  // Night gradient (salt)
+            background: 'linear-gradient(135deg, #164e63 0%, #1e3a5f 50%, #1e293b 100%)'
           }}
         />
-        <div className={`absolute inset-0 ${gradientImageIndex === 0 ? 'bg-black/20' : 'bg-black/35'} transition-colors duration-3000`}></div>
+        <div className={`absolute inset-0 ${gradientImageIndex === 0 ? 'bg-black/20' : 'bg-black/30'} transition-colors duration-3000`}></div>
       </div>
-      
+
       <div className="container mx-auto relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">Book a Service</h2>
-            <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto">
+        <div className="max-w-5xl mx-auto">
+          {/* Section header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/20 backdrop-blur-sm border border-orange-500/30 rounded-full mb-4">
+              <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
+              <span className="text-orange-200 text-sm font-medium">Book Online</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">
+              Book a <span className="bg-gradient-to-r from-cyan-400 to-cyan-300 bg-clip-text text-transparent">Service</span>
+            </h2>
+            <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
               Schedule your mobile plant or truck repair service online for fast, reliable service throughout South East Queensland.
             </p>
           </div>
-          
-          <div className="max-w-2xl mx-auto relative">
-            {/* Floating card effect */}
-            <div id="booking-widget" className="bg-gray-100/90 backdrop-blur-sm p-4 sm:p-8 rounded-lg shadow-xl border-2 border-orange-500 relative overflow-hidden scroll-mt-24 transform hover:-translate-y-1 transition-all duration-300 hover:shadow-2xl z-10 w-[94%] mx-auto">
-              <div className="absolute top-0 right-0 bg-orange-500 text-white px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold shadow-md">
-                FAST BOOKING
+
+          {/* Booking widget card */}
+          <div className="max-w-2xl mx-auto relative mb-16 sm:mb-20">
+            <div id="booking-widget" className="bg-white/95 backdrop-blur-md p-5 sm:p-8 rounded-2xl shadow-2xl border border-white/20 relative overflow-hidden scroll-mt-24 transition-all duration-500 hover:shadow-cyan-500/10 z-10">
+              {/* Badge */}
+              <div className="absolute -top-px -right-px">
+                <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1.5 text-xs sm:text-sm font-bold rounded-bl-xl rounded-tr-2xl shadow-lg">
+                  FAST BOOKING
+                </div>
               </div>
-              <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-cyan-700 text-center">Book a Service Online</h3>
-              
-              <div className="mb-6 sm:mb-8 p-3 sm:p-4 bg-gray-200/80 rounded-lg border border-gray-300">
-                <h4 className="font-medium text-gray-800 mb-2 sm:mb-3 flex items-center text-sm sm:text-base">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-700 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+
+              <h3 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-gray-800 text-center">
+                Book a Service Online
+              </h3>
+
+              {/* How it works */}
+              <div className="mb-6 sm:mb-8 p-4 sm:p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+                <h4 className="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
+                  <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
                   How it works:
                 </h4>
-                <ol className="list-decimal list-inside space-y-1 sm:space-y-2 text-sm sm:text-base text-gray-700 pl-2">
-                  <li>Select a service type and preferred date</li>
-                  <li>Provide your contact information</li>
-                  <li>Our team will confirm your booking by phone</li>
-                  <li>We&apos;ll arrive at your location at the scheduled date</li>
+                <ol className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600 pl-11">
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-cyan-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                    <span>Select a service type and preferred date</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-cyan-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                    <span>Provide your contact information</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-cyan-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                    <span>Our team will confirm your booking by phone</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="w-6 h-6 bg-cyan-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+                    <span>We&apos;ll arrive at your location at the scheduled date</span>
+                  </li>
                 </ol>
               </div>
-              
+
               <CalendlyWidget />
-              
-              <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-300">
-                <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 text-center">Need Immediate Assistance?</h4>
-                
+
+              {/* Contact options */}
+              <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-gray-200">
+                <h4 className="text-base sm:text-lg font-bold mb-4 text-gray-800 text-center">Need Immediate Assistance?</h4>
+
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <a 
-                    href={`tel:${CONTACT.PHONE}`} 
-                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-orange-500 hover:bg-orange-600 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-md transition-all duration-300 text-base sm:text-lg font-medium shadow-md hover:-translate-y-1"
+                  <a
+                    href={`tel:${CONTACT.PHONE}`}
+                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 text-base sm:text-lg font-bold shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                     </svg>
                     Call {CONTACT.PHONE_DISPLAY}
                   </a>
-                  
-                  <a 
-                    href={`mailto:${CONTACT.EMAIL}`} 
-                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-cyan-700 hover:bg-cyan-800 text-white py-2.5 sm:py-3 px-3 sm:px-4 rounded-md transition-all duration-300 text-base sm:text-lg font-medium shadow-md hover:-translate-y-1"
+
+                  <a
+                    href={`mailto:${CONTACT.EMAIL}`}
+                    className="flex-1 flex items-center justify-center gap-2 sm:gap-3 bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl transition-all duration-300 text-base sm:text-lg font-bold shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 hover:-translate-y-0.5"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -153,94 +176,54 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                     Email Us
                   </a>
                 </div>
-                
-                <p className="text-xs sm:text-sm text-gray-300 mt-3 text-center">
+
+                <p className="text-xs sm:text-sm text-gray-500 mt-4 text-center">
                   Available 7 days for emergency mobile repairs in South East Queensland
                 </p>
               </div>
             </div>
           </div>
-          
-          <div className="mt-16 sm:mt-24 bg-gray-100/90 backdrop-blur-sm p-4 sm:p-6 rounded-lg shadow-xl relative">
-            {/* Decorative element */}
-            <div className="absolute -top-4 -right-4 h-16 w-16 bg-cyan-500/20 rounded-full blur-xl"></div>
-            <div className="absolute -bottom-8 -left-8 h-24 w-24 bg-orange-500/10 rounded-full blur-xl"></div>
-            
-            <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-cyan-700">South East Queensland Service Areas</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-              <div className="p-3 sm:p-4 bg-gray-200/90 backdrop-blur-sm border border-gray-300 rounded-lg">
-                <h4 className="font-medium text-gray-800 mb-1 sm:mb-2 flex items-center text-sm sm:text-base">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-700 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Brisbane Region
-                </h4>
-                <ul className="text-gray-600 space-y-1 text-xs sm:text-sm">
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Brisbane
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Logan
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Ipswich
-                  </li>
-                </ul>
-              </div>
-              <div className="p-3 sm:p-4 bg-gray-200/90 backdrop-blur-sm border border-gray-300 rounded-lg">
-                <h4 className="font-medium text-gray-800 mb-1 sm:mb-2 flex items-center text-sm sm:text-base">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-700 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Gold Coast Region
-                </h4>
-                <ul className="text-gray-600 space-y-1 text-xs sm:text-sm">
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Gold Coast
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Tweed Heads
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Northern NSW
-                  </li>
-                </ul>
-              </div>
-              <div className="p-3 sm:p-4 bg-gray-200/90 backdrop-blur-sm border border-gray-300 rounded-lg">
-                <h4 className="font-medium text-gray-800 mb-1 sm:mb-2 flex items-center text-sm sm:text-base">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-700 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Sunshine Coast Region
-                </h4>
-                <ul className="text-gray-600 space-y-1 text-xs sm:text-sm">
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Sunshine Coast
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Caboolture
-                  </li>
-                  <li className="flex items-center">
-                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-500 rounded-full mr-1.5 sm:mr-2"></span>
-                    Gympie
-                  </li>
-                </ul>
-              </div>
+
+          {/* Service areas */}
+          <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl"></div>
+
+            <h3 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 text-center">
+              South East Queensland <span className="text-cyan-600">Service Areas</span>
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 relative">
+              {[
+                { region: 'Brisbane Region', areas: ['Brisbane', 'Logan', 'Ipswich'] },
+                { region: 'Gold Coast Region', areas: ['Gold Coast', 'Tweed Heads', 'Northern NSW'] },
+                { region: 'Sunshine Coast Region', areas: ['Sunshine Coast', 'Caboolture', 'Gympie'] }
+              ].map((location, idx) => (
+                <div key={idx} className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  <h4 className="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">
+                    <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    {location.region}
+                  </h4>
+                  <ul className="text-gray-600 space-y-2 text-sm">
+                    {location.areas.map((area) => (
+                      <li key={area} className="flex items-center">
+                        <span className="w-2 h-2 bg-gradient-to-r from-orange-500 to-orange-400 rounded-full mr-3"></span>
+                        {area}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
     </section>
   );
-} 
+}

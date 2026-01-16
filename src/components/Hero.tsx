@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { IMAGE_PATHS } from '@/lib/constants';
 
 interface HeroProps {
   title: string;
@@ -22,33 +21,33 @@ export default function Hero({
 }: HeroProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const backgroundImages = [
-    "/images/inthemiddleofoz.png", 
+    "/images/inthemiddleofoz.png",
     "/images/southEastQTruck.png",
     "/images/front-page.jpg"
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex(prevIndex => 
+      setCurrentImageIndex(prevIndex =>
         prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
       );
-    }, 6000); // Change image every 6 seconds
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [backgroundImages.length]);
 
   return (
     <section className={cn(
-      "relative bg-gray-800 text-gray-100 py-24 min-h-[80vh] flex items-center",
+      "relative bg-gray-900 text-gray-100 py-28 md:py-32 min-h-[85vh] flex items-center overflow-hidden",
       className
     )}>
       {/* Background images with transition */}
       <div className="absolute inset-0 overflow-hidden z-0">
         {backgroundImages.map((image, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className="absolute inset-0 transition-opacity duration-1500 ease-in-out"
-            style={{ 
+            style={{
               opacity: index === currentImageIndex ? 1 : 0,
               zIndex: index === currentImageIndex ? 0 : -1,
               transition: 'opacity 1.5s ease-in-out'
@@ -57,70 +56,131 @@ export default function Hero({
             <Image
               src={image}
               alt={`SEQ Mobile Plant & Truck Repairs - ${
-                index === 0 ? "Outback Road" : 
-                index === 1 ? "South East Queensland Truck" : 
+                index === 0 ? "Outback Road" :
+                index === 1 ? "South East Queensland Truck" :
                 "Heavy Equipment Servicing"
               }`}
               fill
               priority
-              className="object-cover object-center"
+              className="object-cover object-center scale-105"
               sizes="100vw"
               quality={90}
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 via-gray-800/70 to-gray-700/60 z-10"></div>
+        {/* Enhanced gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/75 to-gray-800/60 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent z-10"></div>
       </div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-cyan-300">
-            {title}
+
+      {/* Decorative elements */}
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl z-0"></div>
+      <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl z-0"></div>
+
+      <div className="container mx-auto px-4 relative z-20">
+        <div className="max-w-4xl">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 backdrop-blur-sm border border-cyan-500/30 rounded-full mb-6">
+            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+            <span className="text-cyan-300 text-sm font-medium">Professional Mobile Mechanics</span>
+          </div>
+
+          {/* Title with gradient */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            <span className="text-white">{title.split(' ').slice(0, 2).join(' ')}</span>
+            <br className="hidden sm:block" />
+            <span className="bg-gradient-to-r from-cyan-400 via-cyan-300 to-cyan-500 bg-clip-text text-transparent">
+              {title.split(' ').slice(2).join(' ')}
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-gray-100">
+
+          <p className="text-lg sm:text-xl md:text-2xl mb-10 text-gray-200 max-w-2xl leading-relaxed">
             {subtitle}
           </p>
+
+          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <a 
-              href="#booking-widget" 
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-md text-lg inline-flex items-center justify-center gap-2 shadow-md btn-magnetic"
+            <a
+              href="#booking-widget"
+              className="group bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-xl text-lg inline-flex items-center justify-center gap-3 shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 hover:-translate-y-1"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform group-hover:rotate-12 duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform duration-300 group-hover:rotate-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span className="relative z-10">Book a Service</span>
+              <span>Book a Service</span>
             </a>
+
             {ctaText && ctaLink && (
-              <a 
-                href={ctaLink} 
-                className="bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-3 px-8 rounded-md text-lg inline-block text-center shadow-md btn-expand group"
+              <a
+                href={ctaLink}
+                className="group bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 font-semibold py-4 px-8 rounded-xl text-lg inline-flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-1"
               >
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">{ctaText}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1 inline-block -mt-1 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
+                <span>{ctaText}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </a>
             )}
-            <a 
-              href="tel:+61468601750" 
-              className="bg-transparent hover:bg-gray-700 text-gray-100 border border-gray-500 font-semibold py-3 px-8 rounded-md text-lg inline-flex items-center justify-center gap-2 btn-glow group overflow-hidden"
+
+            <a
+              href="tel:+61468601750"
+              className="group bg-transparent hover:bg-cyan-500/10 text-white border-2 border-cyan-500/50 hover:border-cyan-400 font-semibold py-4 px-8 rounded-xl text-lg inline-flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-all duration-300 group-hover:scale-110 group-hover:text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400 transition-all duration-300 group-hover:scale-110" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
               <span className="group-hover:text-cyan-300 transition-colors duration-300">Call Now</span>
             </a>
           </div>
+
+          {/* Trust indicators */}
+          <div className="mt-12 flex flex-wrap items-center gap-6 text-gray-400">
+            <div className="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm">Licensed Mechanics</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm">On-Site Service</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm">Fast Response</span>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Floating card with brand elements */}
-      <div className="absolute bottom-0 right-0 mr-8 mb-8 hidden lg:block">
-        <div className="bg-gray-800/80 backdrop-blur-sm p-6 rounded-lg border border-gray-600 shadow-lg transform rotate-2 max-w-xs">
-          <div className="text-cyan-300 font-bold mb-2 text-xl">Professional Mobile Services</div>
-          <div className="text-gray-200 text-sm">On-site repairs & maintenance for all heavy equipment</div>
+      <div className="absolute bottom-8 right-8 hidden lg:block z-20">
+        <div className="bg-gray-900/80 backdrop-blur-md p-6 rounded-2xl border border-gray-700/50 shadow-2xl transform rotate-2 max-w-xs hover:rotate-0 transition-transform duration-500">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div className="text-cyan-300 font-bold text-lg">Professional Service</div>
+          </div>
+          <div className="text-gray-300 text-sm">On-site repairs & maintenance for all heavy equipment throughout SEQ</div>
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden md:block">
+        <a href="#services" className="flex flex-col items-center text-gray-400 hover:text-cyan-400 transition-colors">
+          <span className="text-xs mb-2">Scroll to explore</span>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </a>
       </div>
     </section>
   );
-} 
+}
