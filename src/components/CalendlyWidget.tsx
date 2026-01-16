@@ -412,18 +412,13 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       }
 
       // Redirect to thank you page on success
-      try {
-        router.push('/thank-you');
-      } catch (redirectError) {
-        // Fallback to inline confirmation if redirect fails
-        console.error('Redirect failed, showing inline confirmation:', redirectError);
-        setBookingConfirmed(true);
-      }
+      setIsSubmitting(false);
+      window.location.href = '/thank-you';
+      return;
     } catch (err: any) {
       console.error('Booking email error:', err);
-      // Fallback to inline confirmation even on error (user feedback)
+      // Fallback to inline confirmation on error (user feedback)
       setBookingConfirmed(true);
-    } finally {
       setIsSubmitting(false);
     }
   };
