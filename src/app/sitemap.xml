@@ -2,62 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://plantandtruckrepairs.com.au/</loc>
-    <lastmod>2023-05-04</lastmod>
+    <lastmod>2026-01-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://plantandtruckrepairs.com.au/services</loc>
-    <lastmod>2023-05-04</lastmod>
+    <loc>https://plantandtruckrepairs.com.au/thank-you</loc>
+    <lastmod>2026-01-18</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.3</priority>
   </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/contact</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/about</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/services/mobile-diesel-mechanic</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/services/mobile-plant-repairs</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/services/earthmoving-repairs</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/services/truck-repairs</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/services/air-conditioning</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://plantandtruckrepairs.com.au/services/auto-electrical</loc>
-    <lastmod>2023-05-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-</urlset> 
+</urlset>
