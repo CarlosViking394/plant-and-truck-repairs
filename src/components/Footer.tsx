@@ -188,11 +188,6 @@ export default function Footer() {
                 &copy; {new Date().getFullYear()} M.P.T.R Mobile Plant & Truck Repairs. All rights reserved.
               </p>
             </div>
-            <div className="flex space-x-6">
-              <Link href="/sitemap.xml" className="text-gray-500 hover:text-amber-400 text-sm transition-colors">
-                Sitemap
-              </Link>
-            </div>
           </div>
         </div>
       </div>
