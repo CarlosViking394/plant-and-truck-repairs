@@ -93,10 +93,6 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
         <div className="max-w-5xl mx-auto">
           {/* Section header */}
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 rounded-full mb-4">
-              <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
-              <span className="text-amber-200 text-sm font-medium">Book Online</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">
               Book a <span className="bg-gradient-to-r from-amber-400 to-amber-300 bg-clip-text text-transparent">Service</span>
             </h2>

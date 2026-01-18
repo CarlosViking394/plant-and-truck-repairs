@@ -1,15 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CONTACT } from '@/lib/constants';
 
 interface CalendlyWidgetProps {
   className?: string;
-}
-
-interface AddressSuggestion {
-  display_name: string;
-  place_id: string;
 }
 
 export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
@@ -17,7 +12,6 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>("7:30 AM");
   const [serviceType, setServiceType] = useState('Mobile Diesel Mechanic');
-  const [location, setLocation] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneError] = useState<string | null>(null);
@@ -29,108 +23,19 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Address autocomplete state
-  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Structured address fields
+  const [streetAddress, setStreetAddress] = useState('');
+  const [suburb, setSuburb] = useState('');
+  const [state, setState] = useState('QLD');
+  const [postcode, setPostcode] = useState('');
 
   const calendlyEmbedRef = useRef<HTMLDivElement>(null);
-  const locationInputRef = useRef<HTMLInputElement>(null);
-  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   // Component mounted effect
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, []);
-
-  // Search for addresses using OpenStreetMap Nominatim API
-  const searchAddress = useCallback(async (query: string) => {
-    if (query.length < 3) {
-      setAddressSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-
-    setIsSearching(true);
-    try {
-      // Add Queensland/Australia context to improve results
-      const searchQuery = `${query}, Queensland, Australia`;
-
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&countrycodes=au&addressdetails=1&limit=5`,
-        {
-          headers: {
-            'Accept': 'application/json',
-            'User-Agent': 'MPTR-Booking-Widget/1.0'
-          }
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setAddressSuggestions(data.map((item: { display_name: string; place_id: string }) => ({
-          display_name: item.display_name,
-          place_id: item.place_id
-        })));
-        setShowSuggestions(data.length > 0);
-      }
-    } catch (error) {
-      console.error('Address search error:', error);
-      setAddressSuggestions([]);
-    } finally {
-      setIsSearching(false);
-    }
-  }, []);
-
-  // Debounced address search
-  const debouncedSearch = useCallback((query: string) => {
-    if (searchTimeoutRef.current) {
-      clearTimeout(searchTimeoutRef.current);
-    }
-    searchTimeoutRef.current = setTimeout(() => {
-      searchAddress(query);
-    }, 400);
-  }, [searchAddress]);
-
-  // Handle click outside to close suggestions
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node) &&
-        locationInputRef.current &&
-        !locationInputRef.current.contains(event.target as Node)
-      ) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Handle location input changes
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocation(value);
-    debouncedSearch(value);
-  };
-
-  // Handle suggestion selection
-  const handleSuggestionSelect = (suggestion: AddressSuggestion) => {
-    setLocation(suggestion.display_name);
-    setShowSuggestions(false);
-    setAddressSuggestions([]);
-  };
-
-  // Handle location input focus
-  const handleLocationFocus = () => {
-    if (addressSuggestions.length > 0) {
-      setShowSuggestions(true);
-    }
-  };
 
   // Generate next 7 available dates (excluding Sundays)
   const getAvailableDates = () => {
@@ -181,15 +86,21 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     setSelectedDate(null);
     setSelectedTime("7:30 AM");
     setServiceType('Mobile Diesel Mechanic');
-    setLocation('');
+    setStreetAddress('');
+    setSuburb('');
+    setState('QLD');
+    setPostcode('');
     setName('');
     setPhone('');
     setEmail('');
     setDetails('');
     setFormStep(1);
     setBookingConfirmed(false);
-    setAddressSuggestions([]);
-    setShowSuggestions(false);
+  };
+
+  // Combine address fields into a full address string
+  const getFullAddress = () => {
+    return `${streetAddress}, ${suburb} ${state} ${postcode}`;
   };
 
   // Function to handle form step navigation
@@ -239,6 +150,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
   // Handle form submission
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    const fullAddress = getFullAddress();
     try {
       const res = await fetch('/api/sendBookingEmail', {
         method: 'POST',
@@ -250,7 +162,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
           serviceType,
           selectedDate: selectedDate?.toDateString(),
           selectedTime,
-          location,
+          location: fullAddress,
           details,
         }),
       });
@@ -266,9 +178,10 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
       return;
     } catch (err: any) {
       console.error('Booking email error:', err);
-      // Fallback to inline confirmation on error (user feedback)
-      setBookingConfirmed(true);
+      // Still redirect - booking was attempted, email failure is backend issue
       setIsSubmitting(false);
+      window.location.href = '/thank-you';
+      return;
     }
   };
 
@@ -325,7 +238,12 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
 
   // Check if form can proceed to next step
   const canProceedToStep2 = selectedDate !== null;
-  const canProceedToStep3 = serviceType !== '' && location !== '';
+  const canProceedToStep3 =
+    serviceType !== '' &&
+    streetAddress.trim().length >= 5 &&
+    suburb.trim().length >= 2 &&
+    state !== '' &&
+    /^\d{4}$/.test(postcode);
   const canSubmit = name !== '' && phone !== '' && !phoneError && email !== '' && !emailError;
 
   // Function to check if a time is selected
@@ -438,7 +356,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Location</p>
-                    <p className={`font-medium text-sm sm:text-base break-words text-gray-800`}>{location}</p>
+                    <p className={`font-medium text-sm sm:text-base break-words text-gray-800`}>{getFullAddress()}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Date</p>
@@ -606,64 +524,71 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     </select>
                   </div>
                   
-                  {/* Location with address autocomplete */}
-                  <div className="mb-3 sm:mb-5 relative">
+                  {/* Service Location - Structured Address Fields */}
+                  <div className="mb-3 sm:mb-5">
                     <label className="block text-xs sm:text-base font-medium text-gray-700 mb-1 sm:mb-2 text-left">
                       Service Location
                     </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                      </div>
+
+                    {/* Street Address */}
+                    <div className="mb-3">
                       <input
                         type="text"
-                        placeholder="Start typing your address..."
-                        className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 pl-10 pr-10 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-                        value={location}
-                        onChange={handleLocationChange}
-                        onFocus={handleLocationFocus}
-                        ref={locationInputRef}
-                        aria-label="Service location address"
-                        id="location-input"
-                        autoComplete="off"
+                        placeholder="Street Address (e.g., 136 Mount Cotton Road)"
+                        className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                        value={streetAddress}
+                        onChange={(e) => setStreetAddress(e.target.value)}
+                        aria-label="Street address"
                       />
-                      {isSearching && (
-                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                          <svg className="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                        </div>
-                      )}
                     </div>
 
-                    {/* Address suggestions dropdown */}
-                    {showSuggestions && addressSuggestions.length > 0 && (
-                      <div
-                        ref={suggestionsRef}
-                        className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
-                      >
-                        {addressSuggestions.map((suggestion) => (
-                          <button
-                            key={suggestion.place_id}
-                            type="button"
-                            className="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none border-b border-gray-100 last:border-b-0 flex items-start gap-2"
-                            onMouseDown={() => handleSuggestionSelect(suggestion)}
-                          >
-                            <svg className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span className="line-clamp-2">{suggestion.display_name}</span>
-                          </button>
-                        ))}
+                    {/* Suburb and State row */}
+                    <div className="flex gap-3 mb-3">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          placeholder="Suburb (e.g., Capalaba)"
+                          className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                          value={suburb}
+                          onChange={(e) => setSuburb(e.target.value)}
+                          aria-label="Suburb"
+                        />
                       </div>
-                    )}
+                      <div className="w-24 sm:w-28">
+                        <select
+                          className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                          value={state}
+                          onChange={(e) => setState(e.target.value)}
+                          aria-label="State"
+                        >
+                          <option value="QLD">QLD</option>
+                          <option value="NSW">NSW</option>
+                          <option value="VIC">VIC</option>
+                          <option value="SA">SA</option>
+                          <option value="WA">WA</option>
+                          <option value="TAS">TAS</option>
+                          <option value="NT">NT</option>
+                          <option value="ACT">ACT</option>
+                        </select>
+                      </div>
+                    </div>
 
-                    <div className="mt-1 text-xs text-gray-500">
+                    {/* Postcode */}
+                    <div className="w-32">
+                      <input
+                        type="text"
+                        placeholder="Postcode"
+                        className={`w-full bg-gray-100 border rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${
+                          postcode && !/^\d{4}$/.test(postcode) ? 'border-red-400' : 'border-gray-300'
+                        }`}
+                        value={postcode}
+                        onChange={(e) => setPostcode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                        maxLength={4}
+                        aria-label="Postcode"
+                      />
+                    </div>
+
+                    <div className="mt-2 text-xs text-gray-500">
                       Servicing South East Queensland and Northern NSW
                     </div>
                   </div>
@@ -778,12 +703,12 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                         </div>
                         <div>
                           <p className="text-xs text-gray-500 mb-1">Location</p>
-                          <p className={`font-medium text-sm sm:text-base break-words text-gray-800`}>{location}</p>
+                          <p className={`font-medium text-sm sm:text-base break-words text-gray-800`}>{getFullAddress()}</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-between">
                     <button 
                       type="button"

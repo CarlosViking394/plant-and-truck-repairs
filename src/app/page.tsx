@@ -29,10 +29,6 @@ export default function Home() {
         <div className="container mx-auto relative z-10">
           {/* Section header */}
           <div className="text-center mb-12 md:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full mb-4">
-              <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-              <span className="text-amber-700 text-sm font-medium">Professional Services</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               <span className="text-gray-800">Our </span>
               <span className="bg-gradient-to-r from-amber-600 to-amber-500 bg-clip-text text-transparent">Services</span>
@@ -95,11 +91,6 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             {/* Content */}
             <div className="lg:w-1/2 order-2 lg:order-1">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/20 border border-amber-500/30 rounded-full mb-6">
-                <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
-                <span className="text-amber-300 text-sm font-medium">About Us</span>
-              </div>
-
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
                 Experienced <span className="bg-gradient-to-r from-amber-400 to-amber-300 bg-clip-text text-transparent">Mobile Mechanics</span>
               </h2>
