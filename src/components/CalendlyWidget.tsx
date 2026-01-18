@@ -534,7 +534,7 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
                     <div className="mb-3">
                       <input
                         type="text"
-                        placeholder="Street Address (e.g., 136 Mount Cotton Road)"
+                        placeholder="Street Address (e.g., 42 Smith Street)"
                         className="w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                         value={streetAddress}
                         onChange={(e) => setStreetAddress(e.target.value)}
