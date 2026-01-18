@@ -149,17 +149,19 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Image */}
+            {/* Video */}
             <div className="lg:w-1/2 order-1 lg:order-2">
               <div className="relative">
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-500/20 aspect-[4/3]">
-                  <Image
-                    src={IMAGE_PATHS.WHO_WE_ARE}
-                    alt="Emergency truck repairs in rainy conditions"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-500/20 aspect-square">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  >
+                    <source src="/videos/mechanic-wheel.mp4" type="video/mp4" />
+                  </video>
                 </div>
                 {/* Floating badge */}
                 <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-5 py-3 rounded-xl shadow-xl font-bold hidden md:block">
