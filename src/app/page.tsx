@@ -40,9 +40,10 @@ export default function Home() {
 
           {/* Service cards grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {services.slice(0, 6).map((service) => (
+            {services.slice(0, 6).map((service, index) => (
               <ServiceCard
                 key={service.id}
+                index={index}
                 title={service.title}
                 description={service.description}
                 icon={service.icon}
@@ -55,9 +56,10 @@ export default function Home() {
 
           {/* Last two services centered */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mt-8 lg:w-2/3 mx-auto">
-            {services.slice(6).map((service) => (
+            {services.slice(6).map((service, index) => (
               <ServiceCard
                 key={service.id}
+                index={index + 6}
                 title={service.title}
                 description={service.description}
                 icon={service.icon}

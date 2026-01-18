@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Service } from '@/lib/services';
@@ -17,6 +17,7 @@ import {
 type ServiceCardProps = Omit<Service, 'id'> & {
   className?: string;
   bookingServiceType?: string;
+  index?: number;
 };
 
 // Map icon string to Lucide component
@@ -38,16 +39,44 @@ export default function ServiceCard({
   backgroundImage,
   className,
   bookingServiceType,
+  index = 0,
 }: ServiceCardProps) {
   // Get the proper icon component from the map or use the default
   const IconComponent = IconMap[icon] || IconMap.default;
 
+  // Scroll-triggered animation state
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (cardRef.current) observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={cn(
-      "group bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-500 border border-gray-100 relative overflow-hidden h-full flex flex-col",
-      "sm:hover:-translate-y-2 hover:border-amber-200/50",
-      className
-    )}>
+    <div
+      ref={cardRef}
+      style={{
+        transitionDelay: `${index * 100}ms`,
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(20px)'
+      }}
+      className={cn(
+        "group bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-500 ease-out border border-gray-100 relative overflow-hidden h-full flex flex-col",
+        "sm:hover:-translate-y-2 hover:border-amber-400/50",
+        className
+      )}
+    >
       {backgroundImage && (
         <div className="absolute inset-0 z-0 transition-all duration-500">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/75 to-gray-900/85 z-10 transition-all duration-500 group-hover:from-gray-900/70 group-hover:via-gray-800/65 group-hover:to-gray-900/75"></div>
@@ -117,7 +146,8 @@ export default function ServiceCard({
               }
             }}
             className={cn(
-              "inline-flex items-center gap-2 font-semibold transition-all duration-300 group/link",
+              "inline-flex items-center gap-2 font-semibold transition-all duration-300 group/link rounded-lg px-3 py-1.5 -mx-3 -my-1.5",
+              "group-hover:shadow-lg group-hover:shadow-amber-500/30",
               backgroundImage
                 ? "text-amber-300 hover:text-amber-200"
                 : "text-amber-600 hover:text-amber-700"
