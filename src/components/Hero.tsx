@@ -38,7 +38,7 @@ export default function Hero({
 
   return (
     <section className={cn(
-      "relative bg-gray-900 text-gray-100 py-28 md:py-32 min-h-[85vh] flex items-center overflow-hidden",
+      "relative bg-gray-900 text-gray-100 pt-40 pb-28 md:pt-44 md:pb-32 min-h-[85vh] flex items-center overflow-hidden",
       className
     )}>
       {/* Background images with transition */}
