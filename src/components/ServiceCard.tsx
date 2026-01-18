@@ -16,6 +16,7 @@ import {
 
 type ServiceCardProps = Omit<Service, 'id'> & {
   className?: string;
+  bookingServiceType?: string;
 };
 
 // Map icon string to Lucide component
@@ -36,6 +37,7 @@ export default function ServiceCard({
   alt,
   backgroundImage,
   className,
+  bookingServiceType,
 }: ServiceCardProps) {
   // Get the proper icon component from the map or use the default
   const IconComponent = IconMap[icon] || IconMap.default;
@@ -101,7 +103,7 @@ export default function ServiceCard({
         {/* CTA Link */}
         <div className="mt-auto pt-4 border-t border-gray-200/20">
           <a
-            href="#contact"
+            href={bookingServiceType ? `#booking-widget?service=${encodeURIComponent(bookingServiceType)}` : "#contact"}
             className={cn(
               "inline-flex items-center gap-2 font-semibold transition-all duration-300 group/link",
               backgroundImage
