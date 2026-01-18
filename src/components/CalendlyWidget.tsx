@@ -37,28 +37,17 @@ export default function CalendlyWidget({ className }: CalendlyWidgetProps) {
     return () => setIsMounted(false);
   }, []);
 
-  // Read service type from URL hash on mount and hash change
+  // Listen for service selection from ServiceCard clicks
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash.includes('booking-widget')) {
-        // Parse service parameter from hash
-        const params = new URLSearchParams(hash.split('?')[1] || '');
-        const service = params.get('service');
-        if (service) {
-          setServiceType(decodeURIComponent(service));
-          setShowBookingForm(true);
-          setFormStep(1);
-        }
-      }
+    const handleSelectService = (e: CustomEvent<string>) => {
+      setServiceType(e.detail);
+      setShowBookingForm(true);
+      setFormStep(1);
+      setBookingConfirmed(false);
     };
 
-    // Check on mount
-    handleHashChange();
-
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('selectService', handleSelectService as EventListener);
+    return () => window.removeEventListener('selectService', handleSelectService as EventListener);
   }, []);
 
   // Generate next 7 available dates (excluding Sundays)

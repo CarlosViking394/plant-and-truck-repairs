@@ -103,7 +103,19 @@ export default function ServiceCard({
         {/* CTA Link */}
         <div className="mt-auto pt-4 border-t border-gray-200/20">
           <a
-            href={bookingServiceType ? `#booking-widget?service=${encodeURIComponent(bookingServiceType)}` : "#contact"}
+            href="#booking-widget"
+            onClick={(e) => {
+              if (bookingServiceType) {
+                e.preventDefault();
+                // Dispatch custom event with service type
+                window.dispatchEvent(new CustomEvent('selectService', { detail: bookingServiceType }));
+                // Scroll to booking widget
+                const element = document.getElementById('booking-widget');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }
+            }}
             className={cn(
               "inline-flex items-center gap-2 font-semibold transition-all duration-300 group/link",
               backgroundImage
