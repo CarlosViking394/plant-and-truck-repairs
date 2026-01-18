@@ -81,7 +81,7 @@ export default function Hero({
         <div className="max-w-4xl">
           {/* Title with gradient */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            <span className="text-white">{title.split(' ').slice(0, 2).join(' ')}</span>
+            <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">{title.split(' ').slice(0, 2).join(' ')}</span>
             <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
               {title.split(' ').slice(2).join(' ')}
