@@ -104,9 +104,7 @@ export default function Footer() {
                 { name: 'Home', href: '/' },
                 { name: 'About Us', href: '#about' },
                 { name: 'Services', href: '#services' },
-                { name: 'Contact', href: '#contact' },
-                { name: 'Privacy Policy', href: '#' },
-                { name: 'Terms of Service', href: '#' }
+                { name: 'Contact', href: '#contact' }
               ].map((link) => (
                 <li key={link.name}>
                   <Link
@@ -191,13 +189,7 @@ export default function Footer() {
               </p>
             </div>
             <div className="flex space-x-6">
-              <Link href="#" className="text-gray-500 hover:text-amber-400 text-sm transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="#" className="text-gray-500 hover:text-amber-400 text-sm transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="#" className="text-gray-500 hover:text-amber-400 text-sm transition-colors">
+              <Link href="/sitemap.xml" className="text-gray-500 hover:text-amber-400 text-sm transition-colors">
                 Sitemap
               </Link>
             </div>
