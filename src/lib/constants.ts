@@ -40,5 +40,5 @@ export const COMPANY = {
   NAME: "M.P.T.R Mobile Plant & Truck Repairs",
   TAGLINE: "Professional mobile diesel mechanics at your service",
   YEARS_EXPERIENCE: 15,
-  SERVICE_AREAS: ["Brisbane", "Gold Coast", "Sunshine Coast", "Ipswich", "Logan", "Tweed Heads"]
+  SERVICE_AREAS: ["Brisbane", "Gold Coast", "Sunshine Coast", "Logan", "Tweed Heads"]
 } as const; 
