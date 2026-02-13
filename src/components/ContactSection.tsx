@@ -97,7 +97,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
               Book a <span className="bg-gradient-to-r from-amber-400 to-amber-300 bg-clip-text text-transparent">Service</span>
             </h2>
             <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
-              Schedule your mobile plant or truck repair service online for fast, reliable service throughout South East Queensland.
+              Schedule your mobile plant or truck repair service online for fast, reliable service throughout Northern New South Wales & South East Queensland.
             </p>
           </div>
 
@@ -174,7 +174,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                 </div>
 
                 <p className="text-xs sm:text-sm text-gray-500 mt-4 text-center">
-                  Available 7 days for emergency mobile repairs in South East Queensland
+                  Available 7 days for emergency mobile repairs in Northern New South Wales and South East Queensland
                 </p>
               </div>
             </div>
