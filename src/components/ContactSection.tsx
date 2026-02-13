@@ -192,7 +192,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 relative">
               {[
-                { region: 'Brisbane Region', areas: ['Brisbane', 'Logan', 'Ipswich'] },
+                { region: 'Brisbane Region', areas: ['Brisbane', 'Logan'] },
                 { region: 'Gold Coast Region', areas: ['Gold Coast'] },
                 { region: 'Northern New South Wales Region', areas: ['Ballina', 'Byron Bay', 'Lismore', 'Tweed Heads'] }
               ].map((location, idx) => (
