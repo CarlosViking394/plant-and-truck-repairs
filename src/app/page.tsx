@@ -123,7 +123,7 @@ export default function Home() {
                 </h3>
                 <ul className="space-y-4">
                   {[
-                    'Fast response times throughout South East Queensland',
+                    'Fast response times throughout Northern New South Wales & South East Queensland',
                     'Fully equipped mobile workshop for on-site repairs',
                     'Licensed technicians with extensive industry experience'
                   ].map((item, idx) => (
