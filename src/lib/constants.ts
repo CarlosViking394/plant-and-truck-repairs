@@ -30,7 +30,7 @@ export const CONTACT = {
   PHONE: "+61468601750",
   PHONE_DISPLAY: "0468-601-750",
   EMAIL: "plantandtruckrepairs@gmail.com",
-  ADDRESS: "South East Queensland, Australia",
+  ADDRESS: "Northern New South Wales & South East Queensland, Australia",
 } as const;
 
 /**

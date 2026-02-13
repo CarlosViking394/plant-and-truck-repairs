@@ -187,14 +187,14 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl"></div>
 
             <h3 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 text-center">
-              South East Queensland <span className="text-amber-600">Service Areas</span>
+              Northern New South Wales & South East Queensland <span className="text-amber-600">Service Areas</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 relative">
               {[
                 { region: 'Brisbane Region', areas: ['Brisbane', 'Logan', 'Ipswich'] },
-                { region: 'Gold Coast Region', areas: ['Gold Coast', 'Tweed Heads', 'Northern NSW'] },
-                { region: 'Sunshine Coast Region', areas: ['Sunshine Coast', 'Caboolture', 'Gympie'] }
+                { region: 'Gold Coast Region', areas: ['Gold Coast'] },
+                { region: 'Northern New South Wales Region', areas: ['Ballina', 'Byron Bay', 'Lismore', 'Tweed Heads'] }
               ].map((location, idx) => (
                 <div key={idx} className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                   <h4 className="font-bold text-gray-800 mb-3 flex items-center text-sm sm:text-base">

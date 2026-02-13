@@ -163,7 +163,7 @@ export default function Hero({
             </div>
             <div className="text-amber-300 font-bold text-lg">Professional Service</div>
           </div>
-          <div className="text-gray-300 text-sm">On-site repairs & maintenance for all heavy equipment throughout SEQ</div>
+          <div className="text-gray-300 text-sm">On-site repairs & maintenance for all heavy equipment throughout Northern New South Wales & SEQ</div>
         </div>
       </div>
 

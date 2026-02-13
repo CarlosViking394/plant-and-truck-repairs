@@ -27,7 +27,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Professional mobile diesel mechanic services throughout South East Queensland. Plant repairs,
+              Professional mobile diesel mechanic services throughout Northern New South Wales & South East Queensland. Plant repairs,
               earthmoving equipment, truck servicing, air conditioning and auto electrical repairs.
             </p>
             <div className="flex space-x-3">
@@ -136,7 +136,7 @@ export default function Footer() {
                   </svg>
                 </div>
                 <span className="text-gray-400 pt-2">
-                  South East Queensland, Australia
+                  Northern New South Wales & South East Queensland, Australia
                 </span>
               </li>
               <li className="flex items-center gap-3">
