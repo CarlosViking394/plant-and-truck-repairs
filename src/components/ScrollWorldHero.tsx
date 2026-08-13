@@ -67,11 +67,12 @@ export default function ScrollWorldHero() {
       const mount = mod.mountScrollWorld ?? mod.default?.mountScrollWorld;
       if (cancelled || !ref.current || typeof mount !== "function") return;
       api = mount(ref.current, {
-        brand: { name: "M.P.T.R", href: "#top" },
+        // no brand/nav — the site's own Header stays the single chrome layer;
+        // the engine's route rail on the right handles in-story navigation
         diveScroll: 1.3,
         crossfade: 0.08, // architecture A: legs chain directly, tiny seam blend
         hint: "scroll — one call gets us moving",
-        nav: true,
+        nav: false,
         atmosphere: false, // the clips carry the atmosphere; keep the chrome quiet
         scrollMobileFactor: 1.2,
         sections,
@@ -85,7 +86,11 @@ export default function ScrollWorldHero() {
   }, []);
 
   return (
-    <div ref={ref} id="scroll-world" style={{ background: "#111827" }}>
+    <div
+      ref={ref}
+      id="scroll-world"
+      style={{ background: "#f9fafb", ["--sw-bg" as string]: "#f9fafb" }}
+    >
       {/* Crawlable static copy — the engine hides this on mount (data-sw-seo). */}
       <div data-sw-seo>
         <h1>Mobile plant &amp; truck repairs — fixed where it stands</h1>
