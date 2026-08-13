@@ -3,6 +3,7 @@ import Script from "next/script";
 import "../styles/globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MotionProvider from "@/components/motion/MotionProvider";
 import { IMAGE_PATHS, CONTACT, COMPANY } from "@/lib/constants";
 import { Metadata } from "next";
 
@@ -338,9 +339,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         </noscript>
 
         <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
+        <MotionProvider>
+          <main className="flex-grow">
+            {children}
+          </main>
+        </MotionProvider>
         <Footer />
       </body>
     </html>
