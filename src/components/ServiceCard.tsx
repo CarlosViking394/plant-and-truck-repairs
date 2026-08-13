@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Service } from '@/lib/services';
+import { CONTACT } from '@/lib/constants';
 import {
   Wrench,
   Truck,
@@ -16,7 +17,6 @@ import {
 
 type ServiceCardProps = Omit<Service, 'id'> & {
   className?: string;
-  bookingServiceType?: string;
   index?: number;
 };
 
@@ -38,7 +38,6 @@ export default function ServiceCard({
   alt,
   backgroundImage,
   className,
-  bookingServiceType,
   index = 0,
 }: ServiceCardProps) {
   // Get the proper icon component from the map or use the default
@@ -132,19 +131,7 @@ export default function ServiceCard({
         {/* CTA Link */}
         <div className="mt-auto pt-4 border-t border-gray-200/20">
           <a
-            href="#booking-widget"
-            onClick={(e) => {
-              if (bookingServiceType) {
-                e.preventDefault();
-                // Dispatch custom event with service type
-                window.dispatchEvent(new CustomEvent('selectService', { detail: bookingServiceType }));
-                // Scroll to booking widget
-                const element = document.getElementById('booking-widget');
-                if (element) {
-                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              }
-            }}
+            href={`tel:${CONTACT.PHONE}`}
             className={cn(
               "inline-flex items-center gap-2 font-semibold transition-all duration-300 group/link rounded-lg px-3 py-1.5 -mx-3 -my-1.5",
               "group-hover:shadow-lg group-hover:shadow-amber-500/30",
@@ -153,19 +140,15 @@ export default function ServiceCard({
                 : "text-amber-600 hover:text-amber-700"
             )}
           >
-            <span>Request Service</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 transition-transform duration-300 group-hover/link:translate-x-1"
+              className="h-5 w-5 transition-transform duration-300 group-hover/link:rotate-6"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
-              <path
-                fillRule="evenodd"
-                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
+              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
             </svg>
+            <span>Call {CONTACT.PHONE_DISPLAY}</span>
           </a>
         </div>
       </div>

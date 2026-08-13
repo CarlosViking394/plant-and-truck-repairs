@@ -49,7 +49,6 @@ export default function Home() {
                 icon={service.icon}
                 alt={service.alt}
                 backgroundImage={service.backgroundImage}
-                bookingServiceType={service.bookingServiceType}
               />
             ))}
           </div>
@@ -65,7 +64,6 @@ export default function Home() {
                 icon={service.icon}
                 alt={service.alt}
                 backgroundImage={service.backgroundImage}
-                bookingServiceType={service.bookingServiceType}
               />
             ))}
           </div>
