@@ -3,7 +3,7 @@ import ContactSection from "../components/ContactSection";
 import ServicesDeck from "../components/ServicesDeck";
 import ReviewsSection from "../components/ReviewsSection";
 import Reveal from "../components/motion/Reveal";
-import Hero from "../components/Hero";
+import ScrollWorldHero from "../components/ScrollWorldHero";
 import { COMPANY, IMAGE_PATHS } from "@/lib/constants";
 
 export const metadata = {
@@ -14,12 +14,7 @@ export const metadata = {
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800">
-      <Hero
-        title="M.P.T.R Mobile Plant & Truck Repairs"
-        subtitle="Professional mobile diesel mechanics at your service"
-        ctaText="Learn More"
-        ctaLink="#services"
-      />
+      <ScrollWorldHero />
 
       {/* Services Section */}
       {/* overflow-clip (not hidden) so the deck's position:sticky keeps working */}
