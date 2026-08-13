@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { CONTACT } from '@/lib/constants';
 
 interface HeroProps {
   title: string;
@@ -96,13 +97,13 @@ export default function Hero({
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <a
-              href="#booking-widget"
+              href={`tel:${CONTACT.PHONE}`}
               className="group bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 px-8 rounded-xl text-lg inline-flex items-center justify-center gap-3 shadow-lg shadow-black/20 hover:shadow-black/30 transition-all duration-300 hover:-translate-y-1"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transition-transform duration-300 group-hover:rotate-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
-              <span>Book a Service</span>
+              <span>Call {CONTACT.PHONE_DISPLAY}</span>
             </a>
 
             {ctaText && ctaLink && (
@@ -117,15 +118,6 @@ export default function Hero({
               </a>
             )}
 
-            <a
-              href="tel:+61468601750"
-              className="group bg-transparent hover:bg-amber-500/10 text-white border-2 border-amber-500/50 hover:border-amber-400 font-semibold py-4 px-8 rounded-xl text-lg inline-flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-400 transition-all duration-300 group-hover:scale-110" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-              </svg>
-              <span className="group-hover:text-amber-300 transition-colors duration-300">Call Now</span>
-            </a>
           </div>
 
           {/* Trust indicators */}
