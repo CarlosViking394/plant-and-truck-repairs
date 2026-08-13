@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Service } from '@/lib/services';
@@ -20,7 +18,6 @@ import {
 
 type ServiceCardProps = Omit<Service, 'id'> & {
   className?: string;
-  index?: number;
 };
 
 // Map icon string to Lucide component
@@ -44,38 +41,12 @@ export default function ServiceCard({
   alt,
   backgroundImage,
   className,
-  index = 0,
 }: ServiceCardProps) {
   // Get the proper icon component from the map or use the default
   const IconComponent = IconMap[icon] || IconMap.default;
 
-  // Scroll-triggered animation state
-  const [isVisible, setIsVisible] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (cardRef.current) observer.observe(cardRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <div
-      ref={cardRef}
-      style={{
-        transitionDelay: `${index * 100}ms`,
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(20px)'
-      }}
       className={cn(
         "group bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 transition-all duration-500 ease-out border border-gray-100 relative overflow-hidden h-full flex flex-col",
         "sm:hover:-translate-y-2 hover:border-amber-400/50",

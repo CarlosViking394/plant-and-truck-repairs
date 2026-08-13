@@ -1,9 +1,8 @@
 import Image from "next/image";
 import ContactSection from "../components/ContactSection";
-import ServiceCard from "../components/ServiceCard";
+import ServicesDeck from "../components/ServicesDeck";
 import Hero from "../components/Hero";
 import { COMPANY, IMAGE_PATHS } from "@/lib/constants";
-import { services } from "@/lib/services";
 
 export const metadata = {
   title: "M.P.T.R Mobile Plant & Truck Repairs | Professional Mobile Diesel Mechanic",
@@ -21,7 +20,8 @@ export default function Home() {
       />
 
       {/* Services Section */}
-      <section id="services" className="py-20 md:py-28 px-4 bg-gradient-to-b from-gray-50 to-gray-100 relative overflow-hidden">
+      {/* overflow-clip (not hidden) so the deck's position:sticky keeps working */}
+      <section id="services" className="py-20 md:py-28 px-4 bg-gradient-to-b from-gray-50 to-gray-100 relative overflow-clip">
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
@@ -38,35 +38,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Service cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {services.slice(0, 6).map((service, index) => (
-              <ServiceCard
-                key={service.id}
-                index={index}
-                title={service.title}
-                description={service.description}
-                icon={service.icon}
-                alt={service.alt}
-                backgroundImage={service.backgroundImage}
-              />
-            ))}
-          </div>
-
-          {/* Last two services centered */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mt-8 lg:w-2/3 mx-auto">
-            {services.slice(6).map((service, index) => (
-              <ServiceCard
-                key={service.id}
-                index={index + 6}
-                title={service.title}
-                description={service.description}
-                icon={service.icon}
-                alt={service.alt}
-                backgroundImage={service.backgroundImage}
-              />
-            ))}
-          </div>
+          {/* Scroll-driven 3D service deck (static grid on reduced motion) */}
+          <ServicesDeck />
         </div>
       </section>
 
