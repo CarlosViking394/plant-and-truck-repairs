@@ -258,7 +258,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en-AU" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en-AU" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#f59e0b" />

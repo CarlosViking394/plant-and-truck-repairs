@@ -10,17 +10,16 @@ export const IMAGE_PATHS = {
   LOGO_SMALL: "/icons/LOGO-MPTRSVG.svg",
   HERO_BG: "/images/hero-bg.jpg",
   FRONT_PAGE: "/images/hero-image.jpg",
-  EARTHMOVING: "/images/earthmoving.jpg",
+  EARTHMOVING: "/images/Earthmoving.jpg",
   EARTHMOVING_NEW: "/images/pexels-radwanmenzer-14704776.jpg",
   MOBILE_DIESEL_MECHANIC: "/images/mobile_diesel_mechanic_final.jpg",
-  MOBILE_PLANT_REPAIRS: "/images/mobileplantrepairs.png",
+  MOBILE_PLANT_REPAIRS: "/images/MobilePlantRepairs.png",
   TRUCK_REPAIRS: "/images/truck-repairs.png",
   AIR_CONDITIONING: "/images/airconditioner.png",
   AUTO_ELECTRICAL: "/images/autoelectrical.png",
   WHO_WE_ARE: "/images/whoweare.png",
   OUTBACK_ROAD: "/images/inthemiddleofoz.png",
-  SOUTHEAST_TRUCK: "/images/southeastqtruck.png",
-  GOLD_COAST: "/images/goldcoast.png",
+  SOUTHEAST_TRUCK: "/images/southEastQTruck.png",
 } as const;
 
 /**
@@ -31,6 +30,14 @@ export const CONTACT = {
   PHONE_DISPLAY: "0468-601-750",
   EMAIL: "plantandtruckrepairs@gmail.com",
   ADDRESS: "Northern New South Wales & South East Queensland, Australia",
+} as const;
+
+/**
+ * External links
+ */
+export const LINKS = {
+  // TODO: replace with the real Google Business Profile share link
+  GOOGLE_PROFILE_URL: "https://www.google.com/maps/search/M.P.T.R+Mobile+Plant+%26+Truck+Repairs",
 } as const;
 
 /**

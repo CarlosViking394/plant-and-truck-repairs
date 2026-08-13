@@ -12,6 +12,9 @@ import {
   Construction,
   Thermometer,
   Battery,
+  Zap,
+  Leaf,
+  Forklift,
   Settings
 } from 'lucide-react';
 
@@ -28,6 +31,9 @@ const IconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   construction: Construction,
   thermometer: Thermometer,
   battery: Battery,
+  bolt: Zap,
+  leaf: Leaf,
+  dolly: Forklift,
   default: Settings
 };
 
