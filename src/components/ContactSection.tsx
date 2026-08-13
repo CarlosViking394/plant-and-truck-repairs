@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import Reveal from './motion/Reveal';
 import { CONTACT } from '@/lib/constants';
 
 interface ContactSectionProps {
@@ -101,7 +102,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
           </div>
 
           {/* Call-to-book card */}
-          <div className="max-w-2xl mx-auto relative mb-16 sm:mb-20">
+          <Reveal className="max-w-2xl mx-auto relative mb-16 sm:mb-20">
             <div className="bg-white/95 backdrop-blur-md p-6 sm:p-10 rounded-2xl shadow-2xl border border-white/20 relative overflow-hidden transition-all duration-500 hover:shadow-amber-500/10 z-10 text-center">
               <p className="text-xs sm:text-sm font-bold uppercase tracking-widest text-amber-600 mb-3">
                 Talk to a real mechanic
@@ -158,10 +159,10 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                 </a>
               </p>
             </div>
-          </div>
+          </Reveal>
 
           {/* Service areas */}
-          <div className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+          <Reveal delay={0.1} className="bg-white/95 backdrop-blur-md p-6 sm:p-8 rounded-2xl shadow-2xl relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl"></div>
@@ -197,7 +198,7 @@ export default function ContactSection({ id, className }: ContactSectionProps) {
                 </div>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

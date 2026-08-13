@@ -1,6 +1,7 @@
 import Image from "next/image";
 import ContactSection from "../components/ContactSection";
 import ServicesDeck from "../components/ServicesDeck";
+import Reveal from "../components/motion/Reveal";
 import Hero from "../components/Hero";
 import { COMPANY, IMAGE_PATHS } from "@/lib/constants";
 
@@ -65,7 +66,7 @@ export default function Home() {
         <div className="container mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             {/* Content */}
-            <div className="lg:w-1/2 order-2 lg:order-1">
+            <Reveal className="lg:w-1/2 order-2 lg:order-1" x={-24} y={0}>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
                 Experienced <span className="bg-gradient-to-r from-amber-400 to-amber-300 bg-clip-text text-transparent">Mobile Mechanics</span>
               </h2>
@@ -122,10 +123,10 @@ export default function Home() {
                   </svg>
                 </a>
               </div>
-            </div>
+            </Reveal>
 
             {/* Video */}
-            <div className="lg:w-1/2 order-1 lg:order-2">
+            <Reveal className="lg:w-1/2 order-1 lg:order-2" x={24} y={0}>
               <div className="relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-500/20 aspect-square">
                   <video
@@ -143,7 +144,7 @@ export default function Home() {
                   {COMPANY.YEARS_EXPERIENCE}+ Years Experience
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>

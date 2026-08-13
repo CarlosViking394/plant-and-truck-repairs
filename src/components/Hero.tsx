@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { m, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { CONTACT } from '@/lib/constants';
 
@@ -27,6 +28,18 @@ export default function Hero({
     "/images/front-page.jpg"
   ];
 
+  // Scroll-linked parallax: background drifts down and content fades
+  // slightly as the hero scrolls out of view
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "10%"]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.6]);
+  const scrollHintOpacity = useTransform(scrollYProgress, [0, 0.15], [1, reduceMotion ? 1 : 0]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(prevIndex =>
@@ -38,12 +51,12 @@ export default function Hero({
   }, [backgroundImages.length]);
 
   return (
-    <section className={cn(
+    <section ref={sectionRef} className={cn(
       "relative bg-gray-900 text-gray-100 pt-40 pb-28 md:pt-44 md:pb-32 min-h-[85vh] flex items-center overflow-hidden",
       className
     )}>
-      {/* Background images with transition */}
-      <div className="absolute inset-0 overflow-hidden z-0">
+      {/* Background images with transition + scroll parallax */}
+      <m.div className="absolute inset-0 overflow-hidden z-0" style={{ y: bgY }}>
         {backgroundImages.map((image, index) => (
           <div
             key={index}
@@ -72,13 +85,13 @@ export default function Hero({
         {/* Enhanced gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 via-gray-900/75 to-gray-800/60 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent z-10"></div>
-      </div>
+      </m.div>
 
       {/* Decorative elements */}
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl z-0"></div>
       <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl z-0"></div>
 
-      <div className="container mx-auto px-4 relative z-20">
+      <m.div className="container mx-auto px-4 relative z-20" style={{ opacity: contentOpacity }}>
         <div className="max-w-4xl">
           {/* Title with gradient */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
@@ -142,7 +155,7 @@ export default function Hero({
             </div>
           </div>
         </div>
-      </div>
+      </m.div>
 
       {/* Floating card with brand elements */}
       <div className="absolute bottom-8 right-8 hidden lg:block z-20">
@@ -159,15 +172,18 @@ export default function Hero({
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden md:block">
+      {/* Scroll indicator (fades out as soon as scrolling starts) */}
+      <m.div
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 hidden md:block"
+        style={{ opacity: scrollHintOpacity }}
+      >
         <a href="#services" className="flex flex-col items-center text-gray-400 hover:text-amber-400 transition-colors">
           <span className="text-xs mb-2">Scroll to explore</span>
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </a>
-      </div>
+      </m.div>
     </section>
   );
 }
