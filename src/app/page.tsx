@@ -1,6 +1,7 @@
 import Image from "next/image";
 import ContactSection from "../components/ContactSection";
 import ServicesDeck from "../components/ServicesDeck";
+import ReviewsSection from "../components/ReviewsSection";
 import Reveal from "../components/motion/Reveal";
 import Hero from "../components/Hero";
 import { COMPANY, IMAGE_PATHS } from "@/lib/constants";
@@ -148,6 +149,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ReviewsSection id="reviews" />
 
       <ContactSection id="contact" />
     </div>
